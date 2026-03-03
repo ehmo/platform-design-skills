@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "organization": "Platform Design Skills",
+  "date": "February 2026",
+  "abstract": "Apple Human Interface Guidelines for Apple TV. 25+ rules across 6 categories covering focus-based navigation, Siri Remote, Top Shelf, parallax icons, living room viewing distances, and media playback patterns.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines",
+    "https://developer.apple.com/design/human-interface-guidelines/designing-for-tvos",
+    "https://developer.apple.com/documentation/tvuikit",
+    "https://developer.apple.com/documentation/tvservices"
+  ]
+}

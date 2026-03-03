@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "organization": "Platform Design Skills",
+  "date": "February 2026",
+  "abstract": "Apple Human Interface Guidelines for iPad apps. 35+ rules across 8 categories covering multitasking, pointer support, sidebar navigation, keyboard shortcuts, Stage Manager, responsive layout, and iPad-specific adaptations. Extends iOS patterns for the larger canvas.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines",
+    "https://developer.apple.com/design/human-interface-guidelines/designing-for-ipados",
+    "https://developer.apple.com/documentation/swiftui",
+    "https://developer.apple.com/documentation/uikit"
+  ]
+}

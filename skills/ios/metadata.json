@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "organization": "Platform Design Skills",
+  "date": "February 2026",
+  "abstract": "Apple Human Interface Guidelines for iPhone apps. 50+ rules across 10 categories covering navigation, layout, typography, color, accessibility, gestures, components, patterns, privacy, and system integration. Each rule includes SwiftUI/UIKit examples with correct and incorrect implementations.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines",
+    "https://developer.apple.com/design/human-interface-guidelines/designing-for-ios",
+    "https://developer.apple.com/documentation/swiftui",
+    "https://developer.apple.com/documentation/uikit"
+  ]
+}

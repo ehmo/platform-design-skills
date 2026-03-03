@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "organization": "Platform Design Skills",
+  "date": "February 2026",
+  "abstract": "Web platform design and accessibility guidelines. 60+ rules across 10 categories covering WCAG 2.2 accessibility, responsive design, semantic HTML, performance, forms, animations, typography, dark mode, internationalization, and progressive enhancement. Framework-agnostic with HTML/CSS/JS examples.",
+  "references": [
+    "https://www.w3.org/WAI/WCAG22/quickref/",
+    "https://developer.mozilla.org/en-US/docs/Web",
+    "https://web.dev",
+    "https://www.a11yproject.com"
+  ]
+}
