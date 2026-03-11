@@ -1,6 +1,6 @@
 ---
 name: android-design-guidelines
-description: Material Design 3 and Android platform guidelines. Use when building Android apps with Jetpack Compose or XML layouts, implementing Material You, navigation, or accessibility. Triggers on tasks involving Android UI, Compose components, dynamic color, or Material Design compliance.
+description: Material Design 3 and Android platform guidelines. Creates Material 3 themed components, implements adaptive color schemes, builds responsive layouts for phones/tablets/foldables, and validates accessibility with TalkBack. Use when building Android apps with Jetpack Compose or XML layouts, implementing Material You, navigation, accessibility, or Android UI. Triggers on tasks involving Compose components, dynamic color, Android navigation, TalkBack, or Material Design.
 license: MIT
 metadata:
   author: platform-design-skills
@@ -13,7 +13,7 @@ metadata:
 
 ### 1.1 Dynamic Color
 
-Enable dynamic color derived from the user's wallpaper. Dynamic color is the default on Android 12+ and should be the primary theming strategy.
+Enable dynamic color derived from the user's wallpaper on Android 12+.
 
 ```kotlin
 // Compose: Dynamic color theme
@@ -54,7 +54,7 @@ fun AppTheme(
 
 ### 1.2 Color Roles
 
-Material 3 defines a structured set of color roles. Use them semantically, not aesthetically.
+Use color roles semantically, not aesthetically.
 
 | Role | Usage | On-Role |
 |------|-------|---------|
@@ -93,7 +93,7 @@ Text(text = "Error", color = Color(0xFFB00020)) // Anti-pattern
 
 ### 1.3 Light and Dark Themes
 
-Support both light and dark themes. Respect the system setting by default.
+Respect the system theme setting by default.
 
 ```kotlin
 // Compose: Detect system theme
@@ -107,7 +107,7 @@ val darkTheme = isSystemInDarkTheme()
 
 ### 1.4 Custom Color Seeds
 
-When branding requires custom colors, provide a seed color and generate tonal palettes using Material Theme Builder.
+Generate tonal palettes from brand seed colors using Material Theme Builder.
 
 ```kotlin
 // Custom color scheme with brand seed
@@ -129,8 +129,6 @@ private val BrandLightColorScheme = lightColorScheme(
 ## 2. Navigation [CRITICAL]
 
 ### 2.1 Navigation Bar (Bottom)
-
-The primary navigation pattern for phones with 3-5 top-level destinations.
 
 ```kotlin
 // Compose: Navigation Bar
@@ -158,8 +156,6 @@ NavigationBar {
 - R2.4: The active indicator uses `secondaryContainer` color. Do not override this.
 
 ### 2.2 Navigation Rail
-
-For medium and expanded screens (tablets, foldables, desktop).
 
 ```kotlin
 // Compose: Navigation Rail for larger screens
@@ -191,8 +187,6 @@ NavigationRail(
 
 ### 2.3 Navigation Drawer
 
-For 5+ destinations or complex navigation hierarchies, typically on expanded screens.
-
 ```kotlin
 // Compose: Permanent Navigation Drawer for large screens
 PermanentNavigationDrawer(
@@ -221,8 +215,6 @@ PermanentNavigationDrawer(
 - R2.9: Group drawer items into sections with dividers and section headers.
 
 ### 2.4 Predictive Back Gesture
-
-Android 13+ supports predictive back with an animation preview.
 
 ```kotlin
 // Compose: Predictive back handling
@@ -255,8 +247,6 @@ val predictiveBackHandler = remember { PredictiveBackHandler(enabled = true) { p
 
 ### 3.1 Window Size Classes
 
-Use window size classes for adaptive layouts, not raw pixel breakpoints.
-
 ```kotlin
 // Compose: Window size classes
 val windowSizeClass = calculateWindowSizeClass(this)
@@ -280,8 +270,6 @@ when (windowSizeClass.widthSizeClass) {
 
 ### 3.2 Material Grid
 
-Apply canonical Material grid margins and gutters.
-
 | Size Class | Margins | Gutters | Columns |
 |------------|---------|---------|---------|
 | Compact | 16dp | 8dp | 4 |
@@ -293,8 +281,6 @@ Apply canonical Material grid margins and gutters.
 - R3.5: Apply consistent horizontal margins matching the grid spec.
 
 ### 3.3 Edge-to-Edge Display
-
-Android 15+ enforces edge-to-edge. All apps should draw behind system bars.
 
 ```kotlin
 // Compose: Edge-to-edge setup
@@ -389,8 +375,6 @@ val AppTypography = Typography(
 ## 5. Components [HIGH]
 
 ### 5.1 Floating Action Button (FAB)
-
-The FAB represents the single most important action on a screen.
 
 ```kotlin
 // Compose: FAB variants
@@ -863,88 +847,31 @@ class TaskWidget : GlanceAppWidget() {
 
 ---
 
-## Design Evaluation Checklist
+## Implementation Workflow
 
-Use this checklist to evaluate Android UI implementations:
+Follow these steps when building an Android UI with Material 3:
 
-### Theme & Color
-- [ ] Dynamic color enabled with static fallback
-- [ ] All colors reference Material theme roles (no hardcoded hex)
-- [ ] Light and dark themes both supported
-- [ ] On-colors match their background color roles
-- [ ] Custom colors generated from seed via Material Theme Builder
+1. **Set up theming**: Configure `MaterialTheme` with dynamic color (Android 12+ fallback to static scheme). Verify light and dark themes render correctly.
+   - **Checkpoint**: All colors come from `MaterialTheme.colorScheme` — no hardcoded hex values.
 
-### Navigation
-- [ ] Correct navigation component for screen size and destination count
-- [ ] Navigation bar labels always visible
-- [ ] Predictive back gesture opted in and handled
-- [ ] Up vs Back behavior correct
+2. **Build navigation structure**: Select navigation component based on window size class and destination count (see Section 2.5 table). Implement adaptive switching between NavigationBar, NavigationRail, and NavigationDrawer.
+   - **Checkpoint**: Navigation renders correctly at compact, medium, and expanded widths.
 
-### Layout
-- [ ] All three window size classes supported
-- [ ] Edge-to-edge with proper inset handling
-- [ ] Content does not span full width on large screens
-- [ ] Foldable hinge area respected
+3. **Implement responsive layouts**: Use `WindowSizeClass` for layout decisions. Call `enableEdgeToEdge()`, handle `WindowInsets`, apply Material grid margins/gutters per size class.
+   - **Checkpoint**: Content does not span full width on expanded screens. System bars are transparent with correct inset padding.
 
-### Typography
-- [ ] All text uses sp units
-- [ ] All text references MaterialTheme.typography roles
-- [ ] Tested at 200% font scale with no clipping
-- [ ] Minimum 12sp body, 11sp labels
+4. **Build components**: Apply Material 3 components (FAB, TopAppBar, BottomSheet, Dialogs, Chips). Connect scroll behaviors. Use semantic typography roles from `MaterialTheme.typography`.
+   - **Checkpoint**: At most one FAB per screen. Top app bar collapses on scroll. All text uses `sp` units.
 
-### Components
-- [ ] At most one FAB per screen
-- [ ] Top app bar connected to scroll behavior
-- [ ] Snackbars used for non-critical feedback only
-- [ ] Dialogs reserved for critical interruptions
+5. **Validate accessibility**: Add `contentDescription` to all interactive elements. Verify 48dp minimum touch targets. Check color contrast >= 4.5:1. Test full TalkBack traversal, Switch Access, and keyboard navigation.
+   - **Checkpoint**: Complete TalkBack walkthrough with no unlabeled or unreachable elements.
 
-### Accessibility
-- [ ] All interactive elements have contentDescription
-- [ ] All touch targets >= 48dp
-- [ ] Color contrast >= 4.5:1 for text
-- [ ] No information conveyed by color alone
-- [ ] Full TalkBack traversal tested
-- [ ] Switch Access and keyboard navigation work
+6. **Handle permissions and system integration**: Request permissions in context with rationale. Use Photo Picker instead of media permissions. Implement predictive back, deep links, widgets, and shortcuts.
+   - **Checkpoint**: App functions gracefully when permissions are denied. Predictive back animation works.
 
-### Gestures
-- [ ] No interactive elements in system gesture zones
-- [ ] All gesture actions have non-gesture alternatives
-- [ ] Swipe-to-dismiss is undoable
-
-### Notifications
-- [ ] Separate channels for each notification type
-- [ ] Appropriate importance levels
-- [ ] Tap action navigates to relevant content
-
-### Permissions
-- [ ] Permissions requested in context, not at launch
-- [ ] Rationale shown before permission request
-- [ ] Graceful degradation on denial
-- [ ] Photo Picker used instead of media permission
-
-### System Integration
-- [ ] Widgets use Glance API with dynamic color
-- [ ] App shortcuts provided for common actions
-- [ ] Deep links handled for public content
+7. **Test across form factors**: Verify on phone, tablet, and foldable. Test at 200% font scale. Test with 3+ wallpapers for dynamic color harmony.
+   - **Checkpoint**: No clipped text, no content across fold, consistent theming across wallpapers.
 
 ---
 
-## Anti-Patterns
-
-| Anti-Pattern | Why It Is Wrong | Correct Approach |
-|-------------|----------------|------------------|
-| Hardcoded color hex values | Breaks dynamic color and dark theme | Use `MaterialTheme.colorScheme` roles |
-| Using `dp` for text size | Ignores user font scaling | Use `sp` units |
-| Custom bottom navigation bar | Inconsistent with platform | Use Material `NavigationBar` |
-| Navigation bar without labels | Violates Material guidelines | Always show labels |
-| Dialog for non-critical info | Interrupts user unnecessarily | Use Snackbar or Bottom Sheet |
-| FAB for secondary actions | Dilutes primary action prominence | One FAB for the primary action only |
-| `onBackPressed()` override | Deprecated; breaks predictive back | Use `OnBackInvokedCallback` |
-| Touch targets < 48dp | Accessibility violation | Ensure minimum 48x48dp |
-| Permission request at launch | Users deny without context | Request in context with rationale |
-| Pure black (#000000) dark theme | Eye strain; not Material 3 | Use Material surface color roles |
-| Icon-only navigation bar | Users cannot identify destinations | Always include text labels |
-| Full-width content on tablets | Wastes space; poor readability | Max width or list-detail layout |
-| `READ_EXTERNAL_STORAGE` for photos | Unnecessary since Android 13 | Use Photo Picker API |
-| Blocking UI on permission denial | Punishes the user | Graceful degradation |
-| Manual color palette selection | Inconsistent tonal relationships | Use Material Theme Builder |
+See [REFERENCE.md](REFERENCE.md) for evaluation checklist, anti-patterns, and reference tables.

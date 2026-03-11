@@ -1,6 +1,6 @@
 ---
 name: tvos-design-guidelines
-description: Apple Human Interface Guidelines for Apple TV. Use when building tvOS apps with focus-based navigation, Siri Remote input, or living room viewing experiences. Triggers on tasks involving Apple TV, tvOS, 10-foot UI, or media playback.
+description: Apple Human Interface Guidelines for Apple TV. Designs focus-based navigation patterns, implements Siri Remote gestures, creates TV-optimized layouts, and configures Top Shelf extensions. Use when building tvOS apps with focus-based navigation, Siri Remote input, or living room viewing experiences. Triggers on tasks involving Apple TV, tvOS, 10-foot UI, or media playback.
 license: MIT
 metadata:
   author: platform-design-skills
@@ -9,13 +9,13 @@ metadata:
 
 # tvOS Design Guidelines
 
-Apple TV is a living room device driven entirely by focus-based navigation and the Siri Remote. There is no pointer, no touch screen, and no mouse. Every design decision must account for the 10-foot viewing distance, the simplicity of the remote, and the lean-back nature of TV consumption.
+All design targets 10-foot viewing distance, swipe-based Siri Remote input, and lean-back consumption.
 
 ---
 
 ## 1. Focus-Based Navigation (CRITICAL)
 
-The focus system is the foundation of all tvOS interaction. There is no cursor -- users move focus between elements using the Siri Remote touch surface.
+Users move focus between elements using the Siri Remote touch surface. No cursor exists.
 
 ### Rules
 
@@ -28,8 +28,36 @@ When a user swipes right, focus must move to the element visually to the right. 
 **FOCUS-03: Use focus guides (UIFocusGuide) to bridge gaps in layouts.**
 When visual gaps exist between focusable elements, add invisible focus guides so the user does not get stuck. Every swipe should move focus somewhere meaningful.
 
+```swift
+let focusGuide = UIFocusGuide()
+view.addLayoutGuide(focusGuide)
+NSLayoutConstraint.activate([
+    focusGuide.leadingAnchor.constraint(equalTo: leftButton.trailingAnchor),
+    focusGuide.trailingAnchor.constraint(equalTo: rightButton.leadingAnchor),
+    focusGuide.topAnchor.constraint(equalTo: leftButton.topAnchor),
+    focusGuide.heightAnchor.constraint(equalTo: leftButton.heightAnchor)
+])
+focusGuide.preferredFocusEnvironments = [rightButton]
+```
+
 **FOCUS-04: Apply the parallax effect to focused items.**
-Focused cards, posters, and icons should exhibit a subtle parallax tilt responding to touch surface movement. Use layered images (LSR format) with foreground, midground, and background layers. This communicates depth and confirms focus.
+Focused cards, posters, and icons should exhibit a subtle parallax tilt responding to touch surface movement. Use layered images (LSR format) with foreground, midground, and background layers.
+
+```swift
+// SwiftUI card with focus-driven scale and shadow
+struct CardView: View {
+    @Environment(\.isFocused) var isFocused
+    var body: some View {
+        Image("poster")
+            .resizable()
+            .frame(width: 300, height: 450)
+            .scaleEffect(isFocused ? 1.1 : 1.0)
+            .shadow(radius: isFocused ? 20 : 0)
+            .animation(.easeInOut(duration: 0.2), value: isFocused)
+            .focusable()
+    }
+}
+```
 
 **FOCUS-05: Make focus targets large enough for comfortable navigation.**
 Minimum recommended touch target is 250x150pt for cards. Smaller elements are difficult to land on with swipe-based navigation. Group small actions under a focused parent when possible.
@@ -43,21 +71,13 @@ If a user navigates away and returns, focus should restore to the last focused i
 **FOCUS-08: Never trap focus.**
 Users must always be able to move focus away from any element. If focus cannot leave a region, the app feels broken.
 
-### Parallax Layer Reference
-
-| Layer | Purpose | Movement Amount |
-|-------|---------|-----------------|
-| Background | Static backdrop, blurred imagery | Minimal (1-2pt) |
-| Midground | Primary artwork or content image | Moderate (3-5pt) |
-| Foreground | Title text, logos, badges | Maximum (5-8pt) |
-
-Use Xcode's LSR (Layered Static Image) format or dynamically compose layers at runtime via `TVMonogramView` or custom focus effects.
+See [REFERENCE.md](REFERENCE.md) for parallax layers, text sizes, and anti-patterns.
 
 ---
 
 ## 2. Siri Remote (CRITICAL)
 
-The Siri Remote is the primary (and often only) input device. It has a touch surface, Menu button, Play/Pause button, Siri/microphone button, volume buttons, and a power button.
+Primary input: touch surface (swipe + click), Menu, Play/Pause, Siri/mic buttons.
 
 ### Rules
 
@@ -86,7 +106,7 @@ When the user clicks the touch surface to select an item, provide immediate visu
 
 ## 3. 10-Foot UI (HIGH)
 
-Apple TV content is viewed from across a room, typically 8-12 feet (2.5-3.5 meters) from the screen. All visual design must account for this distance.
+Design for 8-12 foot viewing distance. Dark theme default.
 
 ### Rules
 
@@ -111,16 +131,6 @@ Keep all critical content within the safe area (60pt inset from edges). Content 
 **DISTANCE-07: Avoid thin fonts and hairline borders.**
 Thin strokes disappear on TV displays, especially with motion blur and compression artifacts. Use medium or semibold weights minimum.
 
-### Text Size Reference
-
-| Element | Minimum Size | Recommended Size |
-|---------|-------------|-----------------|
-| Body text | 29pt | 31-35pt |
-| Secondary labels | 25pt | 29pt |
-| Titles | 48pt | 52-76pt |
-| Large headers | 64pt | 76-96pt |
-| Buttons | 29pt | 35-38pt |
-
 ---
 
 ## 4. Top Shelf (HIGH)
@@ -131,6 +141,22 @@ The Top Shelf is a prominent content area displayed when the user focuses on you
 
 **SHELF-01: Provide a Top Shelf extension.**
 Apps should include a TVTopShelfProvider that returns dynamic content. A static Top Shelf is a missed opportunity for engagement.
+
+```swift
+class TopShelfProvider: TVTopShelfContentProvider {
+    override func loadTopShelfContent() async -> TVTopShelfContent? {
+        let items = fetchFeaturedItems().map { item in
+            let shelfItem = TVTopShelfSectionedItem(identifier: item.id)
+            shelfItem.title = item.title
+            shelfItem.setImageURL(item.imageURL, for: .screenScale1x)
+            return shelfItem
+        }
+        let section = TVTopShelfItemCollection(items: items)
+        section.title = "Featured"
+        return TVTopShelfSectionedContent(sections: [section])
+    }
+}
+```
 
 **SHELF-02: Use the correct layout style for your content.**
 - **Inset banner**: 1 large focused item with smaller items on either side. Best for featured or editorial content.
@@ -157,6 +183,17 @@ Apple TV is primarily a media consumption device. Playback interfaces must follo
 
 **MEDIA-01: Use standard transport controls.**
 Provide play, pause, skip forward (10s), skip back (10s), and a scrubber timeline. Use `AVPlayerViewController` to get these for free with consistent behavior.
+
+```swift
+import AVKit
+
+let player = AVPlayer(url: videoURL)
+let playerVC = AVPlayerViewController()
+playerVC.player = player
+present(playerVC, animated: true) {
+    player.play()
+}
+```
 
 **MEDIA-02: Show an info overlay on swipe-down during playback.**
 Swiping down during playback should reveal an info panel showing title, description, and metadata. Swiping down again or pressing Menu dismisses it.
@@ -251,21 +288,3 @@ Use this checklist when reviewing a tvOS app design or implementation.
 - [ ] 3-7 tabs are used
 - [ ] Selected tab persists across launches
 
----
-
-## Anti-Patterns for TV
-
-**Do not** bring mobile patterns directly to tvOS. The following are common mistakes:
-
-| Anti-Pattern | Why It Fails | Correct Approach |
-|-------------|-------------|-----------------|
-| Bottom tab bar | iOS convention; feels wrong on TV | Use top tab bar |
-| Small touch targets | Cannot precisely target with swipe navigation | Minimum 250x150pt cards |
-| Dense text screens | Unreadable at 10-foot distance | Headlines + short descriptions only |
-| Hamburger menus | No tap-to-reveal interaction on TV | Use tab bar or focus-driven menus |
-| Pull-to-refresh | No pull gesture on Siri Remote | Auto-refresh or explicit refresh button |
-| Toast notifications | Easy to miss on a large TV screen | Use modal alerts or persistent banners |
-| Scroll indicators | Thin scrollbars invisible at distance | Use content peek (partially visible next item) |
-| Pinch-to-zoom | Multi-finger gestures impossible on Siri Remote | Provide explicit zoom controls |
-| Long forms | Keyboard input is painful on tvOS | Pre-fill, use profiles, or offload to iPhone |
-| Thin/light typography | Disappears on TV displays | Medium weight minimum |

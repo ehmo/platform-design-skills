@@ -1,6 +1,6 @@
 ---
 name: visionos-design-guidelines
-description: Apple Human Interface Guidelines for Apple Vision Pro. Use when building spatial computing apps, implementing eye/hand input, or designing immersive experiences. Triggers on tasks involving visionOS, RealityKit, spatial UI, or mixed reality.
+description: Apply Apple HIG to visionOS apps — design spatial windows with glass materials, implement gaze-based look-and-pinch navigation, create immersive volumes with RealityView, configure hand gesture interactions, and build ornament-based toolbars/tab bars. Triggers on tasks involving visionOS, RealityKit, spatial UI, or mixed reality.
 license: MIT
 metadata:
   author: platform-design-skills
@@ -9,27 +9,23 @@ metadata:
 
 # visionOS Design Guidelines
 
-Comprehensive design rules for Apple Vision Pro based on Apple Human Interface Guidelines. These rules ensure spatial computing apps are comfortable, intuitive, and consistent with platform conventions.
-
 ---
 
 ## 1. Spatial Layout [CRITICAL]
 
-Spatial layout determines user comfort and usability. Poor placement causes neck strain, disorientation, or inaccessible content.
-
 ### Rules
 
 **SL-01: Center content in the field of view.**
-Place primary windows and content directly ahead of the user at eye level. The comfortable vertical viewing range is approximately 30 degrees above and below eye level. Content outside this range requires head movement and causes fatigue.
+Place primary windows directly ahead at eye level. Comfortable vertical range: 30 degrees above/below eye level.
 
 **SL-02: Maintain comfortable distance.**
-Position content at a natural distance from the user, typically 1-2 meters for windows. Content too close feels invasive; content too far is hard to read. The system default placement is approximately 1.5 meters. Respect this unless there is a strong reason to override.
+Position windows at 1-2 meters from the user. System default: ~1.5 meters. Respect this unless there is a strong reason to override.
 
 **SL-03: Never place content behind the user.**
 Users cannot see content behind them without physically turning around. All UI elements must appear within the forward-facing hemisphere. If content must surround the user, provide clear navigation to rotate or reposition.
 
 **SL-04: Respect personal space.**
-Do not place 3D objects or windows closer than arm's length (~0.5 meters) from the user's head. Objects inside personal space cause discomfort and a feeling of intrusion. Direct-touch interactions are the exception, where objects are intentionally within reach.
+Do not place 3D objects or windows closer than arm's length (~0.5 meters) from the user's head. Exception: direct-touch interactions where objects are intentionally within reach.
 
 **SL-05: Use Z-depth to establish hierarchy.**
 Elements closer to the user appear more prominent and interactive. Push secondary or background content further back. Use subtle depth offsets (a few centimeters) between layered elements rather than dramatic separation that fragments the interface.
@@ -44,64 +40,68 @@ Windows and objects should stay fixed in world space as the user moves their hea
 
 ## 2. Eye & Hand Input [CRITICAL]
 
-visionOS uses indirect interaction as its primary input model: users look at a target and pinch to select. This is fundamentally different from touch or mouse input.
-
 ### Rules
 
 **EH-01: Design for look-and-pinch as the primary interaction.**
-The standard interaction is: user looks at an element (eyes provide targeting), then pinches thumb and index finger together (hand provides confirmation). Design all primary interactions around this model. Users do not need to raise their hands or point at objects.
+User looks at an element (eyes target), then pinches thumb and index finger (hand confirms). Design all primary interactions around this model. Users do not need to raise hands or point at objects.
 
 **EH-02: Minimum interactive target size is 60pt.**
-Eye tracking has inherent imprecision. All tappable elements must be at least 60 points in diameter to be reliably targeted by gaze. This is larger than iOS touch targets (44pt). Smaller targets cause frustration and mis-selections.
+All tappable elements must be at least 60 points in diameter. This is larger than iOS touch targets (44pt).
 
 **EH-03: Provide hover feedback on gaze.**
-When the user's eyes rest on an interactive element, show a visible highlight or subtle expansion to confirm the element is targeted. This feedback is essential because there is no cursor. Without hover states, users cannot tell what they are about to select.
+When the user's eyes rest on an interactive element, show a visible highlight or subtle expansion to confirm targeting.
 
 **EH-04: Support direct touch for close-range objects.**
 When 3D objects or UI elements are within arm's reach, allow direct touch interaction (physically reaching out and tapping). Direct touch should feel natural: provide visual and audio feedback on contact. Use direct touch for immersive experiences where it enhances presence.
 
 **EH-05: Never track gaze for content purposes.**
-Eye position is used exclusively for system interaction targeting. Do not use gaze direction to infer user interest, change content based on what the user looks at, or record where the user looks. This is a core privacy principle of the platform. The system does not expose raw eye-tracking data to apps.
+Do not use gaze direction to infer user interest, change content based on what the user looks at, or record where the user looks. The system does not expose raw eye-tracking data to apps.
 
 **EH-06: Keep custom gestures simple and intuitive.**
 If you define custom hand gestures beyond the system pinch, ensure they are easy to discover, physically comfortable to perform, and do not conflict with system gestures. Avoid gestures that require sustained hand raising, complex finger patterns, or two-handed coordination for basic actions.
 
 **EH-07: Do not require precise hand positioning.**
-Users interact with hands resting naturally in their lap or at their sides. Do not require users to hold their hands in specific positions, reach to specific locations, or maintain sustained gestures. The indirect interaction model exists specifically to reduce physical effort.
+Do not require users to hold hands in specific positions, reach to specific locations, or maintain sustained gestures. Design for hands resting naturally at sides or in lap.
 
-### Spatial Interaction Quick Reference
+### Hover Effect Example
 
-| Interaction | Method | Use Case |
-|---|---|---|
-| Tap / Select | Look + pinch | Buttons, links, list items |
-| Scroll | Look + pinch-and-drag | Lists, long content |
-| Zoom | Two-hand pinch | Maps, images, 3D models |
-| Rotate | Two-hand twist | 3D object manipulation |
-| Drag | Look + pinch-hold-and-move | Repositioning windows |
-| Direct touch | Reach and tap | Close-range 3D objects |
-| Long press | Look + pinch-and-hold | Context menus |
+```swift
+// Add hover effect for gaze targeting feedback
+Button("Action") { /* handle tap */ }
+    .hoverEffect(.highlight)
+    .frame(minWidth: 60, minHeight: 60) // Minimum 60pt target
 
-### Target Size Reference
+// Custom hover effect on any view
+RoundedRectangle(cornerRadius: 12)
+    .frame(width: 200, height: 60)
+    .hoverEffect(.automatic)
+    .contentShape(.hoverEffect, RoundedRectangle(cornerRadius: 12))
+```
 
-| Element | Minimum Size | Recommended Size |
-|---|---|---|
-| Buttons | 60pt | 60-80pt |
-| List rows | 60pt height | 80pt height |
-| Tab bar items | 60pt | 72pt |
-| Close/dismiss | 60pt | 60pt |
-| Toolbar items | 60pt | 60pt |
-| 3D interactive objects | 60pt equivalent | Scale to context |
+See [REFERENCE.md](REFERENCE.md) for interaction tables, target sizes, and anti-patterns.
 
 ---
 
 ## 3. Windows [HIGH]
 
-Windows in visionOS float in the user's physical space. They use a glass material that blends with the real-world environment.
-
 ### Rules
 
 **WN-01: Use glass material as the default window background.**
-The system glass material dynamically adapts to the user's real-world surroundings, providing a consistent and readable backdrop. Do not replace glass with opaque solid colors unless you have a specific design reason (such as media playback). Glass grounds the interface in the shared space.
+Do not replace glass with opaque solid colors unless you have a specific design reason (such as media playback).
+
+```swift
+// Glass material window — system default, no extra config needed
+struct ContentView: View {
+    var body: some View {
+        VStack {
+            Text("Hello, visionOS")
+                .font(.title)
+        }
+        .padding()
+        .glassBackgroundEffect()  // Explicit glass background
+    }
+}
+```
 
 **WN-02: Maintain standard window controls.**
 Windows include a system-provided window bar at the bottom for repositioning and a close button. Do not hide, override, or replace these controls. Users rely on consistent window management across all apps.
@@ -110,24 +110,80 @@ Windows include a system-provided window bar at the bottom for repositioning and
 If your content benefits from different sizes (documents, browsers, media), support window resizing. Use the system resize handle. Define reasonable minimum and maximum sizes. Adapt layout responsively as the window resizes.
 
 **WN-04: Place the tab bar as a leading ornament (left side).**
-On visionOS, the tab bar (app navigation) is positioned as a vertical ornament on the leading (left) edge of the window, not at the bottom as on iOS. This keeps navigation accessible without consuming window content area. Use SF Symbols for tab icons.
+Position the tab bar as a vertical ornament on the leading (left) edge, not at the bottom as on iOS. Use SF Symbols for tab icons.
+
+```swift
+// Tab bar as leading ornament
+TabView {
+    HomeView()
+        .tabItem { Label("Home", systemImage: "house") }
+    SettingsView()
+        .tabItem { Label("Settings", systemImage: "gear") }
+}
+.tabViewStyle(.sidebarAdaptable)  // Leading ornament on visionOS
+```
 
 **WN-05: Place the toolbar as a bottom ornament.**
-Primary action controls appear in a toolbar ornament anchored to the bottom edge of the window. This positions controls near the user's natural hand resting position and keeps the content area unobstructed.
+Primary action controls appear in a toolbar ornament anchored to the bottom edge of the window.
+
+```swift
+// Toolbar as bottom ornament
+ContentView()
+    .ornament(attachmentAnchor: .scene(.bottom)) {
+        HStack(spacing: 20) {
+            Button(action: { /* play */ }) {
+                Label("Play", systemImage: "play.fill")
+            }
+            Button(action: { /* share */ }) {
+                Label("Share", systemImage: "square.and.arrow.up")
+            }
+        }
+        .padding()
+        .glassBackgroundEffect()
+    }
+```
 
 **WN-06: Windows float in space with no fixed screen.**
-There is no fixed display. Windows exist in the user's physical environment. Design content that looks correct when viewed from slight angles and at varying distances. Avoid designs that assume a fixed viewport size or pixel-perfect positioning.
+Design content that looks correct from slight angles and at varying distances. Do not assume a fixed viewport size or pixel-perfect positioning.
 
 ---
 
 ## 4. Volumes [HIGH]
 
-Volumes display 3D content within a bounded box. They are ideal for 3D models, visualizations, and objects users can examine from multiple angles.
-
 ### Rules
 
 **VL-01: Contain 3D content within the volume bounds.**
-All content must fit within the defined volume dimensions. Content that escapes the bounds will be clipped. Size the volume appropriately for the content it holds and respect the system-enforced limits.
+All content must fit within the defined volume dimensions. Content that escapes the bounds will be clipped.
+
+```swift
+// Volume setup with RealityView
+struct VolumeContent: View {
+    var body: some View {
+        RealityView { content in
+            if let model = try? await ModelEntity(named: "toy_robot") {
+                model.scale = SIMD3(repeating: 0.5)
+                content.add(model)
+            }
+        }
+    }
+}
+
+// In App.swift — declare the volume window group
+@main
+struct MyApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+        }
+
+        WindowGroup(id: "model-viewer") {
+            VolumeContent()
+        }
+        .windowStyle(.volumetric)
+        .defaultSize(width: 0.5, height: 0.5, depth: 0.5, in: .meters)
+    }
+}
+```
 
 **VL-02: Design for viewing from all angles.**
 Users can physically walk around a volume or reposition it. Ensure 3D content looks correct from all viewing angles, not just the front. Avoid flat facades that look like cardboard cutouts from the side.
@@ -145,15 +201,42 @@ Volumes are not windows with 3D objects inside them. Use volumes when the 3D con
 
 ## 5. Immersive Spaces [HIGH]
 
-visionOS supports a spectrum of immersion from shared space (apps alongside reality) to full immersion (complete virtual environment).
-
 ### Rules
 
 **IS-01: Start in the Shared Space.**
-Apps launch into the Shared Space by default, where multiple app windows coexist alongside the real world. Only transition to more immersive experiences when the user explicitly requests it. Do not force immersion on launch.
+Apps launch into the Shared Space by default. Only transition to more immersive experiences when the user explicitly requests it. Do not force immersion on launch.
 
 **IS-02: Use progressive immersion.**
-Move through immersion levels gradually: Shared Space (windows alongside reality) to Full Space (your app takes over but passthrough remains) to Full Immersion (completely virtual environment). Each step should feel intentional and user-initiated.
+Move through levels gradually: Shared Space → Full Space (passthrough remains) → Full Immersion (completely virtual). Each step should be user-initiated.
+
+```swift
+// Immersive space transition
+@main
+struct MyApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()  // Starts in Shared Space
+        }
+
+        ImmersiveSpace(id: "immersive-view") {
+            ImmersiveContent()
+        }
+        .immersionStyle(selection: .constant(.mixed), in: .mixed, .full)
+    }
+}
+
+// Trigger transition from a button
+struct ContentView: View {
+    @Environment(\.openImmersiveSpace) var openImmersiveSpace
+    @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
+
+    var body: some View {
+        Button("Enter Immersive") {
+            Task { await openImmersiveSpace(id: "immersive-view") }
+        }
+    }
+}
+```
 
 **IS-03: Always provide an exit path.**
 Users must always be able to return to a less immersive state or exit the experience entirely. The Digital Crown is the system-level escape. Within your app, provide clear controls to reduce immersion. Never trap users in an immersive experience.
@@ -162,7 +245,7 @@ Users must always be able to return to a less immersive state or exit the experi
 In experiences where users might move physically, maintain passthrough of the real environment or provide a guardian boundary. Users need awareness of physical obstacles, other people, and room boundaries. Full immersion is only appropriate when the user is stationary.
 
 **IS-05: Dim passthrough gradually.**
-When transitioning to increased immersion, dim the passthrough environment gradually rather than cutting to black. Abrupt visual changes are disorienting. Use smooth, animated transitions between immersion levels.
+Dim the passthrough environment gradually rather than cutting to black. Use smooth, animated transitions between immersion levels.
 
 **IS-06: Do not assume room layout or size.**
 Users are in diverse physical spaces. Do not design experiences that require a minimum room size, assume a clear floor area, or expect specific furniture placement. Gracefully adapt to whatever physical space is available.
@@ -173,8 +256,6 @@ In immersive spaces, use spatial audio to help users orient. Sounds should come 
 ---
 
 ## 6. Materials & Depth [MEDIUM]
-
-visionOS uses a physically-based material system that responds to real-world lighting. Proper use of materials creates depth hierarchy and ensures readability.
 
 ### Rules
 
@@ -200,8 +281,6 @@ Opaque surfaces in the shared space create visual holes in the environment. Use 
 
 ## 7. Ornaments [MEDIUM]
 
-Ornaments are UI controls that attach to the edges of windows, floating partially outside the window bounds. They provide toolbars, navigation, and contextual actions.
-
 ### Rules
 
 **OR-01: Attach controls as ornaments rather than inline.**
@@ -221,6 +300,18 @@ Not all ornaments need to be visible at all times. Toolbars can appear on hover 
 
 **OR-06: Use standard ornament styling.**
 Ornaments use the same glass material system as windows but at a slightly different depth. Use system-provided ornament containers rather than custom floating UI. This ensures visual consistency with other visionOS apps.
+
+---
+
+## Implementation Workflow
+
+1. **Set up window with glass material** — Create your `WindowGroup` with `.glassBackgroundEffect()`. Validate: window renders with translucent glass, not opaque.
+2. **Configure navigation as leading ornament** — Use `.tabViewStyle(.sidebarAdaptable)` for the tab bar. Validate: tab bar appears on left edge of window.
+3. **Configure toolbar as bottom ornament** — Attach action controls via `.ornament(attachmentAnchor: .scene(.bottom))`. Validate: toolbar floats below window, not inside content area.
+4. **Add hover effects to all interactive elements** — Apply `.hoverEffect(.highlight)` and ensure minimum 60pt targets. Validate: every button/link highlights on gaze.
+5. **Build volumes for 3D content** — Use `RealityView` inside a `.windowStyle(.volumetric)` scene. Validate: model renders within bounds, visible from all angles.
+6. **Implement immersive space transitions** — Add `ImmersiveSpace` scene, trigger via `openImmersiveSpace`. Validate: transition is smooth, exit via Digital Crown works.
+7. **Run Evaluation Checklist** — Walk through every item below before shipping.
 
 ---
 
@@ -282,25 +373,3 @@ Use this checklist to evaluate a visionOS design or implementation.
 - [ ] Ornaments extend outward, not over content
 - [ ] Standard ornament styling used
 
----
-
-## Anti-Patterns
-
-These are common mistakes in visionOS design. Avoid them.
-
-| Anti-Pattern | Problem | Correct Approach |
-|---|---|---|
-| Head-locked UI | Causes motion sickness, feels claustrophobic | Anchor UI to world space |
-| Tiny tap targets | Eye tracking cannot reliably target < 60pt | Minimum 60pt interactive targets |
-| No hover states | Users cannot tell what is interactive | Always show highlight on gaze |
-| Opaque windows in shared space | Creates visual holes in environment | Use system glass material |
-| Forced full immersion | Disorienting, traps users | Start in shared space, progressive immersion |
-| Content behind user | Invisible, requires full body rotation | Keep content in forward hemisphere |
-| Gaze-driven content | Privacy violation, feels surveilled | Use gaze only for system targeting |
-| Flat 3D volumes | Looks like cardboard cutout from side | Design for all viewing angles |
-| Inline toolbars | Wastes content space, breaks conventions | Use ornaments for controls |
-| Small room assumptions | Fails in tight spaces | Adapt to available physical space |
-| Abrupt immersion changes | Disorienting, breaks presence | Gradual transitions with animation |
-| Sustained arm raising | Physical fatigue in minutes | Design for hands resting at sides |
-| Custom window chrome | Breaks platform consistency | Use system window controls |
-| Z-fighting layers | Visual flicker, unclear hierarchy | Use intentional depth offsets |

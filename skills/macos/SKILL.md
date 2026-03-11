@@ -9,13 +9,11 @@ metadata:
 
 # macOS Human Interface Guidelines
 
-Mac apps serve power users who expect deep keyboard control, persistent menu bars, resizable multi-window layouts, and tight system integration. These guidelines codify Apple's HIG into actionable rules with SwiftUI and AppKit examples.
+Actionable rules from Apple's HIG with SwiftUI and AppKit examples.
 
 ---
 
 ## 1. Menu Bar (CRITICAL)
-
-Every Mac app must have a menu bar. It is the primary discovery mechanism for commands. Users who cannot find a feature will look in the menu bar before anywhere else.
 
 ### Rule 1.1 — Provide Standard Menus
 
@@ -144,8 +142,6 @@ struct MyApp: App {
 
 ## 2. Windows (CRITICAL)
 
-Mac users expect full control over window size, position, and lifecycle. An app that fights window management feels fundamentally broken on the Mac.
-
 ### Rule 2.1 — Resizable with Sensible Minimums
 
 All main windows must be freely resizable. Set a minimum size that keeps the UI usable. Never set a maximum size unless the content truly cannot scale (rare).
@@ -243,8 +239,6 @@ window.styleMask.insert(.fullSizeContentView)
 
 ## 3. Toolbars (HIGH)
 
-Toolbars are the secondary command surface after the menu bar. They provide quick access to frequent actions and should be customizable.
-
 ### Rule 3.1 — Unified Title Bar and Toolbar
 
 Use the unified title bar + toolbar style for a modern appearance. The toolbar sits in the title bar area, saving vertical space.
@@ -334,8 +328,6 @@ Toolbar items should have both an icon (SF Symbol) and a text label. In compact 
 
 ## 4. Sidebars (HIGH)
 
-Sidebars are the primary navigation surface for Mac apps. They appear on the leading edge and provide persistent access to top-level sections and content libraries.
-
 ### Rule 4.1 — Leading Edge, Collapsible
 
 Place the sidebar on the left (leading) edge. Make it collapsible via the toolbar button or Cmd+Ctrl+S. Persist collapsed state.
@@ -422,8 +414,6 @@ Label("Inbox", systemImage: "tray")
 ---
 
 ## 5. Keyboard (CRITICAL)
-
-Mac users rely on keyboard shortcuts more than any other platform. An app without comprehensive keyboard support is a broken Mac app.
 
 ### Rule 5.1 — Cmd Shortcuts for Everything
 
@@ -516,8 +506,6 @@ In lists and grids, Up/Down arrow keys move selection. Left/Right collapse/expan
 
 ## 6. Pointer and Mouse (HIGH)
 
-Mac is a pointer-driven platform. Every interactive element must respond to hover, click, right-click, and drag.
-
 ### Rule 6.1 — Hover States
 
 All interactive elements must have a visible hover state. Buttons highlight, rows show a selection indicator, links change cursor. Use `.onHover` in SwiftUI.
@@ -589,7 +577,7 @@ override func resetCursorRects() {
 
 ### Rule 6.6 — Multi-Selection
 
-Support Cmd+Click for non-contiguous selection and Shift+Click for range selection in lists, tables, and grids. This is a deeply ingrained Mac interaction pattern.
+Support Cmd+Click for non-contiguous selection and Shift+Click for range selection in lists, tables, and grids.
 
 ```swift
 // SwiftUI — Tables with multi-selection
@@ -603,8 +591,6 @@ Table(items, selection: $selectedItems) {
 ---
 
 ## 7. Notifications and Alerts (MEDIUM)
-
-Mac users are protective of their attention. Only interrupt when truly necessary.
 
 ### Rule 7.1 — Use Notification Center Appropriately
 
@@ -660,8 +646,6 @@ NSApp.dockTile.badgeLabel = unreadCount > 0 ? "\(unreadCount)" : nil
 
 ## 8. System Integration (MEDIUM)
 
-Mac apps exist in a rich ecosystem. Deep integration makes an app feel native.
-
 ### Rule 8.1 — Dock Icon and Menus
 
 Provide a high-quality 1024x1024 app icon. Support Dock right-click menus for quick actions. Show recent documents in the Dock menu.
@@ -713,7 +697,7 @@ ShareLink(item: document.url) {
 
 ### Rule 8.5 — Services Menu
 
-Register for the Services menu to receive text, URLs, or files from other apps. This is a uniquely Mac integration point that power users rely on.
+Register for the Services menu to receive text, URLs, or files from other apps.
 
 ### Rule 8.6 — Shortcuts and AppleScript
 
@@ -739,8 +723,6 @@ struct CreateDocumentIntent: AppIntent {
 
 ## 9. Visual Design (HIGH)
 
-Mac apps should look and feel like they belong on the platform. Use system-provided materials, fonts, and colors.
-
 ### Rule 9.1 — Use System Fonts
 
 Use SF Pro (the system font) at standard dynamic type sizes. Use SF Mono for code. Never hardcode font sizes; use semantic styles.
@@ -756,7 +738,7 @@ Text("let x = 42").font(.system(.body, design: .monospaced))
 
 ### Rule 9.2 — Vibrancy and Materials
 
-Use system materials for sidebar and toolbar backgrounds. Vibrancy lets the desktop or underlying content show through, anchoring the app to the Mac visual language.
+Use system materials for sidebar and toolbar backgrounds. Vibrancy lets the desktop or underlying content show through.
 
 ```swift
 // SwiftUI
@@ -829,137 +811,4 @@ Use 20pt standard margins, 8pt spacing between related controls, 20pt spacing be
 
 ---
 
-## Keyboard Shortcut Quick Reference
-
-### Navigation
-| Shortcut | Action |
-|----------|--------|
-| Cmd+N | New window/document |
-| Cmd+O | Open |
-| Cmd+W | Close window/tab |
-| Cmd+Q | Quit app |
-| Cmd+, | Settings/Preferences |
-| Cmd+Tab | Switch apps |
-| Cmd+` | Switch windows within app |
-| Cmd+T | New tab |
-
-### Editing
-| Shortcut | Action |
-|----------|--------|
-| Cmd+Z | Undo |
-| Cmd+Shift+Z | Redo |
-| Cmd+X / C / V | Cut / Copy / Paste |
-| Cmd+A | Select All |
-| Cmd+D | Duplicate |
-| Cmd+F | Find |
-| Cmd+G | Find Next |
-| Cmd+Shift+G | Find Previous |
-| Cmd+E | Use Selection for Find |
-
-### View
-| Shortcut | Action |
-|----------|--------|
-| Cmd+Ctrl+F | Toggle fullscreen |
-| Cmd+Ctrl+S | Toggle sidebar |
-| Cmd+0 | Show/hide toolbar |
-| Cmd++ / Cmd+- | Zoom in/out |
-| Cmd+0 | Actual size |
-
----
-
-## Evaluation Checklist
-
-Before shipping a Mac app, verify:
-
-### Menu Bar
-- [ ] App has a complete menu bar with standard menus
-- [ ] All actions have keyboard shortcuts
-- [ ] Menu items dynamically update (enable/disable, title changes)
-- [ ] Context menus on all interactive elements
-- [ ] App menu has About, Settings, Hide, Quit
-
-### Windows
-- [ ] Windows are freely resizable with sensible minimums
-- [ ] Fullscreen and Split View work
-- [ ] Multiple windows supported (if appropriate)
-- [ ] Window position and size persist across launches
-- [ ] Traffic light buttons visible and functional
-- [ ] Document title and edited state shown (if document-based)
-
-### Toolbars
-- [ ] Toolbar present with common actions
-- [ ] Toolbar is user-customizable
-- [ ] Search field available in toolbar
-
-### Sidebars
-- [ ] Sidebar for navigation (if app has multiple sections)
-- [ ] Sidebar is collapsible
-- [ ] Source list style with vibrancy
-
-### Keyboard
-- [ ] Full keyboard navigation (Tab, arrows, Enter, Esc)
-- [ ] Cmd+Z undo for all destructive actions
-- [ ] Space for Quick Look previews
-- [ ] Delete key removes selected items
-- [ ] No keyboard traps (user can always Tab out)
-
-### Pointer
-- [ ] Hover states on interactive elements
-- [ ] Right-click context menus everywhere
-- [ ] Drag and drop for content manipulation
-- [ ] Cmd+Click for multi-selection
-- [ ] Appropriate cursor changes
-
-### Notifications
-- [ ] Notifications only for important events
-- [ ] Alerts have suppression option for recurring ones
-- [ ] No modal alerts for routine operations
-
-### System Integration
-- [ ] High-quality Dock icon
-- [ ] Content indexed in Spotlight (if applicable)
-- [ ] Share menu works
-- [ ] App Intents for Shortcuts
-
-### Visual Design
-- [ ] System fonts at semantic sizes
-- [ ] Dark Mode fully supported
-- [ ] System accent color respected
-- [ ] Translucency respects accessibility setting
-- [ ] Consistent spacing on 8pt grid
-
----
-
-## Anti-Patterns
-
-**Do not do these things in a Mac app:**
-
-1. **No menu bar** — Every Mac app needs a menu bar. Period. A Mac app without menus is like a car without a steering wheel.
-
-2. **Hamburger menus** — Never use a hamburger menu on Mac. The menu bar exists for this purpose. Hamburger menus signal a lazy iOS port.
-
-3. **Tab bars at the bottom** — Mac apps use sidebars and toolbars, not iOS-style tab bars. If you need tabs, use actual document tabs in the tab bar (like Safari or Finder).
-
-4. **Large touch-sized targets** — Mac controls should be compact (22-28pt height). Users have precise pointer input. Giant buttons waste space and look out of place.
-
-5. **Floating action buttons** — FABs are a Material Design pattern. On Mac, place primary actions in the toolbar, menu bar, or as inline buttons.
-
-6. **Sheet for every action** — Don't use modal sheets for simple operations. Use popovers, inline editing, or direct manipulation. Sheets should be reserved for multi-step workflows or important decisions.
-
-7. **Custom window chrome** — Don't replace the standard title bar, traffic lights, or window controls with custom implementations. Users expect these to work consistently across all apps.
-
-8. **Ignoring keyboard** — If a power user must reach for the mouse to perform common actions, your keyboard support is insufficient.
-
-9. **Single-window only** — Unless your app is genuinely single-purpose (calculator, timer), support multiple windows. Users expect to Cmd+N for new windows.
-
-10. **Fixed window size** — Non-resizable windows feel broken on Mac. Users have displays ranging from 13" laptops to 32" externals and expect to use that space.
-
-11. **No Cmd+Z undo** — Every destructive or modifying action must be undoable. Users build muscle memory around Cmd+Z as their safety net.
-
-12. **Notification spam** — Mac apps that send excessive notifications get their permissions revoked. Only notify for events that genuinely need attention.
-
-13. **Ignoring Dark Mode** — A Mac app that looks wrong in Dark Mode appears abandoned. Always test both appearances.
-
-14. **Hardcoded colors** — Use semantic system colors, not hardcoded hex values. Your colors should adapt to Light/Dark mode and accessibility settings automatically.
-
-15. **No drag and drop** — Mac is a drag-and-drop platform. If users can see content, they expect to drag it somewhere.
+See [REFERENCE.md](REFERENCE.md) for keyboard shortcuts, evaluation checklist, and anti-patterns.
