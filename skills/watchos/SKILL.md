@@ -1,6 +1,6 @@
 ---
 name: watchos-design-guidelines
-description: Apple Human Interface Guidelines for Apple Watch. Use when building watchOS apps, complications, or workout features. Triggers on tasks involving Watch UI, Digital Crown, glanceable interfaces, or wrist-based interactions.
+description: Apple Human Interface Guidelines for Apple Watch. Reviews watchOS designs for HIG compliance, suggests improvements for glanceable interfaces, implements Digital Crown interactions, and guides complication development. Use when building watchOS apps, designing complications, implementing workout features, or creating glanceable interfaces. Triggers on tasks involving Watch UI, Digital Crown, wrist-based interactions, or HealthKit.
 license: MIT
 metadata:
   author: platform-design-skills
@@ -26,13 +26,7 @@ The defining constraint of watchOS. If a user cannot extract the key information
 - **W-GL-05**: Respect wrist-down time. When the wrist lowers, the app enters an inactive state. Do not assume continuous user attention.
 - **W-GL-06**: Prioritize a single piece of information per screen. If showing multiple data points, establish clear visual hierarchy with size, weight, and color.
 
-### Screen Dimensions Reference
-
-| Device | Screen Width | Screen Height | Corner Radius |
-|--------|-------------|---------------|---------------|
-| 41mm (Series 9/10) | 176px | 215px | 36px |
-| 45mm (Series 9/10) | 198px | 242px | 39px |
-| 49mm (Ultra 2) | 205px | 251px | 40px |
+See [REFERENCE.md](REFERENCE.md) for screen dimensions, complication families, haptic types, and evaluation checklist.
 
 ### Anti-Patterns
 
@@ -53,6 +47,20 @@ The Digital Crown is the primary physical input for scrolling and precise value 
 - **W-DC-02**: For value pickers (time, quantity, sliders), bind the Crown to precise adjustments with haptic detents at each discrete value.
 - **W-DC-03**: Do not override or conflict with system Crown behaviors. The system uses the Crown for volume control during media playback, scrolling in system UI, and Time Travel in complications.
 - **W-DC-04**: Provide visual feedback synchronized with Crown rotation. The UI must respond frame-by-frame to Crown input with no perceptible lag.
+
+```swift
+// Digital Crown binding for precise value selection
+@State private var crownValue = 0.0
+
+var body: some View {
+    Text("\(Int(crownValue))")
+        .font(.largeTitle)
+        .focusable()
+        .digitalCrownRotation($crownValue, from: 0, through: 100, by: 1,
+                              sensitivity: .medium, isContinuous: false,
+                              isHapticFeedbackEnabled: true)
+}
+```
 
 ### Anti-Patterns
 
@@ -105,15 +113,21 @@ Complications are the most visible surface of a Watch app. They live on the watc
 - **W-CP-04**: Complication content must be meaningful without context. A user glancing at their watch face should immediately understand the data (e.g., "72F" not "72").
 - **W-CP-05**: Tapping a complication must launch the app to a relevant context, not just the app's root view.
 
-### Complication Family Reference
-
-| Family | Shape | Typical Content |
-|--------|-------|-----------------|
-| `circularSmall` | Small circle | Single value, icon, or gauge |
-| `graphicCorner` | Curved, top corners | Gauge with label, or text with icon |
-| `graphicCircular` | Larger circle | Gauge, icon with value, or stack |
-| `graphicRectangular` | Wide rectangle | Multi-line text, chart, or detailed view |
-| `graphicExtraLarge` | Full-width circle | Large gauge or prominent single value |
+```swift
+// TimelineProvider for complication updates
+struct MyTimelineProvider: TimelineProvider {
+    func placeholder(in context: Context) -> MyEntry {
+        MyEntry(date: .now, value: "--")
+    }
+    func getSnapshot(in context: Context, completion: @escaping (MyEntry) -> Void) {
+        completion(MyEntry(date: .now, value: fetchCurrent()))
+    }
+    func getTimeline(in context: Context, completion: @escaping (Timeline<MyEntry>) -> Void) {
+        let entries = generateFutureEntries()
+        completion(Timeline(entries: entries, policy: .after(nextUpdateDate)))
+    }
+}
+```
 
 ### Anti-Patterns
 
@@ -135,6 +149,21 @@ When the user's wrist is down, watchOS enters an Always On state showing a dimme
 - **W-AO-03**: Reduce update frequency in Always On. Update the display no more than once per minute. Use `TimelineView` with a `.everyMinute` schedule for time-sensitive content.
 - **W-AO-04**: Use the system-provided dimming behaviors. Do not implement custom dimming. The system automatically reduces brightness and can apply a tint. Ensure your content remains legible at reduced brightness.
 - **W-AO-05**: Test both active and Always On states. The transition between states must feel seamless -- layout should not shift or jump when the wrist raises.
+
+```swift
+// Always On display state handling
+@Environment(\.isLuminanceReduced) var isLuminanceReduced
+
+var body: some View {
+    VStack {
+        Text(mainMetric).font(.largeTitle)
+        if !isLuminanceReduced {
+            Text(secondaryDetail).font(.caption)
+            AnimatedChart(data: chartData)
+        }
+    }
+}
+```
 
 ### Anti-Patterns
 
@@ -177,20 +206,6 @@ Watch notifications must be brief and actionable. The user's wrist is raised for
 - **W-NT-03**: Use appropriate haptic notification types. Match the urgency: `.notification` for standard alerts, `.directionUp` for positive events, `.directionDown` for negative events, `.success`/`.failure`/`.retry` for outcomes.
 - **W-NT-04**: Do not over-notify. Excessive notifications cause users to disable them entirely. Batch non-urgent updates. Reserve Watch notifications for time-sensitive or actionable information.
 
-### Haptic Type Reference
-
-| Haptic | Use Case |
-|--------|----------|
-| `.notification` | General alerts |
-| `.directionUp` | Positive event (goal reached, stock up) |
-| `.directionDown` | Negative event (stock down, weather warning) |
-| `.success` | Action completed successfully |
-| `.failure` | Action failed |
-| `.retry` | Try again prompt |
-| `.start` | Activity beginning |
-| `.stop` | Activity ending |
-| `.click` | Discrete selection (Crown detent, picker) |
-
 ### Anti-Patterns
 
 - Sending every iPhone notification to the Watch
@@ -198,49 +213,3 @@ Watch notifications must be brief and actionable. The user's wrist is raised for
 - Using the same haptic type for all notifications regardless of content
 - Long notification text that requires extensive scrolling
 
----
-
-## Evaluation Checklist
-
-Use this checklist when reviewing a watchOS design or implementation.
-
-### Glanceability
-- [ ] Can the user understand the primary content within 2 seconds?
-- [ ] Is the most important information visible without scrolling?
-- [ ] Is body text at least 16pt with sufficient contrast?
-- [ ] Are interactions completable in under 5 seconds?
-
-### Digital Crown
-- [ ] Does the Crown scroll vertical content?
-- [ ] Do value pickers provide haptic detents?
-- [ ] Are there no conflicts with system Crown behaviors?
-
-### Navigation
-- [ ] Is the primary action reachable within 1 tap from launch?
-- [ ] Is the navigation hierarchy 3 levels or fewer?
-- [ ] Does every pushed view have a back button?
-- [ ] Are top-level sections organized in a TabView (if applicable)?
-
-### Complications
-- [ ] Are multiple complication families supported?
-- [ ] Do complications work in both tinted and full-color modes?
-- [ ] Is complication data updated via TimelineProvider?
-- [ ] Does tapping a complication open relevant context?
-
-### Always On
-- [ ] Is sensitive data hidden in the dimmed state?
-- [ ] Is visual complexity reduced when inactive?
-- [ ] Is the update frequency limited to once per minute or less?
-- [ ] Is the transition between active and dimmed seamless (no layout shift)?
-
-### Workouts
-- [ ] Are live metrics displayed in large, high-contrast text?
-- [ ] Are haptics used for milestones?
-- [ ] Is auto-pause supported for applicable workout types?
-- [ ] Is the workout summary accessible with a single action?
-
-### Notifications
-- [ ] Is the Short Look meaningful (title + icon)?
-- [ ] Does the Long Look include inline actions?
-- [ ] Are haptic types matched to notification urgency?
-- [ ] Is notification frequency appropriate (not excessive)?

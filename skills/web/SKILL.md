@@ -1,6 +1,6 @@
 ---
 name: web-design-guidelines
-description: Web platform design and accessibility guidelines. Use when building web interfaces, auditing accessibility, implementing responsive layouts, or reviewing web UI code. Triggers on tasks involving HTML, CSS, web components, WCAG compliance, responsive design, or web performance.
+description: Web platform design and accessibility guidelines. Implements ARIA labels, audits color contrast, creates responsive breakpoints, optimizes Core Web Vitals, and validates WCAG 2.2 compliance. Use when building web interfaces, auditing accessibility, implementing responsive layouts, or reviewing web UI code. Triggers on tasks involving HTML, CSS, web components, WCAG compliance, responsive design, or web performance.
 license: MIT
 metadata:
   author: platform-design-skills
@@ -10,6 +10,21 @@ metadata:
 # Web Platform Design Guidelines
 
 Framework-agnostic rules for accessible, performant, responsive web interfaces. Based on WCAG 2.2, MDN Web Docs, and modern web platform APIs.
+
+---
+
+## Quick Start
+
+The most critical rules to follow on every web project:
+
+1. **Use semantic HTML** -- `<button>` not `<div onclick>`, `<nav>` not `<div class="nav">`. Semantic elements provide free accessibility and SEO.
+2. **Label every interactive element** -- Visible text for buttons/links; `aria-label` only for icon-only controls (SC 4.1.2).
+3. **Maintain color contrast** -- 4.5:1 for normal text, 3:1 for large text and UI components (SC 1.4.3).
+4. **Never remove focus outlines** -- Replace with `:focus-visible` custom styles; minimum 3:1 contrast (SC 2.4.7).
+5. **Set image dimensions** -- Always include `width` and `height` on `<img>` to prevent layout shift (CLS).
+6. **Mobile-first responsive** -- Base styles for smallest viewport, layer up with `min-width` queries.
+7. **Respect `prefers-reduced-motion`** -- Wrap animations in a media query; reduce or remove motion for users who request it.
+8. **Use CSS logical properties** -- `margin-inline-start` not `margin-left` to support RTL layouts automatically.
 
 ---
 
@@ -243,27 +258,7 @@ Use `aria-live="polite"` by default. Reserve `role="alert"` / `aria-live="assert
 
 ### 1.11 ARIA Role Quick Reference
 
-| Role | Purpose | Native Equivalent |
-|------|---------|-------------------|
-| `button` | Clickable action | `<button>` |
-| `link` | Navigation | `<a href>` |
-| `tab` / `tablist` / `tabpanel` | Tab interface | None |
-| `dialog` | Modal | `<dialog>` |
-| `alert` | Assertive live region | None |
-| `status` | Polite live region | `<output>` |
-| `navigation` | Nav landmark | `<nav>` |
-| `main` | Main landmark | `<main>` |
-| `complementary` | Aside landmark | `<aside>` |
-| `search` | Search landmark | `<search>` (HTML5) |
-| `img` | Image | `<img>` |
-| `list` / `listitem` | List | `<ul>/<li>` |
-| `heading` | Heading (with `aria-level`) | `<h1>`-`<h6>` |
-| `menu` / `menuitem` | Menu widget | None |
-| `tree` / `treeitem` | Tree view | None |
-| `grid` / `row` / `gridcell` | Data grid | `<table>` |
-| `progressbar` | Progress | `<progress>` |
-| `slider` | Range input | `<input type="range">` |
-| `switch` | Toggle | `<input type="checkbox">` |
+See [REFERENCE.md](REFERENCE.md) for the full ARIA role reference table.
 
 **Rule**: Prefer native HTML over ARIA. Use ARIA only when no native element exists for the pattern.
 
@@ -1185,16 +1180,7 @@ Use logical properties instead of physical ones to support both LTR and RTL layo
 }
 ```
 
-| Physical | Logical |
-|----------|---------|
-| `left` / `right` | `inline-start` / `inline-end` |
-| `top` / `bottom` | `block-start` / `block-end` |
-| `margin-left` | `margin-inline-start` |
-| `padding-right` | `padding-inline-end` |
-| `border-top-left-radius` | `border-start-start-radius` |
-| `width` | `inline-size` |
-| `height` | `block-size` |
-| `text-align: left` | `text-align: start` |
+See [REFERENCE.md](REFERENCE.md) for the full physical-to-logical CSS property mapping table.
 
 ### 10.5 RTL Layout Support
 
@@ -1215,74 +1201,27 @@ Test layouts in RTL mode. Flexbox and Grid handle RTL automatically with logical
 
 ---
 
+## Accessibility Audit Workflow
+
+Follow these steps when auditing an existing web page for accessibility compliance:
+
+1. **Run automated scan** -- Use Lighthouse, axe-core, or WAVE to catch machine-detectable issues (missing alt text, contrast failures, missing labels).
+2. **Check heading hierarchy** -- Inspect the DOM for `h1`-`h6` order. Ensure no levels are skipped and there is exactly one `h1`.
+3. **Keyboard-only navigation test** -- Unplug the mouse. Tab through the entire page. Verify every interactive element is reachable, focus indicators are visible, and focus order is logical.
+4. **Screen reader walkthrough** -- Use VoiceOver (macOS), NVDA (Windows), or Orca (Linux). Navigate by headings, landmarks, and form controls. Confirm all content is announced correctly.
+5. **Color contrast audit** -- Check all text and UI components against WCAG thresholds: 4.5:1 for normal text, 3:1 for large text and interactive components.
+6. **Forms review** -- Verify every input has a programmatic label, error messages are linked via `aria-describedby`, required fields are indicated, and autocomplete attributes are present.
+7. **Responsive reflow test** -- Resize the viewport to 320px width. Confirm no horizontal scrollbar appears and all content remains readable (SC 1.4.10).
+8. **Motion and media check** -- Enable `prefers-reduced-motion` in devtools. Verify animations are suppressed or reduced. Confirm no content flashes more than 3 times per second.
+
+---
+
 ## Evaluation Checklist
 
-Use this checklist when building or reviewing web interfaces.
-
-### Accessibility
-- [ ] All images have appropriate `alt` text
-- [ ] Color contrast meets 4.5:1 (text) and 3:1 (UI components)
-- [ ] All interactive elements are keyboard accessible
-- [ ] Focus indicators are visible (3:1 contrast, 2px minimum perimeter)
-- [ ] Skip navigation link is present
-- [ ] Form inputs have associated labels
-- [ ] Error messages are linked to their inputs
-- [ ] Dynamic content updates use ARIA live regions
-- [ ] No content flashes more than 3 times per second
-- [ ] Page has proper heading hierarchy (h1-h6, no skips)
-- [ ] Landmarks are used correctly (main, nav, header, footer)
-
-### Responsive
-- [ ] No horizontal scrolling at 320px width
-- [ ] Touch targets are at least 44x44px
-- [ ] Viewport meta tag is present (no user-scalable=no)
-- [ ] Layout works on mobile, tablet, and desktop
-- [ ] Text is readable without zooming on mobile
-
-### Forms
-- [ ] All inputs have visible labels
-- [ ] Autocomplete attributes are set for common fields
-- [ ] Correct input types trigger correct mobile keyboards
-- [ ] Error messages are clear and specific
-- [ ] Required fields are indicated
-- [ ] Submit button is not disabled
-
-### Performance
-- [ ] Below-fold images use `loading="lazy"`
-- [ ] Images have explicit `width` and `height`
-- [ ] Critical fonts are preloaded
-- [ ] Third-party origins use `preconnect`
-- [ ] Large JS bundles are code-split
-
-### Motion and Theming
-- [ ] `prefers-reduced-motion` is respected
-- [ ] Animations use only `transform` and `opacity`
-- [ ] Dark mode maintains contrast ratios
-- [ ] `color-scheme` meta tag is present
-- [ ] Theme uses CSS custom properties
-
-### Internationalization
-- [ ] `lang` attribute on `<html>`
-- [ ] CSS logical properties used (not physical)
-- [ ] Dates/numbers formatted with Intl APIs
-- [ ] No text embedded in images
-- [ ] Layout tested in RTL mode
+See [REFERENCE.md](REFERENCE.md) for the full evaluation checklist covering accessibility, responsive design, forms, performance, motion/theming, and internationalization.
 
 ---
 
 ## Common Anti-Patterns
 
-| Anti-Pattern | Fix |
-|--------------|-----|
-| `<div onclick="...">` | Use `<button>` |
-| `outline: none` without replacement | Use `:focus-visible` with custom outline |
-| `placeholder` as label | Add a `<label>` element |
-| `tabindex="5"` | Use `tabindex="0"` or natural order |
-| `user-scalable=no` | Remove it |
-| `font-size: 12px` | Use `font-size: 0.75rem` |
-| Animating `width`/`height`/`top`/`left` | Animate `transform` and `opacity` |
-| Disabling submit button | Validate on submit, show errors |
-| Color alone for status | Add icon, text, or pattern |
-| `margin-left` / `padding-right` | Use `margin-inline-start` / `padding-inline-end` |
-| `<img>` without dimensions | Add `width` and `height` attributes |
-| Hover-only disclosure | Add `:focus-within` and click handler |
+See [REFERENCE.md](REFERENCE.md) for the full anti-patterns table with fixes.
