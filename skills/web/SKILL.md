@@ -964,7 +964,7 @@ Provide appropriate images for light and dark contexts.
 
 ### 7.6 Respect prefers-contrast
 
-Honor the user's contrast preference using `@media (prefers-contrast: more)` and `@media (prefers-contrast: forced)`. Users who set "Increase Contrast" in their OS accessibility settings rely on this.
+Honor the user's contrast preference using `@media (prefers-contrast: more)` and `@media (prefers-contrast: forced)`. `prefers-contrast: more` responds to macOS/iOS "Increase Contrast" in System Settings; `prefers-contrast: forced` responds to Windows High Contrast Mode — a distinct OS feature that overrides colors entirely.
 
 ```css
 /* Default theme */
