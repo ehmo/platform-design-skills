@@ -24,7 +24,7 @@ Rules marked **CRITICAL** must never be violated. Rules marked **HIGH** should b
 
 - Never hardcode color hex values — always use `MaterialTheme.colorScheme` color roles
 - Never use `dp` for text sizes — use `sp` so user font scaling applies
-- Never override `onBackPressed()` — use `OnBackInvokedCallback` for predictive back support
+- Never override `onBackPressed()` — use `BackHandler` (Compose) or `OnBackInvokedCallback` (View-based) for predictive back
 - Never place touch targets below 48x48dp — accessibility violation
 - Never request permissions at app launch — request in context with a rationale
 - Never use pure black (#000000) for dark theme backgrounds — use Material surface roles
