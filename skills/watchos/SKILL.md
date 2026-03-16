@@ -142,6 +142,8 @@ Complications are the most visible surface of a Watch app. They live on the watc
 - **W-CP-01**: Support multiple complication families to maximize watch face compatibility. At minimum support `accessoryCircular`, `accessoryCorner`, and `accessoryRectangular` (WidgetKit, watchOS 9+).
 - **W-CP-02**: Provide both tinted (single-color) and full-color variants. Tinted complications must remain legible when the system applies a single tint color.
 - **W-CP-03**: Update complications via `TimelineProvider`. Provide future timeline entries when data is predictable (e.g., next calendar event, weather forecast). Keep data fresh -- stale complications erode trust.
+- **W-CP-04**: Complication content must be meaningful without context. A user glancing at their watch face should immediately understand the data (e.g., "72F" not "72").
+- **W-CP-05**: Tapping a complication must launch the app to a relevant context, not just the app's root view.
 
 **Correct — WidgetKit TimelineProvider for an accessoryCircular complication:**
 ```swift
@@ -175,12 +177,10 @@ struct StepCountComplicationView: View {
     }
 }
 ```
-- **W-CP-04**: Complication content must be meaningful without context. A user glancing at their watch face should immediately understand the data (e.g., "72F" not "72").
-- **W-CP-05**: Tapping a complication must launch the app to a relevant context, not just the app's root view.
 
 ### Complication Family Reference
 
-Complications are built with WidgetKit (watchOS 9+). Use `WidgetFamily` values:
+Use `WidgetFamily` values:
 
 | Family | Shape | Typical Content |
 |--------|-------|-----------------|

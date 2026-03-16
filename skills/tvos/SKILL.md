@@ -28,6 +28,9 @@ When a user swipes right, focus must move to the element visually to the right. 
 **FOCUS-03: Use focus guides (UIFocusGuide) to bridge gaps in layouts.**
 When visual gaps exist between focusable elements, add invisible focus guides so the user does not get stuck. Every swipe should move focus somewhere meaningful.
 
+**FOCUS-04: Apply the parallax effect to focused items.**
+Focused cards, posters, and icons should exhibit a subtle parallax tilt responding to touch surface movement. Use layered images (LSR format) with foreground, midground, and background layers. This communicates depth and confirms focus.
+
 **Correct:**
 ```swift
 // SwiftUI — custom focus engine with explicit focus state
@@ -65,9 +68,6 @@ struct ContentView: View {
     }
 }
 ```
-
-**FOCUS-04: Apply the parallax effect to focused items.**
-Focused cards, posters, and icons should exhibit a subtle parallax tilt responding to touch surface movement. Use layered images (LSR format) with foreground, midground, and background layers. This communicates depth and confirms focus.
 
 **FOCUS-05: Make focus targets large enough for comfortable navigation.**
 Minimum recommended touch target is 250x150pt for cards. Smaller elements are difficult to land on with swipe-based navigation. Group small actions under a focused parent when possible.
