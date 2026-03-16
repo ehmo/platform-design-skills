@@ -266,6 +266,35 @@ When the user enables Bold Text, custom-rendered text must adapt. SwiftUI dynami
 **ACCESS-06: Respond to Increase Contrast.**
 When the user enables Increase Contrast (Darker System Colors), custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI or `UIAccessibility.isDarkerSystemColorsEnabled` in UIKit to detect and apply appropriate values.
 
+**ACCESS-07: Respect Dynamic Type / Larger Text.**
+tvOS supports the "Larger Text" accessibility setting via `UIContentSizeCategory`. Use SwiftUI semantic text styles (`Font.TextStyle`) so text scales automatically. For UIKit, scale custom fonts with `UIFontMetrics` relative to a base `UIFont.TextStyle`.
+
+**Correct:**
+```swift
+// SwiftUI — semantic text styles scale with Larger Text automatically
+Text("Now Playing")
+    .font(.title2)        // Scales with UIContentSizeCategory
+Text("Episode description")
+    .font(.body)          // Scales with UIContentSizeCategory
+
+// UIKit — scale custom font with UIFontMetrics
+let baseFont = UIFont(name: "CustomFont-Regular", size: 29)!
+let scaledFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: baseFont)
+label.font = scaledFont
+label.adjustsFontForContentSizeCategory = true
+```
+
+**Incorrect:**
+```swift
+// SwiftUI — hardcoded size ignores Larger Text preference
+Text("Now Playing")
+    .font(.system(size: 29)) // Does not scale
+
+// UIKit — hardcoded font ignores UIContentSizeCategory
+label.font = UIFont(name: "CustomFont-Regular", size: 29)
+// Missing adjustsFontForContentSizeCategory = true
+```
+
 ---
 
 ## Evaluation Checklist

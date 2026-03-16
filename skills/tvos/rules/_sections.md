@@ -143,6 +143,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | ACCESS-04 | Respect Reduce Motion; disable parallax and decorative animations | HIGH |
 | ACCESS-05 | Respond to Bold Text; adapt custom text via legibilityWeight / isBoldTextEnabled | HIGH |
 | ACCESS-06 | Respond to Increase Contrast; provide higher-contrast variants via colorSchemeContrast | HIGH |
+| ACCESS-07 | Respect Dynamic Type / Larger Text; use Font.TextStyle in SwiftUI or UIFontMetrics in UIKit | HIGH |
 
 **Key principle**: VoiceOver on tvOS navigates via the focus engine. Correct focus configuration ensures VoiceOver users have the same experience as sighted users.
 
@@ -153,7 +154,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | Severity | Count |
 |----------|-------|
 | CRITICAL | 12 |
-| HIGH | 19 |
+| HIGH | 20 |
 | MEDIUM | 12 |
 | LOW | 3 |
-| **Total** | **46** |
+| **Total** | **47** |
