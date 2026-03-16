@@ -15,7 +15,7 @@ Framework-agnostic rules for accessible, performant, responsive web interfaces. 
 
 ## 1. Accessibility / WCAG [CRITICAL]
 
-Accessibility is not optional. Every rule in this section maps to WCAG 2.2 success criteria at Level A or AA.
+Accessibility is not optional. Most rules in this section map to WCAG 2.2 success criteria at Level A or AA. A small number of best-practice rules (noted inline) target Level AAA or go beyond WCAG.
 
 ### 1.1 Use Semantic HTML Elements
 
@@ -780,7 +780,7 @@ Only apply `will-change` to elements that will animate, and remove it after anim
 
 ### 6.1 Respect prefers-reduced-motion
 
-Always provide a reduced-motion alternative (SC 2.3.3).
+Always provide a reduced-motion alternative (SC 2.3.3, Level AAA).
 
 ```css
 /* Define animations normally */
