@@ -935,6 +935,43 @@ Provide appropriate images for light and dark contexts.
 }
 ```
 
+### 7.6 Respect prefers-contrast
+
+Honor the user's contrast preference using `@media (prefers-contrast: more)` and `@media (prefers-contrast: forced)`. Users who set "Increase Contrast" in their OS accessibility settings rely on this.
+
+```css
+/* Default theme */
+:root {
+  --color-text: #555770;
+  --color-border: #d1d1e0;
+  --color-bg: #ffffff;
+}
+
+/* High contrast mode: stronger text and border colors */
+@media (prefers-contrast: more) {
+  :root {
+    --color-text: #1a1a2e;       /* Darker text for higher ratio */
+    --color-border: #1a1a2e;     /* Stronger borders */
+    --color-bg: #ffffff;
+  }
+
+  /* Ensure interactive elements are clearly delineated */
+  button, input, select, textarea {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Forced colors (Windows High Contrast mode) */
+@media (prefers-contrast: forced) {
+  /* Use system color keywords to respect OS color palette */
+  :root {
+    --color-text: ButtonText;
+    --color-bg: ButtonFace;
+    --color-border: ButtonBorder;
+  }
+}
+```
+
 ---
 
 ## 8. Navigation and State [MEDIUM]
@@ -1346,6 +1383,8 @@ Use this checklist when building or reviewing web interfaces.
 - [ ] Dark mode maintains contrast ratios
 - [ ] `color-scheme` meta tag is present
 - [ ] Theme uses CSS custom properties
+- [ ] `prefers-contrast: more` increases text and border contrast
+- [ ] `prefers-contrast: forced` uses system color keywords
 
 ### Internationalization
 - [ ] `lang` attribute on `<html>`

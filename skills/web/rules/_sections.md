@@ -159,6 +159,8 @@ Load individual sections as needed. Each section is self-contained.
 
 5. **Adapt images to theme.** Use `<picture>` with `media="(prefers-color-scheme: dark)"` for alternate assets. Use `filter: brightness()` for simple adjustments.
 
+6. **Respect `prefers-contrast`.** Use `@media (prefers-contrast: more)` to increase text and border contrast for users with OS-level "Increase Contrast" enabled. Use `@media (prefers-contrast: forced)` with system color keywords (`ButtonText`, `ButtonFace`, `ButtonBorder`) for Windows High Contrast mode.
+
 <!-- /SECTION: dark-mode -->
 
 ---
