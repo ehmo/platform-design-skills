@@ -252,6 +252,19 @@ Modifier.predictiveBackHandler(enabled = true) { progress ->
 - R2.10: Opt in to predictive back in the manifest. In **Compose** apps, use `BackHandler` (from `androidx.activity.compose`) to intercept back events. In **View-based** apps, implement `OnBackInvokedCallback` (API 33+) or `OnBackPressedCallback` (AndroidX) instead of overriding `onBackPressed()`.
 - R2.11: The system back gesture navigates back in the navigation stack. The Up button (toolbar arrow) navigates up in the app hierarchy. These may differ.
 - R2.12: Never intercept system back to show "are you sure?" dialogs unless there is unsaved user input.
+- R2.13: Do not suppress the system-provided back preview animation. If you implement custom enter/exit transitions, interpolate them using `BackEventCompat.progress` (0.0–1.0) and respect `BackEventCompat.swipeEdge` (`EDGE_LEFT`/`EDGE_RIGHT`) so the exiting screen scales down and shifts toward the initiating edge, matching the system animation.
+
+```kotlin
+// Compose: drive a custom animation from predictive back progress
+Modifier.predictiveBackHandler(enabled = true) { progress ->
+    progress.collect { backEvent ->
+        // backEvent.progress: 0.0 (gesture start) → 1.0 (committed)
+        // backEvent.swipeEdge: BackEventCompat.EDGE_LEFT or EDGE_RIGHT
+        exitScale = 1f - (backEvent.progress * 0.1f)
+        exitOffsetX = if (backEvent.swipeEdge == BackEventCompat.EDGE_LEFT) -backEvent.progress * 32.dp.toPx() else backEvent.progress * 32.dp.toPx()
+    }
+}
+```
 
 ### 2.5 Navigation Component Selection
 
