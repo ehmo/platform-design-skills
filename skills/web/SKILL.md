@@ -107,7 +107,7 @@ dialog.addEventListener('keydown', (e) => {
 
 ### 1.4 Visible Focus Indicators
 
-Never remove focus outlines without providing a visible replacement (SC 2.4.7, enhanced 2.4.11/2.4.12 in WCAG 2.2).
+Never remove focus outlines without providing a visible replacement (SC 2.4.7, enhanced SC 2.4.11 (AA) and SC 2.4.12 (AAA) in WCAG 2.2).
 
 ```css
 /* Good: custom focus indicator */
