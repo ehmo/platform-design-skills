@@ -783,7 +783,26 @@ LocationButton(.currentLocation) {
 **Impact:** MEDIUM
 
 ### Rule 10.1: Widgets for Glanceable Data
-Provide widgets using WidgetKit for information users check frequently. Widgets are not interactive (beyond tapping to open the app), so show the most useful snapshot.
+Provide widgets using WidgetKit for information users check frequently. Show the most useful snapshot. Since iOS 17, widgets support interactive controls: use `Button` and `Toggle` backed by App Intents for actions users perform directly from the widget without opening the app.
+
+```swift
+// iOS 17+ interactive widget with a Button
+struct TimerWidgetView: View {
+    let entry: TimerEntry
+
+    var body: some View {
+        VStack {
+            Text(entry.remaining, style: .timer)
+                .font(.title2.bold())
+            Button(intent: ToggleTimerIntent()) {
+                Label(entry.isRunning ? "Pause" : "Start",
+                      systemImage: entry.isRunning ? "pause.fill" : "play.fill")
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+}
+```
 
 ### Rule 10.2: App Shortcuts for Key Actions
 Define App Shortcuts so users can trigger key actions from Siri, Spotlight, and the Shortcuts app.
