@@ -829,6 +829,64 @@ Use 20pt standard margins, 8pt spacing between related controls, 20pt spacing be
 
 ---
 
+## 10. Accessibility (CRITICAL)
+
+Mac apps must support VoiceOver, Full Keyboard Access, Switch Control, and related assistive technologies.
+
+### Rule 10.1 — VoiceOver Labels on All Interactive Elements
+
+Every button, control, and interactive element must have a meaningful accessibility label. Icon-only toolbar items and image buttons must provide labels.
+
+**Correct:**
+```swift
+Button(action: deleteSelected) {
+    Image(systemName: "trash")
+}
+.accessibilityLabel("Delete selected items")
+```
+
+**Incorrect:**
+```swift
+Button(action: deleteSelected) {
+    Image(systemName: "trash")
+}
+// VoiceOver reads "trash" — ambiguous without context
+```
+
+### Rule 10.2 — Full Keyboard Access
+
+Every action reachable by mouse must also be reachable by keyboard. Tab must move focus between all controls. Arrow keys must navigate within lists, tables, and grids. No keyboard traps.
+
+```swift
+// SwiftUI — Ensure all custom views are focusable
+MyCustomControl()
+    .focusable()
+    .onKeyPress(.return) { handleActivation(); return .handled }
+```
+
+### Rule 10.3 — Respect Reduce Motion
+
+Disable or substitute decorative animations when the user enables Reduce Motion.
+
+```swift
+@Environment(\.accessibilityReduceMotion) var reduceMotion
+
+var body: some View {
+    ContentView()
+        .animation(reduceMotion ? nil : .spring(), value: isExpanded)
+}
+```
+
+### Rule 10.4 — Respect Reduce Transparency
+
+Replace translucent materials with solid backgrounds when Reduce Transparency is enabled (see Rule 9.5).
+
+### Rule 10.5 — Logical Focus Order
+
+VoiceOver must traverse elements in a logical reading order (top-left to bottom-right for LTR). Use `.accessibilitySortPriority()` or `accessibilityElement(children:)` to correct order when the visual layout diverges.
+
+---
+
 ## Keyboard Shortcut Quick Reference
 
 ### Navigation

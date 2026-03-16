@@ -135,14 +135,28 @@ Quick-reference for all 9 categories and 40+ rules. See `../SKILL.md` for full d
 
 ---
 
+## Section 10: Accessibility [CRITICAL]
+
+| Rule | Summary |
+|------|---------|
+| 10.1 | VoiceOver label on every button, control, and interactive element |
+| 10.2 | Full Keyboard Access: all actions reachable by keyboard, no traps |
+| 10.3 | Respect Reduce Motion: disable decorative animations |
+| 10.4 | Respect Reduce Transparency: replace translucent materials with solid backgrounds |
+| 10.5 | Logical VoiceOver focus order; adjust with accessibilitySortPriority when needed |
+
+**Key principle:** VoiceOver, Full Keyboard Access, and Switch Control must work flawlessly. Accessibility is not optional.
+
+---
+
 ## Priority Summary
 
 | Priority | Sections | Rule Count |
 |----------|----------|------------|
-| CRITICAL | Menu Bar, Windows, Keyboard | 18 rules |
+| CRITICAL | Menu Bar, Windows, Keyboard, Accessibility | 23 rules |
 | HIGH | Toolbars, Sidebars, Pointer/Mouse, Visual Design | 22 rules |
 | MEDIUM | Notifications, System Integration | 10 rules |
-| **Total** | **9 sections** | **50 rules** |
+| **Total** | **10 sections** | **55 rules** |
 
 ---
 

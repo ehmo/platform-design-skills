@@ -201,6 +201,42 @@ Watch notifications must be brief and actionable. The user's wrist is raised for
 
 ---
 
+## 8. Accessibility (CRITICAL)
+
+Apple Watch supports VoiceOver and other assistive technologies. Complications and app UI must be accessible.
+
+### Rules
+
+- **W-AC-01**: Every interactive element must have a meaningful accessibility label. SF Symbol names are not sufficient labels. Use `.accessibilityLabel()` on image-only buttons.
+- **W-AC-02**: VoiceOver must be able to navigate all app content. Do not hide essential information from the accessibility hierarchy.
+- **W-AC-03**: Provide accessibility values and hints for custom controls (e.g., gauges, progress indicators, custom pickers). Use `.accessibilityValue()` and `.accessibilityHint()`.
+- **W-AC-04**: Respect Reduce Motion. Disable or substitute decorative animations when enabled. Use `@Environment(\.accessibilityReduceMotion)`.
+
+**Correct:**
+```swift
+Button(action: startWorkout) {
+    Image(systemName: "play.fill")
+}
+.accessibilityLabel("Start workout")
+```
+
+**Incorrect:**
+```swift
+Button(action: startWorkout) {
+    Image(systemName: "play.fill")
+}
+// VoiceOver reads "play" — not clear what action this performs
+```
+
+### Anti-Patterns
+
+- Image-only buttons with no accessibility label
+- Custom controls with no accessibility value or hint
+- Animations that do not respect Reduce Motion
+- Hiding content from the accessibility tree that sighted users can see
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist when reviewing a watchOS design or implementation.

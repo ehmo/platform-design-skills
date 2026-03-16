@@ -204,6 +204,26 @@ If the user was on the "Search" tab when they left the app, return to "Search" w
 
 ---
 
+## 7. Accessibility (CRITICAL)
+
+Apple TV supports VoiceOver. Sighted users use focus navigation; VoiceOver users additionally hear spoken descriptions. Both must work.
+
+### Rules
+
+**ACCESS-01: Every interactive element must have a meaningful accessibility label.**
+Icon-only buttons and image cards must have labels. The focused item's name is announced by VoiceOver when focus arrives.
+
+**ACCESS-02: Provide accessibility hints for non-obvious interactions.**
+If tapping a card does something other than opening the content (e.g., launching a trailer rather than full playback), describe this with an accessibility hint.
+
+**ACCESS-03: Ensure VoiceOver focus order matches visual focus order.**
+VoiceOver must traverse elements in the same order that focus engine navigation produces. Custom focus ordering via `UIFocusGuide` must not create discontinuities in the VoiceOver reading order.
+
+**ACCESS-04: Respect Reduce Motion.**
+Parallax effects and other animations must be reduced or disabled when the user enables Reduce Motion in Accessibility settings.
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist when reviewing a tvOS app design or implementation.

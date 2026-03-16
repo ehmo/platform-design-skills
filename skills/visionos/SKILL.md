@@ -224,6 +224,35 @@ Ornaments use the same glass material system as windows but at a slightly differ
 
 ---
 
+## 8. Accessibility (CRITICAL)
+
+visionOS supports VoiceOver, Switch Control, and pointer control alternatives. Spatial UI must be navigable without relying solely on eye and hand input.
+
+### Rules
+
+**ACC-01: Every interactive element must have a meaningful accessibility label.**
+Buttons, controls, and 3D objects that users can interact with must have labels VoiceOver can announce. Do not rely on visual appearance or position alone.
+
+**ACC-02: VoiceOver must be able to reach all interactive elements.**
+Ensure the accessibility tree covers all focusable controls. Custom `RealityKit` entities that are interactive must be registered in the accessibility hierarchy.
+
+**ACC-03: Support pointer control and Switch Control alternatives.**
+Not all users can use eye tracking and hand pinch. Ensure the app is fully navigable via alternative input methods such as head pointer, Switch Control, or keyboard navigation.
+
+**ACC-04: Respect Reduce Motion.**
+Spatial animations, immersive transitions, and parallax effects must be disabled or reduced when Reduce Motion is enabled. Abrupt motion in a spatial environment can cause disorientation.
+
+```swift
+@Environment(\.accessibilityReduceMotion) var reduceMotion
+
+var body: some View {
+    model3D
+        .rotation3DEffect(reduceMotion ? .zero : rotation, axis: (0, 1, 0))
+}
+```
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist to evaluate a visionOS design or implementation.

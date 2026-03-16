@@ -30,10 +30,34 @@ This skill provides Apple Human Interface Guidelines for Apple Watch. Load it wh
 4. **Complications drive engagement** -- keep watch face data fresh and useful
 5. **Always On awareness** -- dim gracefully, hide sensitive content
 
+## Rule Categories
+
+| # | Category | Priority |
+|---|----------|----------|
+| 1 | Glanceable Design | CRITICAL |
+| 2 | Digital Crown | HIGH |
+| 3 | Navigation | HIGH |
+| 4 | Complications | HIGH |
+| 5 | Always On Display | MEDIUM |
+| 6 | Workouts & Health | MEDIUM |
+| 7 | Notifications | MEDIUM |
+| 8 | Accessibility | CRITICAL |
+
 ## Priority Reference
 
 | Level | Meaning |
 |-------|---------|
-| CRITICAL | Glanceable design -- violations make the app unusable on Watch |
+| CRITICAL | Glanceable design, accessibility -- violations make the app unusable on Watch |
 | HIGH | Digital Crown, navigation, complications -- core Watch interaction patterns |
 | MEDIUM | Always On, workouts, notifications -- important but context-dependent |
+
+## Never Do
+
+- Never place primary information off-screen (requires scrolling to see)
+- Never ignore the Digital Crown for scrollable or value-picking content
+- Never override system Crown behaviors (volume, Time Travel)
+- Never support only one complication family
+- Never use deprecated ClockKit APIs -- use WidgetKit complication families
+- Never show sensitive health data in the Always On dimmed state
+- Never omit accessibility labels on image-only interactive elements
+- Never use laggy or batched responses to Crown rotation

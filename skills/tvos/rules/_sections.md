@@ -133,12 +133,25 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 
 ---
 
+## Section 7: Accessibility
+
+| ID | Rule | Severity |
+|----|------|----------|
+| ACCESS-01 | Accessibility label on every interactive element and card | CRITICAL |
+| ACCESS-02 | Accessibility hints for non-obvious interactions | HIGH |
+| ACCESS-03 | VoiceOver focus order matches visual focus order | HIGH |
+| ACCESS-04 | Respect Reduce Motion; disable parallax and decorative animations | HIGH |
+
+**Key principle**: VoiceOver on tvOS navigates via the focus engine. Correct focus configuration ensures VoiceOver users have the same experience as sighted users.
+
+---
+
 ## Rule Count by Severity
 
 | Severity | Count |
 |----------|-------|
-| CRITICAL | 10 |
-| HIGH | 12 |
+| CRITICAL | 11 |
+| HIGH | 15 |
 | MEDIUM | 10 |
 | LOW | 2 |
-| **Total** | **34** |
+| **Total** | **38** |

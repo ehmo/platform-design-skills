@@ -109,6 +109,15 @@ Rules where violations miss platform polish or conventions.
 | OR-05 | Contextual visibility | Show/hide on hover when appropriate |
 | OR-06 | Standard ornament styling | System glass containers |
 
+### Accessibility
+
+| ID | Rule | Summary |
+|---|---|---|
+| ACC-01 | Accessibility label on all interactive elements | Every button and 3D object needs a label |
+| ACC-02 | Full accessibility tree coverage | VoiceOver can reach all interactive elements |
+| ACC-03 | Support pointer control and Switch Control | App navigable without eye/hand input |
+| ACC-04 | Respect Reduce Motion | Disable spatial animations and transitions |
+
 ---
 
 ## Rule Count Summary
@@ -122,4 +131,5 @@ Rules where violations miss platform polish or conventions.
 | Immersive Spaces | 7 | 7 HIGH |
 | Materials & Depth | 6 | 6 MEDIUM |
 | Ornaments | 6 | 6 MEDIUM |
-| **Total** | **44** | |
+| Accessibility | 4 | 4 CRITICAL |
+| **Total** | **48** | |
