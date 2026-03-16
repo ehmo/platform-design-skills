@@ -947,7 +947,6 @@ VoiceOver must traverse elements in a logical reading order (top-left to bottom-
 |----------|--------|
 | Cmd+Ctrl+F | Toggle fullscreen |
 | Cmd+Ctrl+S | Toggle sidebar |
-| Cmd+0 | Show/hide toolbar |
 | Cmd++ / Cmd+- | Zoom in/out |
 | Cmd+0 | Actual size |
 
