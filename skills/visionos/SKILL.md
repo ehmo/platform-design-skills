@@ -340,8 +340,6 @@ Use this checklist to evaluate a visionOS design or implementation.
 ### Accessibility
 - [ ] Bold Text preference respected (SwiftUI handles automatically; custom text checks `legibilityWeight` or `UIAccessibility.isBoldTextEnabled`)
 - [ ] Increase Contrast preference respected (custom colors provide higher-contrast variants via `colorSchemeContrast`)
-
-### Accessibility
 - [ ] All interactive elements and 3D objects have meaningful accessibility labels
 - [ ] App is fully navigable via head pointer or Switch Control (not solely eye-and-pinch)
 - [ ] Spatial animations and immersive transitions disabled or reduced when Reduce Motion is enabled
