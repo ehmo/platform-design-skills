@@ -941,7 +941,7 @@ Text("Custom Label")
 
 ### Rule 11.7 — Respond to Increase Contrast
 
-When the user enables Increase Contrast in System Settings, custom colors must provide higher-contrast variants. Use `NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast` in AppKit, or `@Environment(\.accessibilityDisplayAdjustments)` / `@Environment(\.colorSchemeContrast)` in SwiftUI to detect and apply appropriate values.
+When the user enables Increase Contrast in System Settings, custom colors must provide higher-contrast variants. Use `NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast` in AppKit, or `@Environment(\.colorSchemeContrast)` in SwiftUI to detect and apply appropriate values.
 
 **Correct:**
 ```swift
