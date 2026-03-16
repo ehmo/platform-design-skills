@@ -8,7 +8,7 @@ Built by scraping the [Apple Human Interface Guidelines](https://developer.apple
 
 ### ios
 
-Apple Human Interface Guidelines for iPhone. 64+ rules covering navigation, layout, accessibility, gestures, and iOS-specific components like tab bars, sheets, and Dynamic Island.
+Apple Human Interface Guidelines for iPhone. 67+ rules covering navigation, layout, accessibility, gestures, and iOS-specific components like tab bars, sheets, and Dynamic Island.
 
 **Use when:**
 - Building SwiftUI or UIKit interfaces for iPhone
