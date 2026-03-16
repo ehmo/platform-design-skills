@@ -44,7 +44,7 @@ Quick reference for locating rules by category and ID.
 - **R2.7** — Rail labels optional but recommended
 - **R2.8** — Modal drawer on compact, permanent drawer on expanded
 - **R2.9** — Group drawer items with dividers and section headers
-- **R2.10** — Opt in to predictive back; use `OnBackInvokedCallback`
+- **R2.10** — Opt in to predictive back; use `BackHandler` (Compose) or `OnBackInvokedCallback` (View-based)
 - **R2.11** — System back != Up button; they may navigate differently
 - **R2.12** — No "are you sure?" on back unless unsaved user input
 - **R2.13** — Do not suppress the system predictive back preview animation; interpolate custom transitions using `BackEventCompat.progress` and respect `BackEventCompat.swipeEdge`
