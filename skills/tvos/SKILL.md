@@ -89,7 +89,7 @@ Users must always be able to move focus away from any element. If focus cannot l
 | Midground | Primary artwork or content image | Moderate (3-5pt) |
 | Foreground | Title text, logos, badges | Maximum (5-8pt) |
 
-Use Xcode's LSR (Layered Static Image) format or dynamically compose layers at runtime via `TVMonogramView` or custom focus effects.
+Use Xcode's LSR (Layered Static Image) format for static layered images in the asset catalog, or compose layers programmatically by stacking `UIImageView` instances and applying `UIMotionEffect` for parallax movement tied to device tilt.
 
 ---
 
