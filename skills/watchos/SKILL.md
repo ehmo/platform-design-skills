@@ -362,3 +362,5 @@ Use this checklist when reviewing a watchOS design or implementation.
 - [ ] Custom controls provide accessibility values and hints via `.accessibilityValue()` / `.accessibilityHint()`
 - [ ] VoiceOver can navigate all app content — no essential content hidden from the accessibility tree
 - [ ] Animations respect Reduce Motion (`@Environment(\.accessibilityReduceMotion)`)
+- [ ] Bold Text preference is respected (SwiftUI handles automatically; custom text checks `isBoldTextEnabled`)
+- [ ] Increase Contrast preference is respected (custom colors provide higher-contrast variants)

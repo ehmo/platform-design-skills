@@ -141,6 +141,8 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | ACCESS-02 | Accessibility hints for non-obvious interactions | HIGH |
 | ACCESS-03 | VoiceOver focus order matches visual focus order | HIGH |
 | ACCESS-04 | Respect Reduce Motion; disable parallax and decorative animations | HIGH |
+| ACCESS-05 | Respond to Bold Text; adapt custom text via legibilityWeight / isBoldTextEnabled | HIGH |
+| ACCESS-06 | Respond to Increase Contrast; provide higher-contrast variants via colorSchemeContrast | HIGH |
 
 **Key principle**: VoiceOver on tvOS navigates via the focus engine. Correct focus configuration ensures VoiceOver users have the same experience as sighted users.
 
@@ -151,7 +153,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | Severity | Count |
 |----------|-------|
 | CRITICAL | 12 |
-| HIGH | 17 |
+| HIGH | 19 |
 | MEDIUM | 12 |
 | LOW | 3 |
-| **Total** | **44** |
+| **Total** | **46** |

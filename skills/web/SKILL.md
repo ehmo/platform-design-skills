@@ -1354,6 +1354,12 @@ Use this checklist when building or reviewing web interfaces.
 - [ ] No text embedded in images
 - [ ] Layout tested in RTL mode
 
+### Progressive Web App
+- [ ] Web App Manifest linked from `<head>` with `name`, `icons`, `start_url`, and `display`
+- [ ] `theme_color` and `background_color` match brand palette
+- [ ] Service worker registered with a `fetch` handler for offline support
+- [ ] App served over HTTPS
+
 ---
 
 ## Common Anti-Patterns

@@ -320,6 +320,8 @@ Use this checklist when reviewing a tvOS app design or implementation.
 - [ ] Non-obvious interactions have accessibility hints
 - [ ] VoiceOver focus order matches the visual focus engine order
 - [ ] Parallax effects and decorative animations are disabled when Reduce Motion is enabled
+- [ ] Bold Text preference is respected (SwiftUI handles automatically; custom text checks `isBoldTextEnabled`)
+- [ ] Increase Contrast preference is respected (custom colors provide higher-contrast variants)
 
 ---
 
