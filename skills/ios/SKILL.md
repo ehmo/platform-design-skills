@@ -417,7 +417,29 @@ VStack {
 ```
 
 ### Rule 5.3: Support Bold Text
-When the user enables Bold Text in Settings, use the `.bold` dynamic type variants. SwiftUI text styles handle this automatically. Custom text must respond to `UIAccessibility.isBoldTextEnabled`.
+When the user enables Bold Text in Settings, custom-rendered text must adapt. SwiftUI text styles handle this automatically. For SwiftUI custom rendering, use `@Environment(\.legibilityWeight)` to apply heavier weights. UIKit code must check `UIAccessibility.isBoldTextEnabled` and re-query on `UIAccessibility.boldTextStatusDidChangeNotification`.
+
+**Correct:**
+```swift
+// SwiftUI — standard text styles adapt automatically
+Text("Section Header")
+    .font(.headline)
+
+// SwiftUI — custom rendering respects legibilityWeight
+@Environment(\.legibilityWeight) var legibilityWeight
+
+var body: some View {
+    Text("Custom Label")
+        .fontWeight(legibilityWeight == .bold ? .bold : .regular)
+}
+```
+
+**Incorrect:**
+```swift
+// Hardcoded weight ignores Bold Text preference
+label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+// Missing: re-query font when UIAccessibility.boldTextStatusDidChangeNotification fires
+```
 
 ### Rule 5.4: Support Reduce Motion
 Disable decorative animations and parallax when Reduce Motion is enabled. Use `@Environment(\.accessibilityReduceMotion)`.
