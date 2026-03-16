@@ -309,6 +309,12 @@ Use this checklist when reviewing a tvOS app design or implementation.
 - [ ] 3-7 tabs are used
 - [ ] Selected tab persists across launches
 
+### Accessibility
+- [ ] Every interactive element and content card has a meaningful accessibility label
+- [ ] Non-obvious interactions have accessibility hints
+- [ ] VoiceOver focus order matches the visual focus engine order
+- [ ] Parallax effects and decorative animations are disabled when Reduce Motion is enabled
+
 ---
 
 ## Anti-Patterns for TV

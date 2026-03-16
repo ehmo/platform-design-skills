@@ -354,3 +354,9 @@ Use this checklist when reviewing a watchOS design or implementation.
 - [ ] Does the Long Look include inline actions?
 - [ ] Are haptic types matched to notification urgency?
 - [ ] Is notification frequency appropriate (not excessive)?
+
+### Accessibility
+- [ ] All interactive elements have meaningful accessibility labels (no raw SF Symbol names)
+- [ ] Custom controls provide accessibility values and hints via `.accessibilityValue()` / `.accessibilityHint()`
+- [ ] VoiceOver can navigate all app content — no essential content hidden from the accessibility tree
+- [ ] Animations respect Reduce Motion (`@Environment(\.accessibilityReduceMotion)`)

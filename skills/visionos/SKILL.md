@@ -331,6 +331,12 @@ Use this checklist to evaluate a visionOS design or implementation.
 - [ ] Ornaments extend outward, not over content
 - [ ] Standard ornament styling used
 
+### Accessibility
+- [ ] All interactive elements and 3D objects have meaningful accessibility labels
+- [ ] App is fully navigable via head pointer or Switch Control (not solely eye-and-pinch)
+- [ ] Spatial animations and immersive transitions disabled or reduced when Reduce Motion is enabled
+- [ ] Interactive RealityKit entities are registered in the accessibility hierarchy
+
 ---
 
 ## Anti-Patterns

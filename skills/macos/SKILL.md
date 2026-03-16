@@ -1013,6 +1013,13 @@ Before shipping a Mac app, verify:
 - [ ] Translucency respects accessibility setting
 - [ ] Consistent spacing on 8pt grid
 
+### Accessibility
+- [ ] All icon-only toolbar items and image buttons have accessibility labels
+- [ ] Every action reachable by mouse is also reachable by keyboard (Full Keyboard Access)
+- [ ] Decorative animations disabled when Reduce Motion is enabled
+- [ ] Translucent surfaces replaced with solid backgrounds when Reduce Transparency is enabled
+- [ ] VoiceOver traversal order is logical (top-left to bottom-right)
+
 ---
 
 ## Anti-Patterns
