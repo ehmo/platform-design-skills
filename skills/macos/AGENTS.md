@@ -36,7 +36,8 @@ Rules marked CRITICAL must never be skipped. Rules marked HIGH should be followe
 | 7 | Notifications and Alerts | MEDIUM |
 | 8 | System Integration | MEDIUM |
 | 9 | Visual Design | HIGH |
-| 10 | Accessibility | CRITICAL |
+| 10 | Popovers | MEDIUM |
+| 11 | Accessibility | CRITICAL |
 
 ## Key Principles
 

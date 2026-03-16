@@ -244,7 +244,7 @@ Ornaments use the same glass material system as windows but at a slightly differ
 
 ---
 
-## 8. Accessibility (CRITICAL)
+## 8. Accessibility [CRITICAL]
 
 visionOS supports VoiceOver, Switch Control, and pointer control alternatives. Spatial UI must be navigable without relying solely on eye and hand input.
 
