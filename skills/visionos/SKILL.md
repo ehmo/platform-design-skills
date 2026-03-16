@@ -271,6 +271,12 @@ var body: some View {
 }
 ```
 
+**ACC-05: Respond to Bold Text.**
+When the user enables Bold Text, custom-rendered text in visionOS must adapt. SwiftUI dynamic type styles handle this automatically; custom rendering must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)` to detect and apply heavier weights.
+
+**ACC-06: Respond to Increase Contrast.**
+When the user enables Increase Contrast, custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI to detect `.increased` and substitute higher-contrast color values for text and UI elements rendered against glass or environment backgrounds.
+
 ---
 
 ## Evaluation Checklist
