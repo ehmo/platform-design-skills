@@ -44,3 +44,16 @@ web/
 - Code examples are vanilla HTML/CSS/JS unless noted.
 - WCAG success criteria referenced as (SC x.x.x).
 - Priority in brackets: [CRITICAL], [HIGH], [MEDIUM].
+
+## Never Do
+
+- Never use `<div onclick>` when `<button>` exists — use semantic HTML
+- Never set `maximum-scale=1` or `user-scalable=no` in the viewport meta tag
+- Never rely on color alone to convey information — pair with text or icons
+- Never use placeholder text as the only label for a form input
+- Never build interactive elements that are only keyboard-accessible via `tabindex > 0`
+- Never omit `alt` attributes on images — use `alt=""` for decorative images
+- Never animate content that flashes more than 3 times per second (seizure risk)
+- Never trap keyboard focus inside a component without providing a documented escape
+- Never use `<table>` for layout — tables are for tabular data only
+- Never set `font-size` in `px` on body text — use `rem` so user preferences apply

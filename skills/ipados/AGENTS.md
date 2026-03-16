@@ -27,3 +27,16 @@ iPad-specific HIG rules extending iOS patterns for the larger, multitasking-capa
 - **Stage Manager** -- freely resizable windows, multiple scenes
 - **Toolbar at top** instead of bottom navigation
 - **Three-column layouts** for deep hierarchies
+
+## Never Do
+
+- Never scale up an iPhone layout to fill the iPad screen — redesign for the larger canvas
+- Never opt out of multitasking — every app must work in Split View and Slide Over
+- Never use bottom tab bars in regular width — use sidebar navigation
+- Never show popovers as full-screen sheets — anchor popovers to their source element
+- Never hardcode pixel dimensions for specific iPad models
+- Never omit hover states for interactive elements — trackpad users need visual feedback
+- Never override system keyboard shortcuts (Cmd+H, Cmd+Tab, Cmd+Space)
+- Never ignore drag and drop — at minimum support dragging text, images, and URLs
+- Never block the keyboard from dismissing modal sheets on iPad
+- Never present iPhone-style modals when a popover or inspector is more appropriate
