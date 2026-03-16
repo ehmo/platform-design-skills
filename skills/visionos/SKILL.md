@@ -266,7 +266,7 @@ Spatial animations, immersive transitions, and parallax effects must be disabled
 @Environment(\.accessibilityReduceMotion) var reduceMotion
 
 var body: some View {
-    model3D
+    Model3D(named: "SceneObject")
         .rotation3DEffect(reduceMotion ? .zero : rotation, axis: (0, 1, 0))
 }
 ```
