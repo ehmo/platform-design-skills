@@ -11,7 +11,7 @@
 - **Applies when**: App runs alongside other apps, user resizes windows, app enters compact width via multitasking
 
 ## Section 3: Navigation
-- **Impact**: HIGH
+- **Impact**: CRITICAL
 - **Scope**: Sidebar navigation, tab-to-sidebar conversion, three-column layout, toolbar placement, detail views
 - **Applies when**: Designing primary navigation, building information hierarchies, placing toolbars and actions
 

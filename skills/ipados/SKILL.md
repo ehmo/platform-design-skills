@@ -115,7 +115,7 @@ Use `UIScene` / SwiftUI `WindowGroup` to let users open multiple instances of yo
 
 ---
 
-## 3. Navigation (HIGH)
+## 3. Navigation (CRITICAL)
 
 ### 3.1 Sidebar for Primary Navigation
 
