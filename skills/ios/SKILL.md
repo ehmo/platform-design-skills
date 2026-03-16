@@ -771,6 +771,8 @@ If you track users across apps or websites, display the ATT prompt. Respect deni
 Use `LocationButton` for actions that need location once without requesting ongoing permission.
 
 ```swift
+import CoreLocationUI
+
 LocationButton(.currentLocation) {
     fetchNearbyStores()
 }
