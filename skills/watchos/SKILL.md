@@ -99,7 +99,7 @@ Complications are the most visible surface of a Watch app. They live on the watc
 
 ### Rules
 
-- **W-CP-01**: Support multiple complication families to maximize watch face compatibility. At minimum support `circularSmall`, `graphicCorner`, and `graphicRectangular`.
+- **W-CP-01**: Support multiple complication families to maximize watch face compatibility. At minimum support `accessoryCircular`, `accessoryCorner`, and `accessoryRectangular` (WidgetKit, watchOS 9+).
 - **W-CP-02**: Provide both tinted (single-color) and full-color variants. Tinted complications must remain legible when the system applies a single tint color.
 - **W-CP-03**: Update complications via `TimelineProvider`. Provide future timeline entries when data is predictable (e.g., next calendar event, weather forecast). Keep data fresh -- stale complications erode trust.
 - **W-CP-04**: Complication content must be meaningful without context. A user glancing at their watch face should immediately understand the data (e.g., "72F" not "72").
@@ -107,13 +107,14 @@ Complications are the most visible surface of a Watch app. They live on the watc
 
 ### Complication Family Reference
 
+Complications are built with WidgetKit (watchOS 9+). Use `WidgetFamily` values:
+
 | Family | Shape | Typical Content |
 |--------|-------|-----------------|
-| `circularSmall` | Small circle | Single value, icon, or gauge |
-| `graphicCorner` | Curved, top corners | Gauge with label, or text with icon |
-| `graphicCircular` | Larger circle | Gauge, icon with value, or stack |
-| `graphicRectangular` | Wide rectangle | Multi-line text, chart, or detailed view |
-| `graphicExtraLarge` | Full-width circle | Large gauge or prominent single value |
+| `accessoryCircular` | Small circle | Single value, icon, or gauge |
+| `accessoryCorner` | Curved, top corners | Gauge with label, or text with icon |
+| `accessoryRectangular` | Wide rectangle | Multi-line text, chart, or detailed view |
+| `accessoryInline` | Text row | Short label or value |
 
 ### Anti-Patterns
 

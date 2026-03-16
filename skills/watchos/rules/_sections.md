@@ -56,6 +56,8 @@ All rules organized by category with stable IDs for cross-referencing.
 | W-CP-04 | Content meaningful without context (include units/labels) | HIGH |
 | W-CP-05 | Tap launches app to relevant context | HIGH |
 
+**API Note**: Complications are built with WidgetKit (watchOS 9+). Use `accessoryCircular`, `accessoryCorner`, `accessoryRectangular`, and `accessoryInline` widget families. ClockKit is deprecated.
+
 **Rationale**: Complications are the primary engagement surface. A well-designed complication delivers value without the user ever launching the app.
 
 ---
