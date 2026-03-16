@@ -54,6 +54,26 @@ The standard interaction is: user looks at an element (eyes provide targeting), 
 **EH-02: Minimum interactive target size is 60pt.**
 Eye tracking has inherent imprecision. All tappable elements must be at least 60 points in diameter to be reliably targeted by gaze. This is larger than iOS touch targets (44pt). Smaller targets cause frustration and mis-selections.
 
+**Correct:**
+```swift
+// visionOS — button meeting 60pt minimum
+Button(action: confirmAction) {
+    Label("Confirm", systemImage: "checkmark")
+        .frame(minWidth: 60, minHeight: 60)
+        .padding(.horizontal, 16)
+}
+.buttonStyle(.borderedProminent)
+```
+
+**Incorrect:**
+```swift
+// visionOS — 32pt button too small for reliable gaze targeting
+Button(action: confirmAction) {
+    Image(systemName: "checkmark")
+        .frame(width: 32, height: 32)  // Below 60pt minimum; unreliable with eye tracking
+}
+```
+
 **EH-03: Provide hover feedback on gaze.**
 When the user's eyes rest on an interactive element, show a visible highlight or subtle expansion to confirm the element is targeted. This feedback is essential because there is no cursor. Without hover states, users cannot tell what they are about to select.
 
