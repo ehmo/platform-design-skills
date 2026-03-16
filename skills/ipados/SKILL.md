@@ -439,7 +439,21 @@ struct MyApp: App {
 
 ### 8.2 Handle Display Connection and Disconnection
 
-Listen for `UIScreen.didConnectNotification` and `UIScreen.didDisconnectNotification`. Transition gracefully -- if the external display disconnects mid-presentation, bring content back to the iPad screen without data loss.
+Observe external display lifecycle via `UIWindowScene` events in your `SceneDelegate` or by listening for `UIScene` session notifications (`UIApplication.didConnectSceneSessionNotification` / `UIApplication.didDisconnectSceneSessionNotification`). Transition gracefully — if the external display disconnects mid-presentation, bring content back to the iPad screen without data loss.
+
+```swift
+// SceneDelegate: detect when a scene (external display window) connects or disconnects
+func scene(_ scene: UIScene,
+           willConnectTo session: UISceneSession,
+           options connectionOptions: UIScene.ConnectionOptions) {
+    guard let windowScene = scene as? UIWindowScene else { return }
+    configureExternalDisplay(for: windowScene)
+}
+
+func sceneDidDisconnect(_ scene: UIScene) {
+    restoreContentToiPad()
+}
+```
 
 ### 8.3 Support Full External Display Resolution
 
