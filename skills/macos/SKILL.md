@@ -829,11 +829,39 @@ Use 20pt standard margins, 8pt spacing between related controls, 20pt spacing be
 
 ---
 
-## 10. Accessibility (CRITICAL)
+## 10. Popovers (MEDIUM)
+
+Popovers present contextual content anchored to a control. They are common in Mac apps for options panels, color pickers, and contextual settings.
+
+### Rule 10.1 — Use Popovers for Transient Context-Sensitive Content
+
+Popovers attach to a source view and are dismissed by clicking outside or pressing Esc. Use them for settings or options that apply to a specific element. Do not use popovers for primary workflows or multi-step operations.
+
+```swift
+// SwiftUI
+Button("Format...") { showingFormatPopover = true }
+    .popover(isPresented: $showingFormatPopover, arrowEdge: .bottom) {
+        FormatOptionsView()
+            .frame(width: 280)
+            .padding()
+    }
+```
+
+### Rule 10.2 — Dismiss Popovers with Esc
+
+Popovers must close when the user presses Esc. SwiftUI handles this automatically for `.popover`. AppKit's `NSPopover` also dismisses on Esc when `behavior` is set to `.transient` or `.semitransient`.
+
+### Rule 10.3 — Size Popovers to Their Content
+
+Set a reasonable width for the popover's content. Do not let the popover be wider than necessary. Content should not require scrolling unless the list is inherently long (e.g., a font picker).
+
+---
+
+## 11. Accessibility (CRITICAL)
 
 Mac apps must support VoiceOver, Full Keyboard Access, Switch Control, and related assistive technologies.
 
-### Rule 10.1 — VoiceOver Labels on All Interactive Elements
+### Rule 11.1 — VoiceOver Labels on All Interactive Elements
 
 Every button, control, and interactive element must have a meaningful accessibility label. Icon-only toolbar items and image buttons must provide labels.
 
@@ -853,7 +881,7 @@ Button(action: deleteSelected) {
 // VoiceOver reads "trash" — ambiguous without context
 ```
 
-### Rule 10.2 — Full Keyboard Access
+### Rule 11.2 — Full Keyboard Access
 
 Every action reachable by mouse must also be reachable by keyboard. Tab must move focus between all controls. Arrow keys must navigate within lists, tables, and grids. No keyboard traps.
 
@@ -864,7 +892,7 @@ MyCustomControl()
     .onKeyPress(.return) { handleActivation(); return .handled }
 ```
 
-### Rule 10.3 — Respect Reduce Motion
+### Rule 11.3 — Respect Reduce Motion
 
 Disable or substitute decorative animations when the user enables Reduce Motion.
 
@@ -877,11 +905,11 @@ var body: some View {
 }
 ```
 
-### Rule 10.4 — Respect Reduce Transparency
+### Rule 11.4 — Respect Reduce Transparency
 
 Replace translucent materials with solid backgrounds when Reduce Transparency is enabled (see Rule 9.5).
 
-### Rule 10.5 — Logical Focus Order
+### Rule 11.5 — Logical Focus Order
 
 VoiceOver must traverse elements in a logical reading order (top-left to bottom-right for LTR). Use `.accessibilitySortPriority()` or `accessibilityElement(children:)` to correct order when the visual layout diverges.
 

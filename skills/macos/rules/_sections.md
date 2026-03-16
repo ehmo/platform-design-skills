@@ -135,15 +135,27 @@ Quick-reference for all 9 categories and 40+ rules. See `../SKILL.md` for full d
 
 ---
 
-## Section 10: Accessibility [CRITICAL]
+## Section 10: Popovers [MEDIUM]
 
 | Rule | Summary |
 |------|---------|
-| 10.1 | VoiceOver label on every button, control, and interactive element |
-| 10.2 | Full Keyboard Access: all actions reachable by keyboard, no traps |
-| 10.3 | Respect Reduce Motion: disable decorative animations |
-| 10.4 | Respect Reduce Transparency: replace translucent materials with solid backgrounds |
-| 10.5 | Logical VoiceOver focus order; adjust with accessibilitySortPriority when needed |
+| 10.1 | Use popovers for transient, context-sensitive content anchored to a control |
+| 10.2 | Esc must dismiss all popovers |
+| 10.3 | Size popovers to content; avoid unnecessary scrolling |
+
+**Key principle:** Popovers are for focused, transient options. Not for primary flows or multi-step tasks.
+
+---
+
+## Section 11: Accessibility [CRITICAL]
+
+| Rule | Summary |
+|------|---------|
+| 11.1 | VoiceOver label on every button, control, and interactive element |
+| 11.2 | Full Keyboard Access: all actions reachable by keyboard, no traps |
+| 11.3 | Respect Reduce Motion: disable decorative animations |
+| 11.4 | Respect Reduce Transparency: replace translucent materials with solid backgrounds |
+| 11.5 | Logical VoiceOver focus order; adjust with accessibilitySortPriority when needed |
 
 **Key principle:** VoiceOver, Full Keyboard Access, and Switch Control must work flawlessly. Accessibility is not optional.
 
@@ -155,8 +167,8 @@ Quick-reference for all 9 categories and 40+ rules. See `../SKILL.md` for full d
 |----------|----------|------------|
 | CRITICAL | Menu Bar, Windows, Keyboard, Accessibility | 23 rules |
 | HIGH | Toolbars, Sidebars, Pointer/Mouse, Visual Design | 22 rules |
-| MEDIUM | Notifications, System Integration | 10 rules |
-| **Total** | **10 sections** | **55 rules** |
+| MEDIUM | Notifications, System Integration, Popovers | 13 rules |
+| **Total** | **11 sections** | **58 rules** |
 
 ---
 
