@@ -260,6 +260,12 @@ VoiceOver must traverse elements in the same order that focus engine navigation 
 **ACCESS-04: Respect Reduce Motion.**
 Parallax effects and other animations must be reduced or disabled when the user enables Reduce Motion in Accessibility settings.
 
+**ACCESS-05: Respond to Bold Text.**
+When the user enables Bold Text, custom-rendered text must adapt. SwiftUI dynamic type styles handle this automatically; custom text rendering must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)`.
+
+**ACCESS-06: Respond to Increase Contrast.**
+When the user enables Increase Contrast (Darker System Colors), custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI or `UIAccessibility.isDarkerSystemColorsEnabled` in UIKit to detect and apply appropriate values.
+
 ---
 
 ## Evaluation Checklist

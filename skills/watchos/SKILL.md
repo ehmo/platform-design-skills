@@ -284,6 +284,8 @@ Apple Watch supports VoiceOver and other assistive technologies. Complications a
 - **W-AC-02**: VoiceOver must be able to navigate all app content. Do not hide essential information from the accessibility hierarchy.
 - **W-AC-03**: Provide accessibility values and hints for custom controls (e.g., gauges, progress indicators, custom pickers). Use `.accessibilityValue()` and `.accessibilityHint()`.
 - **W-AC-04**: Respect Reduce Motion. Disable or substitute decorative animations when enabled. Use `@Environment(\.accessibilityReduceMotion)`.
+- **W-AC-05**: Respond to Bold Text. When the user enables Bold Text, custom text must adapt. SwiftUI dynamic type handles this automatically; custom-drawn text must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)`.
+- **W-AC-06**: Respond to Increase Contrast. When the user enables Increase Contrast, custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` to detect and `UIAccessibility.isDarkerSystemColorsEnabled` in UIKit.
 
 **Correct:**
 ```swift
