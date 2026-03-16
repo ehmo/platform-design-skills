@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "organization": "Platform Design Skills",
   "date": "February 2026",
-  "abstract": "Apple Human Interface Guidelines for Apple Watch. 38+ rules across 8 categories covering glanceable interfaces, Digital Crown, complications, Always On display, workout tracking, wrist-optimized interactions, and accessibility.",
+  "abstract": "Apple Human Interface Guidelines for Apple Watch. 40+ rules across 8 categories covering glanceable interfaces, Digital Crown, complications, Always On display, workout tracking, wrist-optimized interactions, and accessibility.",
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines",
     "https://developer.apple.com/design/human-interface-guidelines/designing-for-watchos",
