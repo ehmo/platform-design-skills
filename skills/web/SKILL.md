@@ -267,6 +267,33 @@ Use `aria-live="polite"` by default. Reserve `role="alert"` / `aria-live="assert
 
 **Rule**: Prefer native HTML over ARIA. Use ARIA only when no native element exists for the pattern.
 
+### 1.12 Label in Name (WCAG 2.5.3 Level A)
+
+When an interactive element has visible text, its accessible name must contain that visible text as a substring (SC 2.5.3). Voice control users (Dragon NaturallySpeaking, macOS Voice Control) speak the visible label to activate controls. If `aria-label` replaces or contradicts the visible text, voice commands fail.
+
+```html
+<!-- Correct: aria-label contains visible text as substring -->
+<button aria-label="Delete item from cart">Delete</button>
+
+<!-- Correct: no aria-label needed — visible text is the accessible name -->
+<button>Save Changes</button>
+
+<!-- Correct: icon button — no visible text, aria-label is fine -->
+<button aria-label="Close dialog">
+  <svg aria-hidden="true">...</svg>
+</button>
+```
+
+```html
+<!-- Incorrect: aria-label overrides visible text with different text -->
+<button aria-label="Remove">Delete</button>
+
+<!-- Incorrect: aria-label does not contain visible "Submit" -->
+<button aria-label="Proceed to next step">Submit</button>
+```
+
+**Rule**: When visible text is present, `aria-label` must include that visible text (verbatim, case-insensitively). Prefer no `aria-label` at all when visible text is sufficient.
+
 ---
 
 ## 2. Responsive Design [CRITICAL]

@@ -31,6 +31,8 @@ Load individual sections as needed. Each section is self-contained.
 
 11. **Prefer native HTML over ARIA roles.** Use `<button>` not `<div role="button">`. Use `<nav>` not `<div role="navigation">`. ARIA is a supplement, not a replacement.
 
+12. **Accessible name must contain visible text (SC 2.5.3).** When an element has visible text, its accessible name must include that text as a substring. Do not use `aria-label` that replaces visible text with different text — voice control users speak the visible label to activate controls.
+
 <!-- /SECTION: accessibility -->
 
 ---
