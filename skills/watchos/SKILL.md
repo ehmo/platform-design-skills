@@ -30,8 +30,10 @@ The defining constraint of watchOS. If a user cannot extract the key information
 
 | Device | Screen Width | Screen Height | Corner Radius |
 |--------|-------------|---------------|---------------|
-| 41mm (Series 9/10) | 176px | 215px | 36px |
-| 45mm (Series 9/10) | 198px | 242px | 39px |
+| 41mm (Series 9) | 176px | 215px | 36px |
+| 45mm (Series 9) | 198px | 242px | 39px |
+| 42mm (Series 10) | 180px | 220px | 37px |
+| 46mm (Series 10) | 205px | 251px | 40px |
 | 49mm (Ultra 2) | 205px | 251px | 40px |
 
 ### Anti-Patterns
