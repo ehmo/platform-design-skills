@@ -90,8 +90,8 @@ Every menu item that performs an action must have a keyboard shortcut. Use stand
 Menu items must reflect current state. Disable items that are not applicable. Update titles to match context (e.g., "Undo Typing" not just "Undo"). Toggle checkmarks for on/off states.
 
 ```swift
-// SwiftUI — Dynamic menu state
-CommandGroup(replacing: .toolbar) {
+// SwiftUI — Add sidebar toggle alongside existing toolbar menu commands
+CommandGroup(after: .toolbar) {
     Button(showingSidebar ? "Hide Sidebar" : "Show Sidebar") {
         showingSidebar.toggle()
     }
