@@ -259,10 +259,10 @@ var body: some View {
 }
 ```
 
-### Rule 3.3: Custom Fonts Must Use UIFontMetrics
-If you use a custom typeface, scale it with `UIFontMetrics` so it responds to Dynamic Type.
+### Rule 3.3: Custom Fonts Must Scale with Dynamic Type
+If you use a custom typeface, scale it so it responds to Dynamic Type. The API differs by framework.
 
-**Correct:**
+**Correct (SwiftUI):**
 ```swift
 extension Font {
     static func scaledCustom(size: CGFloat, relativeTo textStyle: Font.TextStyle) -> Font {
@@ -273,6 +273,14 @@ extension Font {
 // Usage
 Text("Hello")
     .font(.scaledCustom(size: 17, relativeTo: .body))
+```
+
+**Correct (UIKit):**
+```swift
+let metrics = UIFontMetrics(forTextStyle: .body)
+let customFont = UIFont(name: "CustomFont-Regular", size: 17)!
+label.font = metrics.scaledFont(for: customFont)
+label.adjustsFontForContentSizeCategory = true
 ```
 
 ### Rule 3.4: SF Pro as System Font
@@ -971,7 +979,7 @@ Use this checklist to audit an iPhone app for HIG compliance:
 - [ ] State is preserved when switching tabs
 
 ### Typography
-- [ ] All text uses built-in text styles or `UIFontMetrics`-scaled custom fonts
+- [ ] All text uses built-in text styles or custom fonts scaled with Dynamic Type (`Font.custom(_:size:relativeTo:)` in SwiftUI or `UIFontMetrics` in UIKit)
 - [ ] Dynamic Type is supported up to accessibility sizes
 - [ ] Layouts reflow at large text sizes (no truncation of essential text)
 - [ ] Minimum text size is 11pt
