@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "organization": "Platform Design Skills",
   "date": "February 2026",
-  "abstract": "Apple Human Interface Guidelines for macOS apps. 40+ rules across 9 categories covering menu bars, window management, toolbars, keyboard-driven interaction, sidebars, popovers, and desktop power-user expectations. Each rule includes SwiftUI/AppKit examples.",
+  "abstract": "Apple Human Interface Guidelines for macOS apps. 58+ rules across 11 categories covering menu bars, window management, toolbars, keyboard-driven interaction, sidebars, popovers, accessibility, and desktop power-user expectations. Each rule includes SwiftUI/AppKit examples.",
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines",
     "https://developer.apple.com/design/human-interface-guidelines/designing-for-macos",
