@@ -1063,6 +1063,11 @@ Before shipping a Mac app, verify:
 - [ ] Translucency respects accessibility setting
 - [ ] Consistent spacing on 8pt grid
 
+### Popovers
+- [ ] Popover is anchored to its source element with an arrow pointing at it
+- [ ] Pressing Esc dismisses the popover
+- [ ] Popover is sized to its content without unnecessary scrolling
+
 ### Accessibility
 - [ ] All icon-only toolbar items and image buttons have accessibility labels
 - [ ] Every action reachable by mouse is also reachable by keyboard (Full Keyboard Access)
