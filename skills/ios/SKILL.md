@@ -618,6 +618,73 @@ PhotoView(photo: photo)
 - Indeterminate (`ProgressView()`) for unknown duration
 - Never block the entire screen with a spinner
 
+### Rule 7.9: SF Symbols — Rendering Modes
+Use the appropriate rendering mode for each symbol. Monochrome is the default; hierarchical, palette, and multicolor provide richer expression where appropriate. Always prefer the symbol rendering mode that best communicates meaning — do not default to monochrome when multicolor conveys critical state.
+
+**Correct:**
+```swift
+// Hierarchical: single color with automatic opacity layers
+Image(systemName: "person.crop.circle.fill")
+    .symbolRenderingMode(.hierarchical)
+    .foregroundStyle(.blue)
+
+// Multicolor: system-defined color per layer (e.g., battery, weather)
+Image(systemName: "battery.100percent.bolt")
+    .symbolRenderingMode(.multicolor)
+
+// Palette: explicit per-layer colors
+Image(systemName: "folder.badge.plus")
+    .symbolRenderingMode(.palette)
+    .foregroundStyle(.white, .blue)
+```
+
+**Incorrect:**
+```swift
+// Monochrome on a symbol that has meaningful multicolor layers
+Image(systemName: "battery.100percent.bolt")
+    .foregroundColor(.gray) // loses the contextual color meaning
+```
+
+### Rule 7.10: SF Symbols — Weight and Scale
+Match the symbol weight to adjacent text weight. Use scale variants (`.small`, `.medium`, `.large`) rather than resizing. The symbol weight should never appear heavier than adjacent text.
+
+**Correct:**
+```swift
+Label("Download", systemImage: "arrow.down.circle.fill")
+    .font(.body.weight(.semibold))
+    // Symbol inherits .semibold weight automatically via Label
+```
+
+**Incorrect:**
+```swift
+HStack {
+    Image(systemName: "arrow.down.circle.fill")
+        .font(.system(size: 32)) // explicit size ignores type scale
+    Text("Download")
+        .font(.body)
+}
+```
+
+### Rule 7.11: SF Symbols — Animations (iOS 17+)
+Use `symbolEffect` for symbol state transitions. Prefer discrete effects (`.bounce`, `.pulse`) for actions and indefinite effects (`.variableColor`) for ongoing state. Do not use manual cross-fade between symbol names when `contentTransition(.symbolEffect)` is available.
+
+**Correct:**
+```swift
+Image(systemName: isLoading ? "arrow.2.circlepath" : "checkmark.circle")
+    .contentTransition(.symbolEffect(.replace))
+    .symbolEffect(.pulse, isActive: isLoading)
+```
+
+**Incorrect:**
+```swift
+// Manual opacity cross-fade between symbol names
+if isLoading {
+    Image(systemName: "arrow.2.circlepath")
+} else {
+    Image(systemName: "checkmark.circle")
+}
+```
+
 ---
 
 ## 8. Patterns
