@@ -913,6 +913,56 @@ Replace translucent materials with solid backgrounds when Reduce Transparency is
 
 VoiceOver must traverse elements in a logical reading order (top-left to bottom-right for LTR). Use `.accessibilitySortPriority()` or `accessibilityElement(children:)` to correct order when the visual layout diverges.
 
+### Rule 11.6 — Respond to Bold Text
+
+When the user enables Bold Text in System Settings, custom-rendered text must adapt. SwiftUI text styles handle this automatically. For AppKit, check `NSWorkspace.shared.accessibilityDisplayShouldUseBoldText`, or use `@Environment(\.legibilityWeight)` in SwiftUI to apply heavier weights to custom text.
+
+**Correct:**
+```swift
+// SwiftUI — environment handles bold text automatically for standard styles
+Text("Section Header")
+    .font(.headline)
+
+// SwiftUI — custom rendering responds to legibilityWeight
+@Environment(\.legibilityWeight) var legibilityWeight
+
+var body: some View {
+    Text("Custom Label")
+        .fontWeight(legibilityWeight == .bold ? .bold : .regular)
+}
+```
+
+**Incorrect:**
+```swift
+// Hardcoded weight ignores Bold Text preference
+Text("Custom Label")
+    .fontWeight(.regular) // Never adapts to Bold Text setting
+```
+
+### Rule 11.7 — Respond to Increase Contrast
+
+When the user enables Increase Contrast in System Settings, custom colors must provide higher-contrast variants. Use `NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast` in AppKit, or `@Environment(\.accessibilityDisplayAdjustments)` / `@Environment(\.colorSchemeContrast)` in SwiftUI to detect and apply appropriate values.
+
+**Correct:**
+```swift
+// SwiftUI
+@Environment(\.colorSchemeContrast) var contrast
+
+var borderColor: Color {
+    contrast == .increased ? Color.primary : Color.secondary
+}
+
+// AppKit
+let shouldIncrease = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+let borderColor: NSColor = shouldIncrease ? .labelColor : .separatorColor
+```
+
+**Incorrect:**
+```swift
+// Static color ignores Increase Contrast setting
+let borderColor = NSColor.separatorColor // Always low-contrast; ignores user preference
+```
+
 ---
 
 ## Keyboard Shortcut Quick Reference
@@ -1019,6 +1069,8 @@ Before shipping a Mac app, verify:
 - [ ] Decorative animations disabled when Reduce Motion is enabled
 - [ ] Translucent surfaces replaced with solid backgrounds when Reduce Transparency is enabled
 - [ ] VoiceOver traversal order is logical (top-left to bottom-right)
+- [ ] Bold Text preference respected (SwiftUI handles automatically; AppKit checks `accessibilityDisplayShouldUseBoldText`)
+- [ ] Increase Contrast preference respected (custom colors provide higher-contrast variants via `colorSchemeContrast` or `accessibilityDisplayShouldIncreaseContrast`)
 
 ---
 

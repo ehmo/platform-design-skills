@@ -156,6 +156,8 @@ Quick-reference for all 11 categories and 58 rules. See `../SKILL.md` for full d
 | 11.3 | Respect Reduce Motion: disable decorative animations |
 | 11.4 | Respect Reduce Transparency: replace translucent materials with solid backgrounds |
 | 11.5 | Logical VoiceOver focus order; adjust with accessibilitySortPriority when needed |
+| 11.6 | Respond to Bold Text: use legibilityWeight or NSWorkspace.accessibilityDisplayShouldUseBoldText |
+| 11.7 | Respond to Increase Contrast: use colorSchemeContrast or NSWorkspace.accessibilityDisplayShouldIncreaseContrast |
 
 **Key principle:** VoiceOver, Full Keyboard Access, and Switch Control must work flawlessly. Accessibility is not optional.
 
@@ -165,10 +167,10 @@ Quick-reference for all 11 categories and 58 rules. See `../SKILL.md` for full d
 
 | Priority | Sections | Rule Count |
 |----------|----------|------------|
-| CRITICAL | Menu Bar, Windows, Keyboard, Accessibility | 23 rules |
+| CRITICAL | Menu Bar, Windows, Keyboard, Accessibility | 25 rules |
 | HIGH | Toolbars, Sidebars, Pointer/Mouse, Visual Design | 22 rules |
 | MEDIUM | Notifications, System Integration, Popovers | 13 rules |
-| **Total** | **11 sections** | **58 rules** |
+| **Total** | **11 sections** | **60 rules** |
 
 ---
 
