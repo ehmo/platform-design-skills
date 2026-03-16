@@ -662,7 +662,7 @@ Box(
 ```kotlin
 // Detect bold text preference (API 31+)
 val fontWeightAdjustment = resources.configuration.fontWeightAdjustment
-val isBoldText = fontWeightAdjustment >= FontStyle.FontWeightBold
+val isBoldText = fontWeightAdjustment >= 700 // equivalent to FontWeight.Bold.weight
 
 // Detect high contrast mode
 val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
