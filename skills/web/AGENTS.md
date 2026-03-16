@@ -36,7 +36,7 @@ web/
 |-------|-----------|
 | CRITICAL | Accessibility/WCAG, Responsive Design |
 | HIGH | Forms, Typography, Performance |
-| MEDIUM | Animation, Dark Mode, Navigation, Touch, i18n |
+| MEDIUM | Animation, Dark Mode, Navigation, Touch, i18n, Progressive Web Apps |
 
 ## Conventions
 
