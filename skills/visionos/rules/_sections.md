@@ -36,6 +36,8 @@ Rules where violations break core spatial UX or cause user discomfort.
 | ACC-02 | Full accessibility tree coverage | VoiceOver can reach all interactive elements |
 | ACC-03 | Support pointer control and Switch Control | App navigable without eye/hand input |
 | ACC-04 | Respect Reduce Motion | Disable spatial animations and transitions |
+| ACC-05 | Respond to Bold Text | Custom text adapts via `legibilityWeight` / `isBoldTextEnabled` |
+| ACC-06 | Respond to Increase Contrast | Custom colors provide higher-contrast variants via `colorSchemeContrast` |
 
 ---
 
@@ -131,5 +133,5 @@ Rules where violations miss platform polish or conventions.
 | Immersive Spaces | 7 | 7 HIGH |
 | Materials & Depth | 6 | 6 MEDIUM |
 | Ornaments | 6 | 6 MEDIUM |
-| Accessibility | 4 | 4 CRITICAL |
-| **Total** | **48** | |
+| Accessibility | 6 | 6 CRITICAL |
+| **Total** | **50** | |
