@@ -7,7 +7,7 @@ Quick reference for locating rules by category and ID.
 | # | Section | Priority | Rules | Topics |
 |---|---------|----------|-------|--------|
 | 1 | Material You & Theming | CRITICAL | R1.1–R1.11 | Dynamic color, color roles, light/dark themes, custom seeds, tonal palettes |
-| 2 | Navigation | CRITICAL | R2.1–R2.12 | Navigation bar, navigation rail, navigation drawer, predictive back, up vs back |
+| 2 | Navigation | CRITICAL | R2.1–R2.13 | Navigation bar, navigation rail, navigation drawer, predictive back, up vs back |
 | 3 | Layout & Responsive | HIGH | R3.1–R3.10 | Window size classes, Material grid, edge-to-edge, insets, foldable support |
 | 4 | Typography | HIGH | R4.1–R4.5 | Type scale, sp units, font scaling, line height, custom fonts |
 | 5 | Components | HIGH | R5.1–R5.18 | FAB, top app bar, bottom sheets, dialogs, snackbars, chips, cards |
@@ -47,6 +47,7 @@ Quick reference for locating rules by category and ID.
 - **R2.10** — Opt in to predictive back; use `OnBackInvokedCallback`
 - **R2.11** — System back != Up button; they may navigate differently
 - **R2.12** — No "are you sure?" on back unless unsaved user input
+- **R2.13** — Do not suppress the system predictive back preview animation; interpolate custom transitions using `BackEventCompat.progress` and respect `BackEventCompat.swipeEdge`
 
 ### 3. Layout & Responsive [HIGH]
 
