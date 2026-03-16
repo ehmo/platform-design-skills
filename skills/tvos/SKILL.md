@@ -168,7 +168,7 @@ The Top Shelf is a prominent content area displayed when the user focuses on you
 ### Rules
 
 **SHELF-01: Provide a Top Shelf extension.**
-Apps should include a TVTopShelfProvider that returns dynamic content. A static Top Shelf is a missed opportunity for engagement.
+Apps should include a `TVTopShelfContentProvider` (tvOS 14+) that returns dynamic content. `TVTopShelfProvider` is deprecated since tvOS 14 — do not use it. A static Top Shelf is a missed opportunity for engagement.
 
 **SHELF-02: Use the correct layout style for your content.**
 - **Inset banner**: 1 large focused item with smaller items on either side. Best for featured or editorial content.

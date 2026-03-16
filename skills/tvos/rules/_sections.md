@@ -72,7 +72,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 
 | ID | Rule | Severity |
 |----|------|----------|
-| SHELF-01 | Provide a TVTopShelfProvider extension with dynamic content | HIGH |
+| SHELF-01 | Provide a TVTopShelfContentProvider extension with dynamic content (use TVTopShelfContentProvider, not deprecated TVTopShelfProvider) | HIGH |
 | SHELF-02 | Use correct layout: inset banner or sectioned content | HIGH |
 | SHELF-03 | Every Top Shelf item must deep-link into corresponding content | HIGH |
 | SHELF-04 | Use high-quality imagery at recommended dimensions | HIGH |
@@ -86,7 +86,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | Sectioned | Poster | 404x608pt | 808x1216pt |
 
 ### Implementation
-- Conform to `TVTopShelfProvider` protocol
+- Conform to `TVTopShelfContentProvider` protocol (tvOS 14+); `TVTopShelfProvider` is deprecated
 - Return `TVTopShelfSectionedContent` or `TVTopShelfInsetContent`
 - Each `TVTopShelfItem` takes a `URL` for deep linking
 - System caches and refreshes on its own schedule; call `TVTopShelfContentProvider.topShelfContentDidChange()` to request update
