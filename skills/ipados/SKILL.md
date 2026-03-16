@@ -493,6 +493,75 @@ Use this checklist to verify iPad-readiness:
 - [ ] Extended content shown (not just mirror)
 - [ ] Graceful handling of connect/disconnect
 
+### Accessibility
+- [ ] VoiceOver labels on all icon-only buttons and custom interactive elements
+- [ ] Text uses semantic type styles and scales with Dynamic Type (including accessibility sizes)
+- [ ] All functionality reachable with Full Keyboard Access (Tab navigation, logical focus order)
+- [ ] Interactive elements are distinguishable without relying solely on hover state
+- [ ] VoiceOver navigates correctly at all Split View widths
+
+---
+
+## 9. Accessibility (CRITICAL)
+
+**Impact:** CRITICAL
+
+### Rule 9.1: VoiceOver Labels on All Interactive Elements
+
+Every button, control, and interactive element must have a meaningful accessibility label. Icon-only toolbar items and custom views must use `.accessibilityLabel()`.
+
+**Correct:**
+```swift
+Button(action: compose) {
+    Image(systemName: "square.and.pencil")
+}
+.accessibilityLabel("Compose new message")
+```
+
+**Incorrect:**
+```swift
+Button(action: compose) {
+    Image(systemName: "square.and.pencil")
+}
+// VoiceOver reads "square.and.pencil" — meaningless to users
+```
+
+### Rule 9.2: Support Dynamic Type Including Accessibility Sizes
+
+Use semantic text styles (`title`, `body`, `caption`) so text scales with the user's preferred size. In iPad's larger canvas, never clamp text size or disable scaling. Test up to the five accessibility size steps.
+
+```swift
+Text("Section Header")
+    .font(.headline)  // Scales with Dynamic Type automatically
+```
+
+### Rule 9.3: Pointer Accessibility — Hover Must Not Be the Only Cue
+
+Hover states (`.hoverEffect`) enhance pointer input but must not be the sole indicator of interactivity. Ensure all interactive elements are also distinguishable via color, shape, or label for VoiceOver and keyboard-only users.
+
+### Rule 9.4: Full Keyboard Access and Focus Routing
+
+With Full Keyboard Access enabled, Tab must move focus through all interactive elements in logical order. In Split View and multi-window layouts, focus must not escape to a hidden or occluded window. Use `@FocusState` and `.focusable()` to control the keyboard focus graph.
+
+```swift
+struct FormView: View {
+    @FocusState private var focusedField: Field?
+
+    var body: some View {
+        VStack {
+            TextField("Name", text: $name)
+                .focused($focusedField, equals: .name)
+            TextField("Email", text: $email)
+                .focused($focusedField, equals: .email)
+        }
+    }
+}
+```
+
+### Rule 9.5: VoiceOver in Split View — Separate Focus Contexts
+
+In Split View, each app has its own VoiceOver focus context. Your app must not assume it occupies the full screen. Ensure VoiceOver can navigate your entire visible interface even at 1/3 or 1/2 split width. Do not hide actionable content outside the visible region without also removing it from the accessibility tree.
+
 ---
 
 ## Anti-Patterns

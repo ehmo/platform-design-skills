@@ -16,6 +16,7 @@ iPad-specific HIG rules extending iOS patterns for the larger, multitasking-capa
 | 6 | Apple Pencil | MEDIUM | Scribble, hover detection, PencilKit |
 | 7 | Drag and Drop | HIGH | Inter-app, multi-item, spring-loaded, Universal Control |
 | 8 | External Display | MEDIUM | Extended content, AirPlay, display lifecycle |
+| 9 | Accessibility | CRITICAL | VoiceOver labels, Dynamic Type, pointer accessibility, Full Keyboard Access |
 
 ## Key Differentiators from iOS
 
@@ -40,3 +41,6 @@ iPad-specific HIG rules extending iOS patterns for the larger, multitasking-capa
 - Never ignore drag and drop — at minimum support dragging text, images, and URLs
 - Never block the keyboard from dismissing modal sheets on iPad
 - Never present iPhone-style modals when a popover or inspector is more appropriate
+- Never omit accessibility labels on icon-only buttons or custom interactive elements
+- Never disable Dynamic Type scaling or clamp text size — iPad users rely on large type too
+- Never create keyboard focus paths that trap or skip interactive elements in Split View

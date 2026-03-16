@@ -39,3 +39,8 @@
 - **Impact**: MEDIUM
 - **Scope**: Extended display content, AirPlay support, display connection/disconnection handling
 - **Applies when**: App supports presentation mode, external monitors, or AirPlay output
+
+## Section 9: Accessibility
+- **Impact**: CRITICAL
+- **Scope**: VoiceOver labels, Dynamic Type scaling, pointer accessibility, Full Keyboard Access, Split View focus routing
+- **Applies when**: Building any interactive element, supporting keyboard users, testing with assistive technologies, adapting UI across split widths
