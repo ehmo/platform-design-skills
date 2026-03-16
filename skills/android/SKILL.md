@@ -951,7 +951,7 @@ Use this checklist to evaluate Android UI implementations:
 | Navigation bar without labels | Violates Material guidelines | Always show labels |
 | Dialog for non-critical info | Interrupts user unnecessarily | Use Snackbar or Bottom Sheet |
 | FAB for secondary actions | Dilutes primary action prominence | One FAB for the primary action only |
-| `onBackPressed()` override | Deprecated; breaks predictive back | Use `OnBackInvokedCallback` |
+| `onBackPressed()` override | Deprecated; breaks predictive back | Use `BackHandler` (Compose) or `OnBackInvokedCallback` (View-based) for predictive back support |
 | Touch targets < 48dp | Accessibility violation | Ensure minimum 48x48dp |
 | Permission request at launch | Users deny without context | Request in context with rationale |
 | Pure black (#000000) dark theme | Eye strain; not Material 3 | Use Material surface color roles |
