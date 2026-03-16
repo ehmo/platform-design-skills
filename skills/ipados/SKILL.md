@@ -521,6 +521,56 @@ struct FormView: View {
 
 In Split View, each app has its own VoiceOver focus context. Your app must not assume it occupies the full screen. Ensure VoiceOver can navigate your entire visible interface even at 1/3 or 1/2 split width. Do not hide actionable content outside the visible region without also removing it from the accessibility tree.
 
+### Rule 9.6: Respond to Bold Text
+
+When the user enables Bold Text in Settings, custom-rendered text must adapt. SwiftUI text styles handle this automatically. UIKit code must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)` in SwiftUI.
+
+**Correct:**
+```swift
+// SwiftUI — handled automatically for standard text styles
+Text("Section Header")
+    .font(.headline)
+
+// SwiftUI — custom rendering respects legibilityWeight
+@Environment(\.legibilityWeight) var legibilityWeight
+
+var body: some View {
+    Text("Custom Label")
+        .fontWeight(legibilityWeight == .bold ? .bold : .regular)
+}
+```
+
+**Incorrect:**
+```swift
+// Hardcoded weight ignores Bold Text preference
+label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+// Missing: re-query font when UIAccessibility.boldTextStatusDidChangeNotification fires
+```
+
+### Rule 9.7: Respond to Increase Contrast
+
+When the user enables Increase Contrast in Settings, custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI or `UIAccessibility.isDarkerSystemColorsEnabled` in UIKit.
+
+**Correct:**
+```swift
+// SwiftUI
+@Environment(\.colorSchemeContrast) var contrast
+
+var separatorColor: Color {
+    contrast == .increased ? Color.primary : Color.secondary
+}
+
+// UIKit
+let useHighContrast = UIAccessibility.isDarkerSystemColorsEnabled
+let borderColor: UIColor = useHighContrast ? .label : .separator
+```
+
+**Incorrect:**
+```swift
+// Static color ignores Increase Contrast setting
+let borderColor = UIColor.separator // Always low-contrast; ignores user preference
+```
+
 ---
 
 ## Evaluation Checklist
@@ -579,6 +629,8 @@ Use this checklist to verify iPad-readiness:
 - [ ] All functionality reachable with Full Keyboard Access (Tab navigation, logical focus order)
 - [ ] Interactive elements are distinguishable without relying solely on hover state
 - [ ] VoiceOver navigates correctly at all Split View widths
+- [ ] Bold Text preference respected (SwiftUI handles automatically; UIKit checks `UIAccessibility.isBoldTextEnabled`)
+- [ ] Increase Contrast preference respected (custom colors provide higher-contrast variants via `colorSchemeContrast` or `isDarkerSystemColorsEnabled`)
 
 ---
 
