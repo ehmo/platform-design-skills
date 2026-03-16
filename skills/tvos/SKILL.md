@@ -351,6 +351,7 @@ Use this checklist when reviewing a tvOS app design or implementation.
 - [ ] Parallax effects and decorative animations are disabled when Reduce Motion is enabled
 - [ ] Bold Text preference is respected (SwiftUI handles automatically; custom text checks `isBoldTextEnabled`)
 - [ ] Increase Contrast preference is respected (custom colors provide higher-contrast variants)
+- [ ] Larger Text (Dynamic Type) preference is respected (use `Font.TextStyle` in SwiftUI or `UIFontMetrics` in UIKit)
 
 ---
 

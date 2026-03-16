@@ -1,6 +1,6 @@
 # macOS Design Guidelines — Section Index
 
-Quick-reference for all 11 categories and 58 rules. See `../SKILL.md` for full details, code examples, and rationale.
+Quick-reference for all 11 categories and 60 rules. See `../SKILL.md` for full details, code examples, and rationale.
 
 ---
 
