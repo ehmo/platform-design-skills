@@ -402,9 +402,9 @@ Ensure VoiceOver reads elements in a logical order. Use `.accessibilitySortPrior
 ```swift
 VStack {
     Text("Price: $29.99")
-        .accessibilitySortPriority(1) // Read first
+        .accessibilitySortPriority(1) // Read second (lower number = lower priority)
     Text("Product Name")
-        .accessibilitySortPriority(2) // Read second
+        .accessibilitySortPriority(2) // Read first (higher number = higher priority)
 }
 ```
 
