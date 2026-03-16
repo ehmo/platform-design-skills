@@ -249,7 +249,7 @@ Modifier.predictiveBackHandler(enabled = true) { progress ->
 ```
 
 **Rules:**
-- R2.10: Opt in to predictive back in the manifest. Handle `OnBackInvokedCallback` instead of overriding `onBackPressed()`.
+- R2.10: Opt in to predictive back in the manifest. In **Compose** apps, use `BackHandler` (from `androidx.activity.compose`) to intercept back events. In **View-based** apps, implement `OnBackInvokedCallback` (API 33+) or `OnBackPressedCallback` (AndroidX) instead of overriding `onBackPressed()`.
 - R2.11: The system back gesture navigates back in the navigation stack. The Up button (toolbar arrow) navigates up in the app hierarchy. These may differ.
 - R2.12: Never intercept system back to show "are you sure?" dialogs unless there is unsaved user input.
 
