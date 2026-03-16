@@ -222,6 +222,25 @@ Load individual sections as needed. Each section is self-contained.
 
 ---
 
+<!-- SECTION: pwa -->
+## Progressive Web Apps [MEDIUM]
+
+### Rules
+
+1. **Provide a complete Web App Manifest.** Link `manifest.json` from `<head>`. Required fields: `name`, `short_name`, `start_url`, `display`, and `icons` (192px and 512px PNG). Missing fields prevent the install prompt.
+
+2. **Set `theme_color` and `background_color`.** `theme_color` tints OS chrome and the task switcher. `background_color` fills the splash screen. Match both to your brand palette.
+
+3. **Register a service worker with a fetch handler.** Required for installability. Cache critical assets on `install`; serve from cache when offline. Use a `fetch` event listener to intercept requests.
+
+4. **Meet all installability criteria.** HTTPS is required. The service worker must have a `fetch` handler. The manifest must include `name`, `icons`, `start_url`, and `display: standalone` (or `fullscreen`/`minimal-ui`).
+
+5. **Choose `display` mode intentionally.** Use `standalone` for most apps (replaces browser UI). Use `fullscreen` for games/media. Use `minimal-ui` to retain minimal browser controls. Avoid `browser` for installed app experiences.
+
+<!-- /SECTION: pwa -->
+
+---
+
 ## Quick Reference: Semantic HTML Elements
 
 | Element | Use For | Replaces |

@@ -1215,6 +1215,92 @@ Test layouts in RTL mode. Flexbox and Grid handle RTL automatically with logical
 
 ---
 
+## 11. Progressive Web Apps [MEDIUM]
+
+PWAs allow web apps to be installed and run offline. When building an installable web app, the following rules ensure the experience is consistent and reliable.
+
+### 11.1 Provide a Complete Web App Manifest
+
+Include a `manifest.json` linked from `<head>` with all required fields for installability. Missing fields silently prevent install prompts.
+
+```html
+<link rel="manifest" href="/manifest.json">
+```
+
+```json
+{
+  "name": "My App",
+  "short_name": "App",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
+```
+
+**Incorrect:**
+```json
+{
+  "name": "My App"
+  // Missing start_url, display, and icons — app is not installable
+}
+```
+
+### 11.2 Set theme_color and background_color
+
+`theme_color` tints the browser chrome and the OS task switcher. `background_color` fills the splash screen before the app loads. Both must match your brand colors.
+
+```json
+{
+  "theme_color": "#1a73e8",
+  "background_color": "#ffffff"
+}
+```
+
+### 11.3 Register a Service Worker for Offline Support
+
+A service worker is required for installability and offline capability. Cache critical assets on install; respond from cache when offline.
+
+```js
+// In your main entry point
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+```
+
+```js
+// sw.js — cache on install, serve from cache when offline
+const CACHE = 'v1';
+const PRECACHE = ['/', '/index.html', '/app.js', '/app.css'];
+
+self.addEventListener('install', e =>
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)))
+);
+
+self.addEventListener('fetch', e =>
+  e.respondWith(
+    caches.match(e.request).then(hit => hit ?? fetch(e.request))
+  )
+);
+```
+
+### 11.4 Meet Installability Criteria
+
+For the browser install prompt to appear: the app must be served over HTTPS, have a registered service worker with a `fetch` handler, and include a manifest with `name`, `icons`, `start_url`, and `display: standalone` (or `fullscreen`/`minimal-ui`).
+
+### 11.5 Use display Mode Appropriately
+
+| Value | Use When |
+|-------|----------|
+| `standalone` | App replaces browser UI; most common choice |
+| `fullscreen` | Games or media apps needing the entire screen |
+| `minimal-ui` | Retain minimal browser controls (back, reload) |
+| `browser` | No installation behavior; opens in browser tab |
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist when building or reviewing web interfaces.
