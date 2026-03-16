@@ -317,8 +317,12 @@ For drawing apps, respond to `force` (pressure) and `altitudeAngle`/`azimuthAngl
 Apple Pencil with hover (M2 iPad Pro and later) provides position data before the pencil touches the screen. Use this for preview effects, tool size indicators, and enhanced precision.
 
 ```swift
-// UIKit hover support
-override func pencilHoverChanged(_ hover: UIHoverGestureRecognizer) {
+// UIKit hover support via UIHoverGestureRecognizer
+let hoverRecognizer = UIHoverGestureRecognizer(target: self, action: #selector(pencilHoverChanged(_:)))
+hoverRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.pencil.rawValue)]
+canvas.addGestureRecognizer(hoverRecognizer)
+
+@objc func pencilHoverChanged(_ hover: UIHoverGestureRecognizer) {
     let location = hover.location(in: canvas)
     showBrushPreview(at: location)
 }
