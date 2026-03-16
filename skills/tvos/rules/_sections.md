@@ -150,8 +150,8 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 
 | Severity | Count |
 |----------|-------|
-| CRITICAL | 11 |
-| HIGH | 15 |
-| MEDIUM | 10 |
-| LOW | 2 |
-| **Total** | **38** |
+| CRITICAL | 12 |
+| HIGH | 17 |
+| MEDIUM | 12 |
+| LOW | 3 |
+| **Total** | **44** |
