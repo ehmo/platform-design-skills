@@ -657,7 +657,30 @@ Box(
 **Rules:**
 - R6.7: Text contrast ratio must be at least 4.5:1 for normal text and 3:1 for large text (18sp+ or 14sp+ bold) against its background.
 - R6.8: Never use color as the only means of conveying information. Pair with icons, text, or patterns.
-- R6.9: Support "bold text" and "high contrast" accessibility settings.
+- R6.9: Support bold text and high contrast accessibility settings. Use `Configuration.fontWeightAdjustment` (API 31+) to detect the user's bold text preference and scale custom font weights accordingly. Use `AccessibilityManager.isHighTextContrastEnabled()` to detect high contrast mode and substitute higher-contrast color values. Material 3 components handle both automatically; custom text rendering and color usage must opt in explicitly.
+
+```kotlin
+// Detect bold text preference (API 31+)
+val fontWeightAdjustment = resources.configuration.fontWeightAdjustment
+val isBoldText = fontWeightAdjustment >= FontStyle.FontWeightBold
+
+// Detect high contrast mode
+val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+val isHighContrast = am.isHighTextContrastEnabled
+
+// Compose: use MaterialTheme.typography which respects fontWeightAdjustment automatically
+Text(
+    text = "Label",
+    style = MaterialTheme.typography.bodyLarge // Adapts to fontWeightAdjustment
+)
+
+// For custom colors: provide high-contrast alternative
+val labelColor = if (isHighContrast) {
+    MaterialTheme.colorScheme.onSurface  // Strong contrast
+} else {
+    MaterialTheme.colorScheme.onSurfaceVariant  // Normal contrast
+}
+```
 
 ### 6.4 Focus and Traversal
 
