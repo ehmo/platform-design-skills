@@ -72,7 +72,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 
 | ID | Rule | Severity |
 |----|------|----------|
-| SHELF-01 | Provide a TVTopShelfProvider extension with dynamic content | HIGH |
+| SHELF-01 | Provide a TVTopShelfContentProvider extension with dynamic content (use TVTopShelfContentProvider, not deprecated TVTopShelfProvider) | HIGH |
 | SHELF-02 | Use correct layout: inset banner or sectioned content | HIGH |
 | SHELF-03 | Every Top Shelf item must deep-link into corresponding content | HIGH |
 | SHELF-04 | Use high-quality imagery at recommended dimensions | HIGH |
@@ -86,7 +86,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | Sectioned | Poster | 404x608pt | 808x1216pt |
 
 ### Implementation
-- Conform to `TVTopShelfProvider` protocol
+- Conform to `TVTopShelfContentProvider` protocol (tvOS 14+); `TVTopShelfProvider` is deprecated
 - Return `TVTopShelfSectionedContent` or `TVTopShelfInsetContent`
 - Each `TVTopShelfItem` takes a `URL` for deep linking
 - System caches and refreshes on its own schedule; call `TVTopShelfContentProvider.topShelfContentDidChange()` to request update
@@ -133,12 +133,28 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 
 ---
 
+## Section 7: Accessibility
+
+| ID | Rule | Severity |
+|----|------|----------|
+| ACCESS-01 | Accessibility label on every interactive element and card | CRITICAL |
+| ACCESS-02 | Accessibility hints for non-obvious interactions | HIGH |
+| ACCESS-03 | VoiceOver focus order matches visual focus order | HIGH |
+| ACCESS-04 | Respect Reduce Motion; disable parallax and decorative animations | HIGH |
+| ACCESS-05 | Respond to Bold Text; adapt custom text via legibilityWeight / isBoldTextEnabled | HIGH |
+| ACCESS-06 | Respond to Increase Contrast; provide higher-contrast variants via colorSchemeContrast | HIGH |
+| ACCESS-07 | Respect Dynamic Type / Larger Text; use Font.TextStyle in SwiftUI or UIFontMetrics in UIKit | HIGH |
+
+**Key principle**: VoiceOver on tvOS navigates via the focus engine. Correct focus configuration ensures VoiceOver users have the same experience as sighted users.
+
+---
+
 ## Rule Count by Severity
 
 | Severity | Count |
 |----------|-------|
-| CRITICAL | 10 |
-| HIGH | 12 |
-| MEDIUM | 10 |
-| LOW | 2 |
-| **Total** | **34** |
+| CRITICAL | 12 |
+| HIGH | 20 |
+| MEDIUM | 12 |
+| LOW | 3 |
+| **Total** | **47** |

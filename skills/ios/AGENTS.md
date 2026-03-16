@@ -14,7 +14,7 @@ Apple Human Interface Guidelines for iPhone apps — layout, navigation, typogra
 | 4 | Color & Dark Mode | HIGH | Semantic colors, contrast, P3 gamut, accent color |
 | 5 | Accessibility | CRITICAL | VoiceOver, Bold Text, Reduce Motion, Switch Control |
 | 6 | Gestures & Input | HIGH | Standard gestures, system gesture protection, input methods |
-| 7 | Components | HIGH | Buttons, alerts, sheets, lists, tab bars, search, menus |
+| 7 | Components | HIGH | Buttons, alerts, sheets, lists, tab bars, search, menus, SF Symbols |
 | 8 | Patterns | MEDIUM | Onboarding, loading, launch, modality, feedback |
 | 9 | Privacy & Permissions | HIGH | Contextual requests, Sign in with Apple, ATT |
 | 10 | System Integration | MEDIUM | Widgets, App Shortcuts, Spotlight, Live Activities |

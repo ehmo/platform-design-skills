@@ -7,11 +7,11 @@ Quick reference for locating rules by category and ID.
 | # | Section | Priority | Rules | Topics |
 |---|---------|----------|-------|--------|
 | 1 | Material You & Theming | CRITICAL | R1.1–R1.11 | Dynamic color, color roles, light/dark themes, custom seeds, tonal palettes |
-| 2 | Navigation | CRITICAL | R2.1–R2.12 | Navigation bar, navigation rail, navigation drawer, predictive back, up vs back |
+| 2 | Navigation | CRITICAL | R2.1–R2.13 | Navigation bar, navigation rail, navigation drawer, predictive back, up vs back |
 | 3 | Layout & Responsive | HIGH | R3.1–R3.10 | Window size classes, Material grid, edge-to-edge, insets, foldable support |
 | 4 | Typography | HIGH | R4.1–R4.5 | Type scale, sp units, font scaling, line height, custom fonts |
 | 5 | Components | HIGH | R5.1–R5.18 | FAB, top app bar, bottom sheets, dialogs, snackbars, chips, cards |
-| 6 | Accessibility | CRITICAL | R6.1–R6.12 | TalkBack, contentDescription, touch targets, contrast, focus order |
+| 6 | Accessibility | CRITICAL | R6.1–R6.13 | TalkBack, contentDescription, touch targets, contrast, focus order, custom canvas views |
 | 7 | Gestures & Input | MEDIUM | R7.1–R7.7 | System gestures, pull to refresh, swipe to dismiss, long press, ripple |
 | 8 | Notifications | MEDIUM | R8.1–R8.9 | Channels, importance, messaging style, expandable, foreground service |
 | 9 | Permissions & Privacy | HIGH | R9.1–R9.8 | Runtime permissions, rationale, photo picker, approximate location |
@@ -44,9 +44,10 @@ Quick reference for locating rules by category and ID.
 - **R2.7** — Rail labels optional but recommended
 - **R2.8** — Modal drawer on compact, permanent drawer on expanded
 - **R2.9** — Group drawer items with dividers and section headers
-- **R2.10** — Opt in to predictive back; use `OnBackInvokedCallback`
+- **R2.10** — Opt in to predictive back; use `BackHandler` (Compose) or `OnBackInvokedCallback` (View-based)
 - **R2.11** — System back != Up button; they may navigate differently
 - **R2.12** — No "are you sure?" on back unless unsaved user input
+- **R2.13** — Do not suppress the system predictive back preview animation; interpolate custom transitions using `BackEventCompat.progress` and respect `BackEventCompat.swipeEdge`
 
 ### 3. Layout & Responsive [HIGH]
 
@@ -104,6 +105,7 @@ Quick reference for locating rules by category and ID.
 - **R6.10** — Logical focus order (top-to-bottom, start-to-end)
 - **R6.11** — Move focus to logical target after navigation/dialog dismissal
 - **R6.12** — Full operability via TalkBack, Switch Access, keyboard
+- **R6.13** — Custom canvas views must use ExploreByTouchHelper for a virtual accessibility tree
 
 ### 7. Gestures & Input [MEDIUM]
 
@@ -159,7 +161,7 @@ Quick reference for locating rules by category and ID.
 | Touch targets | 6.2 | 7.1 (gesture zones) |
 | System bars | 3.3 | 7.1 (gesture insets) |
 | FAB placement | 5.1 | 2.2 (rail header), 5.15 (snackbar) |
-| Font scaling | 4.1 | 6.4 (accessibility) |
+| Font scaling | 4.1 | R4.4 (200% scale test), R6.9 (bold text) |
 | Permissions | 9.1 | 9.5 (photo picker) |
 | Navigation sizing | 2.5 (table) | 3.1 (window size classes) |
-| Color roles | 1.2 | 2.4 (nav indicator), 5.3 (FAB color) |
+| Color roles | 1.2 | R2.4 (nav indicator active color), R5.3 (FAB color) |

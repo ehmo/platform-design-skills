@@ -56,6 +56,8 @@ All rules organized by category with stable IDs for cross-referencing.
 | W-CP-04 | Content meaningful without context (include units/labels) | HIGH |
 | W-CP-05 | Tap launches app to relevant context | HIGH |
 
+**API Note**: Complications are built with WidgetKit (watchOS 9+). Use `accessoryCircular`, `accessoryCorner`, `accessoryRectangular`, and `accessoryInline` widget families. ClockKit is deprecated.
+
 **Rationale**: Complications are the primary engagement surface. A well-designed complication delivers value without the user ever launching the app.
 
 ---
@@ -101,6 +103,21 @@ All rules organized by category with stable IDs for cross-referencing.
 
 ---
 
+## Section 8: Accessibility [CRITICAL]
+
+| ID | Rule | Priority |
+|----|------|----------|
+| W-AC-01 | Accessibility label on every interactive element | CRITICAL |
+| W-AC-02 | VoiceOver can navigate all app content | CRITICAL |
+| W-AC-03 | Custom controls have accessibilityValue and accessibilityHint | HIGH |
+| W-AC-04 | Respect Reduce Motion; disable decorative animations | HIGH |
+| W-AC-05 | Respond to Bold Text; adapt custom text via `@Environment(\.legibilityWeight)` | HIGH |
+| W-AC-06 | Respond to Increase Contrast; provide higher-contrast variants via colorSchemeContrast | HIGH |
+
+**Rationale**: VoiceOver is used on Apple Watch. Complications and health data must be accessible to all users.
+
+---
+
 ## Cross-Reference: Rule Count Summary
 
 | Section | Count | Priority |
@@ -112,4 +129,5 @@ All rules organized by category with stable IDs for cross-referencing.
 | Always On Display | 5 | MEDIUM |
 | Workouts & Health | 5 | MEDIUM |
 | Notifications | 4 | MEDIUM |
-| **Total** | **34** | |
+| Accessibility | 6 | CRITICAL |
+| **Total** | **40** | |

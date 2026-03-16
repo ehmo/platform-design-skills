@@ -225,10 +225,22 @@ PermanentNavigationDrawer(
 Android 13+ supports predictive back with an animation preview.
 
 ```kotlin
-// Compose: Predictive back handling
-val predictiveBackHandler = remember { PredictiveBackHandler(enabled = true) { progress ->
-    // Animate based on progress (0.0 to 1.0)
-}}
+// Compose: Predictive back with BackHandler (androidx.activity.compose)
+BackHandler(enabled = true) {
+    // Called when back is confirmed; navigate back in your nav controller
+    navController.popBackStack()
+}
+```
+
+```kotlin
+// Compose: Predictive back progress animation using predictiveBackHandler modifier
+// (androidx.activity:activity-compose 1.8+)
+Modifier.predictiveBackHandler(enabled = true) { progress ->
+    // progress is a Flow<BackEventCompat> with x, y, swipeEdge, progress (0.0–1.0)
+    progress.collect { backEvent ->
+        animationState = backEvent.progress
+    }
+}
 ```
 
 ```xml
@@ -237,9 +249,22 @@ val predictiveBackHandler = remember { PredictiveBackHandler(enabled = true) { p
 ```
 
 **Rules:**
-- R2.10: Opt in to predictive back in the manifest. Handle `OnBackInvokedCallback` instead of overriding `onBackPressed()`.
+- R2.10: Opt in to predictive back in the manifest. In **Compose** apps, use `BackHandler` (from `androidx.activity.compose`) to intercept back events. In **View-based** apps, implement `OnBackInvokedCallback` (API 33+) or `OnBackPressedCallback` (AndroidX) instead of overriding `onBackPressed()`.
 - R2.11: The system back gesture navigates back in the navigation stack. The Up button (toolbar arrow) navigates up in the app hierarchy. These may differ.
 - R2.12: Never intercept system back to show "are you sure?" dialogs unless there is unsaved user input.
+- R2.13: Do not suppress the system-provided back preview animation. If you implement custom enter/exit transitions, interpolate them using `BackEventCompat.progress` (0.0–1.0) and respect `BackEventCompat.swipeEdge` (`EDGE_LEFT`/`EDGE_RIGHT`) so the exiting screen scales down and shifts toward the initiating edge, matching the system animation.
+
+```kotlin
+// Compose: drive a custom animation from predictive back progress
+Modifier.predictiveBackHandler(enabled = true) { progress ->
+    progress.collect { backEvent ->
+        // backEvent.progress: 0.0 (gesture start) → 1.0 (committed)
+        // backEvent.swipeEdge: BackEventCompat.EDGE_LEFT or EDGE_RIGHT
+        exitScale = 1f - (backEvent.progress * 0.1f)
+        exitOffsetX = if (backEvent.swipeEdge == BackEventCompat.EDGE_LEFT) -backEvent.progress * 32.dp.toPx() else backEvent.progress * 32.dp.toPx()
+    }
+}
+```
 
 ### 2.5 Navigation Component Selection
 
@@ -632,7 +657,30 @@ Box(
 **Rules:**
 - R6.7: Text contrast ratio must be at least 4.5:1 for normal text and 3:1 for large text (18sp+ or 14sp+ bold) against its background.
 - R6.8: Never use color as the only means of conveying information. Pair with icons, text, or patterns.
-- R6.9: Support "bold text" and "high contrast" accessibility settings.
+- R6.9: Support bold text and high contrast accessibility settings. Use `Configuration.fontWeightAdjustment` (API 31+) to detect the user's bold text preference and scale custom font weights accordingly. Use `AccessibilityManager.isHighTextContrastEnabled()` to detect high contrast mode and substitute higher-contrast color values. Material 3 components handle both automatically; custom text rendering and color usage must opt in explicitly.
+
+```kotlin
+// Detect bold text preference (API 31+)
+val fontWeightAdjustment = resources.configuration.fontWeightAdjustment
+val isBoldText = fontWeightAdjustment >= 700 // equivalent to FontWeight.Bold.weight
+
+// Detect high contrast mode
+val am = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+val isHighContrast = am.isHighTextContrastEnabled
+
+// Compose: use MaterialTheme.typography which respects fontWeightAdjustment automatically
+Text(
+    text = "Label",
+    style = MaterialTheme.typography.bodyLarge // Adapts to fontWeightAdjustment
+)
+
+// For custom colors: provide high-contrast alternative
+val labelColor = if (isHighContrast) {
+    MaterialTheme.colorScheme.onSurface  // Strong contrast
+} else {
+    MaterialTheme.colorScheme.onSurfaceVariant  // Normal contrast
+}
+```
 
 ### 6.4 Focus and Traversal
 
@@ -655,6 +703,57 @@ Column {
 - R6.10: Focus order must follow a logical reading sequence (top-to-bottom, start-to-end). Avoid custom `focusOrder` unless the default is incorrect.
 - R6.11: After navigation or dialog dismissal, move focus to the most logical target element.
 - R6.12: All screens must be fully operable using TalkBack, Switch Access, and external keyboard.
+
+### 6.5 Custom Canvas Views
+
+Custom `View` subclasses that draw content on a Canvas (charts, custom pickers, drawing surfaces) are invisible to TalkBack by default because they have no child views. Use `ExploreByTouchHelper` from `androidx.customview.widget` to define a virtual accessibility tree.
+
+- R6.13: Custom canvas-drawn views must use `ExploreByTouchHelper` to expose a virtual accessibility tree to TalkBack. Override `getVirtualViewAt()` to map touch coordinates to virtual view IDs, and `onPopulateNodeForVirtualView()` to supply text, bounds, and actions for each virtual node.
+
+```kotlin
+import androidx.customview.widget.ExploreByTouchHelper
+
+class PieChartView(context: Context) : View(context) {
+
+    private val helper = object : ExploreByTouchHelper(this) {
+        override fun getVirtualViewAt(x: Float, y: Float): Int {
+            // Return virtual view ID for the slice at (x, y), or INVALID_ID
+            return sliceIndexAt(x, y)
+        }
+
+        override fun getVisibleVirtualViews(virtualViewIds: MutableList<Int>) {
+            slices.indices.forEach { virtualViewIds.add(it) }
+        }
+
+        override fun onPopulateNodeForVirtualView(
+            virtualViewId: Int,
+            node: AccessibilityNodeInfoCompat
+        ) {
+            val slice = slices[virtualViewId]
+            node.text = "${slice.label}: ${slice.percentage}%"
+            node.setBoundsInParent(slice.bounds)
+            node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK)
+        }
+
+        override fun onPerformActionForVirtualView(
+            virtualViewId: Int, action: Int, arguments: Bundle?
+        ): Boolean {
+            if (action == AccessibilityNodeInfoCompat.ACTION_CLICK) {
+                onSliceSelected(virtualViewId)
+                return true
+            }
+            return false
+        }
+    }
+
+    init {
+        ViewCompat.setAccessibilityDelegate(this, helper)
+    }
+
+    override fun dispatchHoverEvent(event: MotionEvent) =
+        helper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event)
+}
+```
 
 ---
 
@@ -939,7 +1038,7 @@ Use this checklist to evaluate Android UI implementations:
 | Navigation bar without labels | Violates Material guidelines | Always show labels |
 | Dialog for non-critical info | Interrupts user unnecessarily | Use Snackbar or Bottom Sheet |
 | FAB for secondary actions | Dilutes primary action prominence | One FAB for the primary action only |
-| `onBackPressed()` override | Deprecated; breaks predictive back | Use `OnBackInvokedCallback` |
+| `onBackPressed()` override | Deprecated; breaks predictive back | Use `BackHandler` (Compose) or `OnBackInvokedCallback` (View-based) for predictive back support |
 | Touch targets < 48dp | Accessibility violation | Ensure minimum 48x48dp |
 | Permission request at launch | Users deny without context | Request in context with rationale |
 | Pure black (#000000) dark theme | Eye strain; not Material 3 | Use Material surface color roles |

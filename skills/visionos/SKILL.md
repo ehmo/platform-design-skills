@@ -54,6 +54,26 @@ The standard interaction is: user looks at an element (eyes provide targeting), 
 **EH-02: Minimum interactive target size is 60pt.**
 Eye tracking has inherent imprecision. All tappable elements must be at least 60 points in diameter to be reliably targeted by gaze. This is larger than iOS touch targets (44pt). Smaller targets cause frustration and mis-selections.
 
+**Correct:**
+```swift
+// visionOS — button meeting 60pt minimum
+Button(action: confirmAction) {
+    Label("Confirm", systemImage: "checkmark")
+        .frame(minWidth: 60, minHeight: 60)
+        .padding(.horizontal, 16)
+}
+.buttonStyle(.borderedProminent)
+```
+
+**Incorrect:**
+```swift
+// visionOS — 32pt button too small for reliable gaze targeting
+Button(action: confirmAction) {
+    Image(systemName: "checkmark")
+        .frame(width: 32, height: 32)  // Below 60pt minimum; unreliable with eye tracking
+}
+```
+
 **EH-03: Provide hover feedback on gaze.**
 When the user's eyes rest on an interactive element, show a visible highlight or subtle expansion to confirm the element is targeted. This feedback is essential because there is no cursor. Without hover states, users cannot tell what they are about to select.
 
@@ -224,6 +244,41 @@ Ornaments use the same glass material system as windows but at a slightly differ
 
 ---
 
+## 8. Accessibility [CRITICAL]
+
+visionOS supports VoiceOver, Switch Control, and pointer control alternatives. Spatial UI must be navigable without relying solely on eye and hand input.
+
+### Rules
+
+**ACC-01: Every interactive element must have a meaningful accessibility label.**
+Buttons, controls, and 3D objects that users can interact with must have labels VoiceOver can announce. Do not rely on visual appearance or position alone.
+
+**ACC-02: VoiceOver must be able to reach all interactive elements.**
+Ensure the accessibility tree covers all focusable controls. Custom `RealityKit` entities that are interactive must be registered in the accessibility hierarchy.
+
+**ACC-03: Support pointer control and Switch Control alternatives.**
+Not all users can use eye tracking and hand pinch. Ensure the app is fully navigable via alternative input methods such as head pointer, Switch Control, or keyboard navigation.
+
+**ACC-04: Respect Reduce Motion.**
+Spatial animations, immersive transitions, and parallax effects must be disabled or reduced when Reduce Motion is enabled. Abrupt motion in a spatial environment can cause disorientation.
+
+```swift
+@Environment(\.accessibilityReduceMotion) var reduceMotion
+
+var body: some View {
+    Model3D(named: "SceneObject")
+        .rotation3DEffect(reduceMotion ? .zero : rotation, axis: (0, 1, 0))
+}
+```
+
+**ACC-05: Respond to Bold Text.**
+When the user enables Bold Text, custom-rendered text in visionOS must adapt. SwiftUI dynamic type styles handle this automatically; custom rendering must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)` to detect and apply heavier weights.
+
+**ACC-06: Respond to Increase Contrast.**
+When the user enables Increase Contrast, custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI to detect `.increased` and substitute higher-contrast color values for text and UI elements rendered against glass or environment backgrounds.
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist to evaluate a visionOS design or implementation.
@@ -281,6 +336,14 @@ Use this checklist to evaluate a visionOS design or implementation.
 - [ ] Navigation in leading ornament
 - [ ] Ornaments extend outward, not over content
 - [ ] Standard ornament styling used
+
+### Accessibility
+- [ ] Bold Text preference respected (SwiftUI handles automatically; custom text checks `legibilityWeight` or `UIAccessibility.isBoldTextEnabled`)
+- [ ] Increase Contrast preference respected (custom colors provide higher-contrast variants via `colorSchemeContrast`)
+- [ ] All interactive elements and 3D objects have meaningful accessibility labels
+- [ ] App is fully navigable via head pointer or Switch Control (not solely eye-and-pinch)
+- [ ] Spatial animations and immersive transitions disabled or reduced when Reduce Motion is enabled
+- [ ] Interactive RealityKit entities are registered in the accessibility hierarchy
 
 ---
 

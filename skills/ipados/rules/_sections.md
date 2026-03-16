@@ -11,7 +11,7 @@
 - **Applies when**: App runs alongside other apps, user resizes windows, app enters compact width via multitasking
 
 ## Section 3: Navigation
-- **Impact**: HIGH
+- **Impact**: CRITICAL
 - **Scope**: Sidebar navigation, tab-to-sidebar conversion, three-column layout, toolbar placement, detail views
 - **Applies when**: Designing primary navigation, building information hierarchies, placing toolbars and actions
 
@@ -39,3 +39,9 @@
 - **Impact**: MEDIUM
 - **Scope**: Extended display content, AirPlay support, display connection/disconnection handling
 - **Applies when**: App supports presentation mode, external monitors, or AirPlay output
+
+## Section 9: Accessibility
+- **Impact**: CRITICAL
+- **Scope**: VoiceOver labels, Dynamic Type scaling, pointer accessibility, Full Keyboard Access, Split View focus routing, Bold Text, Increase Contrast
+- **Applies when**: Building any interactive element, supporting keyboard users, testing with assistive technologies, adapting UI across split widths
+- **Rules**: 9.1 VoiceOver labels, 9.2 Dynamic Type, 9.3 Hover accessibility, 9.4 Full Keyboard Access, 9.5 VoiceOver in Split View, 9.6 Bold Text, 9.7 Increase Contrast

@@ -30,8 +30,10 @@ The defining constraint of watchOS. If a user cannot extract the key information
 
 | Device | Screen Width | Screen Height | Corner Radius |
 |--------|-------------|---------------|---------------|
-| 41mm (Series 9/10) | 176px | 215px | 36px |
-| 45mm (Series 9/10) | 198px | 242px | 39px |
+| 41mm (Series 9) | 176px | 215px | 36px |
+| 45mm (Series 9) | 198px | 242px | 39px |
+| 42mm (Series 10) | 180px | 220px | 37px |
+| 46mm (Series 10) | 205px | 251px | 40px |
 | 49mm (Ultra 2) | 205px | 251px | 40px |
 
 ### Anti-Patterns
@@ -53,6 +55,44 @@ The Digital Crown is the primary physical input for scrolling and precise value 
 - **W-DC-02**: For value pickers (time, quantity, sliders), bind the Crown to precise adjustments with haptic detents at each discrete value.
 - **W-DC-03**: Do not override or conflict with system Crown behaviors. The system uses the Crown for volume control during media playback, scrolling in system UI, and Time Travel in complications.
 - **W-DC-04**: Provide visual feedback synchronized with Crown rotation. The UI must respond frame-by-frame to Crown input with no perceptible lag.
+
+**Correct — Crown binding with haptic detents:**
+```swift
+struct VolumePickerView: View {
+    @State private var volume: Double = 0.5
+
+    var body: some View {
+        VStack {
+            Text("\(Int(volume * 100))%")
+                .font(.title.bold())
+            Image(systemName: "speaker.wave.3")
+        }
+        .focusable()
+        .digitalCrownRotation(
+            $volume,
+            from: 0.0,
+            through: 1.0,
+            by: 0.05,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+    }
+}
+```
+
+**Incorrect — ignoring the Crown and forcing touch-only interaction:**
+```swift
+struct VolumePickerView: View {
+    @State private var volume: Double = 0.5
+
+    var body: some View {
+        Slider(value: $volume)
+        // No .digitalCrownRotation — Crown input is ignored
+        // Users must use touch-only, which is imprecise and frustrating on Watch
+    }
+}
+```
 
 ### Anti-Patterns
 
@@ -99,21 +139,55 @@ Complications are the most visible surface of a Watch app. They live on the watc
 
 ### Rules
 
-- **W-CP-01**: Support multiple complication families to maximize watch face compatibility. At minimum support `circularSmall`, `graphicCorner`, and `graphicRectangular`.
+- **W-CP-01**: Support multiple complication families to maximize watch face compatibility. At minimum support `accessoryCircular`, `accessoryCorner`, and `accessoryRectangular` (WidgetKit, watchOS 9+).
 - **W-CP-02**: Provide both tinted (single-color) and full-color variants. Tinted complications must remain legible when the system applies a single tint color.
 - **W-CP-03**: Update complications via `TimelineProvider`. Provide future timeline entries when data is predictable (e.g., next calendar event, weather forecast). Keep data fresh -- stale complications erode trust.
 - **W-CP-04**: Complication content must be meaningful without context. A user glancing at their watch face should immediately understand the data (e.g., "72F" not "72").
 - **W-CP-05**: Tapping a complication must launch the app to a relevant context, not just the app's root view.
 
+**Correct — WidgetKit TimelineProvider for an accessoryCircular complication:**
+```swift
+struct StepCountProvider: TimelineProvider {
+    func placeholder(in context: Context) -> StepEntry {
+        StepEntry(date: Date(), steps: 5000)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (StepEntry) -> Void) {
+        completion(StepEntry(date: Date(), steps: HealthStore.shared.todaySteps))
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<StepEntry>) -> Void) {
+        let entry = StepEntry(date: Date(), steps: HealthStore.shared.todaySteps)
+        // Refresh in 15 minutes
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date())!
+        completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+    }
+}
+
+struct StepCountComplicationView: View {
+    let entry: StepEntry
+
+    var body: some View {
+        Gauge(value: Double(entry.steps), in: 0...10000) {
+            Image(systemName: "figure.walk")
+        } currentValueLabel: {
+            Text("\(entry.steps / 1000)k")
+        }
+        .gaugeStyle(.accessoryCircular)
+    }
+}
+```
+
 ### Complication Family Reference
+
+Use `WidgetFamily` values:
 
 | Family | Shape | Typical Content |
 |--------|-------|-----------------|
-| `circularSmall` | Small circle | Single value, icon, or gauge |
-| `graphicCorner` | Curved, top corners | Gauge with label, or text with icon |
-| `graphicCircular` | Larger circle | Gauge, icon with value, or stack |
-| `graphicRectangular` | Wide rectangle | Multi-line text, chart, or detailed view |
-| `graphicExtraLarge` | Full-width circle | Large gauge or prominent single value |
+| `accessoryCircular` | Small circle | Single value, icon, or gauge |
+| `accessoryCorner` | Curved, top corners | Gauge with label, or text with icon |
+| `accessoryRectangular` | Wide rectangle | Multi-line text, chart, or detailed view |
+| `accessoryInline` | Text row | Short label or value |
 
 ### Anti-Patterns
 
@@ -200,6 +274,44 @@ Watch notifications must be brief and actionable. The user's wrist is raised for
 
 ---
 
+## 8. Accessibility (CRITICAL)
+
+Apple Watch supports VoiceOver and other assistive technologies. Complications and app UI must be accessible.
+
+### Rules
+
+- **W-AC-01**: Every interactive element must have a meaningful accessibility label. SF Symbol names are not sufficient labels. Use `.accessibilityLabel()` on image-only buttons.
+- **W-AC-02**: VoiceOver must be able to navigate all app content. Do not hide essential information from the accessibility hierarchy.
+- **W-AC-03**: Provide accessibility values and hints for custom controls (e.g., gauges, progress indicators, custom pickers). Use `.accessibilityValue()` and `.accessibilityHint()`.
+- **W-AC-04**: Respect Reduce Motion. Disable or substitute decorative animations when enabled. Use `@Environment(\.accessibilityReduceMotion)`.
+- **W-AC-05**: Respond to Bold Text. When the user enables Bold Text, custom text must adapt. SwiftUI dynamic type handles this automatically; custom-drawn text must check `@Environment(\.legibilityWeight)`.
+- **W-AC-06**: Respond to Increase Contrast. When the user enables Increase Contrast, custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` to detect the user's preference.
+
+**Correct:**
+```swift
+Button(action: startWorkout) {
+    Image(systemName: "play.fill")
+}
+.accessibilityLabel("Start workout")
+```
+
+**Incorrect:**
+```swift
+Button(action: startWorkout) {
+    Image(systemName: "play.fill")
+}
+// VoiceOver reads "play" — not clear what action this performs
+```
+
+### Anti-Patterns
+
+- Image-only buttons with no accessibility label
+- Custom controls with no accessibility value or hint
+- Animations that do not respect Reduce Motion
+- Hiding content from the accessibility tree that sighted users can see
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist when reviewing a watchOS design or implementation.
@@ -244,3 +356,11 @@ Use this checklist when reviewing a watchOS design or implementation.
 - [ ] Does the Long Look include inline actions?
 - [ ] Are haptic types matched to notification urgency?
 - [ ] Is notification frequency appropriate (not excessive)?
+
+### Accessibility
+- [ ] All interactive elements have meaningful accessibility labels (no raw SF Symbol names)
+- [ ] Custom controls provide accessibility values and hints via `.accessibilityValue()` / `.accessibilityHint()`
+- [ ] VoiceOver can navigate all app content — no essential content hidden from the accessibility tree
+- [ ] Animations respect Reduce Motion (`@Environment(\.accessibilityReduceMotion)`)
+- [ ] Bold Text preference is respected (SwiftUI handles automatically; custom text checks `@Environment(\.legibilityWeight)`)
+- [ ] Increase Contrast preference is respected (custom colors provide higher-contrast variants)

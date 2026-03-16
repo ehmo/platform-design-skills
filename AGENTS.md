@@ -5,7 +5,7 @@ Agent skills for building and evaluating apps against official platform design g
 Each skill in `skills/` follows the Agent Skills format:
 - `SKILL.md` — Full guidelines with YAML frontmatter
 - `metadata.json` — Version, references, abstract
-- `rules/` — Individual rules with correct/incorrect examples
+- `rules/` — Contains `_sections.md`, a rule index/overview grouping all rules by category with IDs
 - `AGENTS.md` — Quick agent context
 
 ## Platforms

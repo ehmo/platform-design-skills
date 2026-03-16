@@ -39,7 +39,7 @@ iPad layouts must be purpose-built. Stretching an iPhone layout across a 13" dis
 
 ### 1.3 Support All iPad Screen Sizes
 
-Design for the full range: iPad Mini (8.3"), iPad (10.9"), iPad Air (11"/13"), and iPad Pro (11"/13"). Use flexible layouts that redistribute content rather than simply scaling.
+Design for the full range: iPad Mini (8.3"), iPad (11"), iPad Air (11"/13"), and iPad Pro (11"/13"). Use flexible layouts that redistribute content rather than simply scaling.
 
 ### 1.4 Column-Based Layouts for Regular Width
 
@@ -115,7 +115,7 @@ Use `UIScene` / SwiftUI `WindowGroup` to let users open multiple instances of yo
 
 ---
 
-## 3. Navigation (HIGH)
+## 3. Navigation (CRITICAL)
 
 ### 3.1 Sidebar for Primary Navigation
 
@@ -317,8 +317,12 @@ For drawing apps, respond to `force` (pressure) and `altitudeAngle`/`azimuthAngl
 Apple Pencil with hover (M2 iPad Pro and later) provides position data before the pencil touches the screen. Use this for preview effects, tool size indicators, and enhanced precision.
 
 ```swift
-// UIKit hover support
-override func pencilHoverChanged(_ hover: UIHoverGestureRecognizer) {
+// UIKit hover support via UIHoverGestureRecognizer
+let hoverRecognizer = UIHoverGestureRecognizer(target: self, action: #selector(pencilHoverChanged(_:)))
+hoverRecognizer.allowedTouchTypes = [NSNumber(value: UITouch.TouchType.pencil.rawValue)]
+canvas.addGestureRecognizer(hoverRecognizer)
+
+@objc func pencilHoverChanged(_ hover: UIHoverGestureRecognizer) {
     let location = hover.location(in: canvas)
     showBrushPreview(at: location)
 }
@@ -435,11 +439,137 @@ struct MyApp: App {
 
 ### 8.2 Handle Display Connection and Disconnection
 
-Listen for `UIScreen.didConnectNotification` and `UIScreen.didDisconnectNotification`. Transition gracefully -- if the external display disconnects mid-presentation, bring content back to the iPad screen without data loss.
+Observe external display lifecycle via `UIWindowScene` events in your `SceneDelegate` or by listening for `UIScene` session notifications (`UIApplication.didConnectSceneSessionNotification` / `UIApplication.didDisconnectSceneSessionNotification`). Transition gracefully — if the external display disconnects mid-presentation, bring content back to the iPad screen without data loss.
+
+```swift
+// SceneDelegate: detect when a scene (external display window) connects or disconnects
+func scene(_ scene: UIScene,
+           willConnectTo session: UISceneSession,
+           options connectionOptions: UIScene.ConnectionOptions) {
+    guard let windowScene = scene as? UIWindowScene else { return }
+    configureExternalDisplay(for: windowScene)
+}
+
+func sceneDidDisconnect(_ scene: UIScene) {
+    restoreContentToiPad()
+}
+```
 
 ### 8.3 Support Full External Display Resolution
 
-Use the full resolution and aspect ratio of the external display. Do not letterbox or pillarbox your content. Query `UIScreen.bounds` and `UIScreen.scale` for the connected display.
+Use the full resolution and aspect ratio of the external display. Do not letterbox or pillarbox your content. In iOS 16+ multi-scene contexts, `UIScreen.main` is deprecated — query the connected display via `UIWindowScene.coordinateSpace.bounds` and `UIWindowScene.screen.scale`, or use `@Environment(\.displayScale)` in SwiftUI.
+
+---
+
+## 9. Accessibility (CRITICAL)
+
+**Impact:** CRITICAL
+
+### Rule 9.1: VoiceOver Labels on All Interactive Elements
+
+Every button, control, and interactive element must have a meaningful accessibility label. Icon-only toolbar items and custom views must use `.accessibilityLabel()`.
+
+**Correct:**
+```swift
+Button(action: compose) {
+    Image(systemName: "square.and.pencil")
+}
+.accessibilityLabel("Compose new message")
+```
+
+**Incorrect:**
+```swift
+Button(action: compose) {
+    Image(systemName: "square.and.pencil")
+}
+// VoiceOver reads "square.and.pencil" — meaningless to users
+```
+
+### Rule 9.2: Support Dynamic Type Including Accessibility Sizes
+
+Use semantic text styles (`title`, `body`, `caption`) so text scales with the user's preferred size. In iPad's larger canvas, never clamp text size or disable scaling. Test up to the five accessibility size steps.
+
+```swift
+Text("Section Header")
+    .font(.headline)  // Scales with Dynamic Type automatically
+```
+
+### Rule 9.3: Pointer Accessibility — Hover Must Not Be the Only Cue
+
+Hover states (`.hoverEffect`) enhance pointer input but must not be the sole indicator of interactivity. Ensure all interactive elements are also distinguishable via color, shape, or label for VoiceOver and keyboard-only users.
+
+### Rule 9.4: Full Keyboard Access and Focus Routing
+
+With Full Keyboard Access enabled, Tab must move focus through all interactive elements in logical order. In Split View and multi-window layouts, focus must not escape to a hidden or occluded window. Use `@FocusState` and `.focusable()` to control the keyboard focus graph.
+
+```swift
+struct FormView: View {
+    @FocusState private var focusedField: Field?
+
+    var body: some View {
+        VStack {
+            TextField("Name", text: $name)
+                .focused($focusedField, equals: .name)
+            TextField("Email", text: $email)
+                .focused($focusedField, equals: .email)
+        }
+    }
+}
+```
+
+### Rule 9.5: VoiceOver in Split View — Separate Focus Contexts
+
+In Split View, each app has its own VoiceOver focus context. Your app must not assume it occupies the full screen. Ensure VoiceOver can navigate your entire visible interface even at 1/3 or 1/2 split width. Do not hide actionable content outside the visible region without also removing it from the accessibility tree.
+
+### Rule 9.6: Respond to Bold Text
+
+When the user enables Bold Text in Settings, custom-rendered text must adapt. SwiftUI text styles handle this automatically. UIKit code must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)` in SwiftUI.
+
+**Correct:**
+```swift
+// SwiftUI — handled automatically for standard text styles
+Text("Section Header")
+    .font(.headline)
+
+// SwiftUI — custom rendering respects legibilityWeight
+@Environment(\.legibilityWeight) var legibilityWeight
+
+var body: some View {
+    Text("Custom Label")
+        .fontWeight(legibilityWeight == .bold ? .bold : .regular)
+}
+```
+
+**Incorrect:**
+```swift
+// Hardcoded weight ignores Bold Text preference
+label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+// Missing: re-query font when UIAccessibility.boldTextStatusDidChangeNotification fires
+```
+
+### Rule 9.7: Respond to Increase Contrast
+
+When the user enables Increase Contrast in Settings, custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI or `UIAccessibility.isDarkerSystemColorsEnabled` in UIKit.
+
+**Correct:**
+```swift
+// SwiftUI
+@Environment(\.colorSchemeContrast) var contrast
+
+var separatorColor: Color {
+    contrast == .increased ? Color.primary : Color.secondary
+}
+
+// UIKit
+let useHighContrast = UIAccessibility.isDarkerSystemColorsEnabled
+let borderColor: UIColor = useHighContrast ? .label : .separator
+```
+
+**Incorrect:**
+```swift
+// Static color ignores Increase Contrast setting
+let borderColor = UIColor.separator // Always low-contrast; ignores user preference
+```
 
 ---
 
@@ -492,6 +622,15 @@ Use this checklist to verify iPad-readiness:
 ### External Display
 - [ ] Extended content shown (not just mirror)
 - [ ] Graceful handling of connect/disconnect
+
+### Accessibility
+- [ ] VoiceOver labels on all icon-only buttons and custom interactive elements
+- [ ] Text uses semantic type styles and scales with Dynamic Type (including accessibility sizes)
+- [ ] All functionality reachable with Full Keyboard Access (Tab navigation, logical focus order)
+- [ ] Interactive elements are distinguishable without relying solely on hover state
+- [ ] VoiceOver navigates correctly at all Split View widths
+- [ ] Bold Text preference respected (SwiftUI handles automatically; UIKit checks `UIAccessibility.isBoldTextEnabled`)
+- [ ] Increase Contrast preference respected (custom colors provide higher-contrast variants via `colorSchemeContrast` or `isDarkerSystemColorsEnabled`)
 
 ---
 

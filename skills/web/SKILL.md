@@ -15,7 +15,7 @@ Framework-agnostic rules for accessible, performant, responsive web interfaces. 
 
 ## 1. Accessibility / WCAG [CRITICAL]
 
-Accessibility is not optional. Every rule in this section maps to WCAG 2.2 success criteria at Level A or AA.
+Accessibility is not optional. Most rules in this section map to WCAG 2.2 success criteria at Level A or AA. A small number of best-practice rules (noted inline) target Level AAA or go beyond WCAG.
 
 ### 1.1 Use Semantic HTML Elements
 
@@ -107,7 +107,7 @@ dialog.addEventListener('keydown', (e) => {
 
 ### 1.4 Visible Focus Indicators
 
-Never remove focus outlines without providing a visible replacement (SC 2.4.7, enhanced 2.4.11/2.4.12 in WCAG 2.2).
+Never remove focus outlines without providing a visible replacement (SC 2.4.7, enhanced SC 2.4.11 (AA) and SC 2.4.12 (AAA) in WCAG 2.2).
 
 ```css
 /* Good: custom focus indicator */
@@ -267,6 +267,33 @@ Use `aria-live="polite"` by default. Reserve `role="alert"` / `aria-live="assert
 
 **Rule**: Prefer native HTML over ARIA. Use ARIA only when no native element exists for the pattern.
 
+### 1.12 Label in Name (WCAG 2.5.3 Level A)
+
+When an interactive element has visible text, its accessible name must contain that visible text as a substring (SC 2.5.3). Voice control users (Dragon NaturallySpeaking, macOS Voice Control) speak the visible label to activate controls. If `aria-label` replaces or contradicts the visible text, voice commands fail.
+
+```html
+<!-- Correct: aria-label contains visible text as substring -->
+<button aria-label="Delete item from cart">Delete</button>
+
+<!-- Correct: no aria-label needed — visible text is the accessible name -->
+<button>Save Changes</button>
+
+<!-- Correct: icon button — no visible text, aria-label is fine -->
+<button aria-label="Close dialog">
+  <svg aria-hidden="true">...</svg>
+</button>
+```
+
+```html
+<!-- Incorrect: aria-label overrides visible text with different text -->
+<button aria-label="Remove">Delete</button>
+
+<!-- Incorrect: aria-label does not contain visible "Submit" -->
+<button aria-label="Proceed to next step">Submit</button>
+```
+
+**Rule**: When visible text is present, `aria-label` must include that visible text (verbatim, case-insensitively). Prefer no `aria-label` at all when visible text is sufficient.
+
 ---
 
 ## 2. Responsive Design [CRITICAL]
@@ -359,7 +386,7 @@ Set breakpoints where your content breaks, not at device widths. Common starting
 
 ### 2.5 Touch Targets
 
-Minimum 44x44 CSS pixels for touch targets (WCAG SC 2.5.8). Provide at least 24px spacing between adjacent targets.
+Minimum 44x44 CSS pixels for touch targets (WCAG SC 2.5.5 AAA; SC 2.5.8 requires only 24x24px at AA). Provide at least 24px spacing between adjacent targets.
 
 ```css
 button, a, input, select, textarea {
@@ -780,7 +807,7 @@ Only apply `will-change` to elements that will animate, and remove it after anim
 
 ### 6.1 Respect prefers-reduced-motion
 
-Always provide a reduced-motion alternative (SC 2.3.3).
+Always provide a reduced-motion alternative (SC 2.3.3, Level AAA).
 
 ```css
 /* Define animations normally */
@@ -931,6 +958,43 @@ Provide appropriate images for light and dark contexts.
 @media (prefers-color-scheme: dark) {
   .decorative-img {
     filter: brightness(0.9) contrast(1.1);
+  }
+}
+```
+
+### 7.6 Respect prefers-contrast
+
+Honor the user's contrast preference using `@media (prefers-contrast: more)` and `@media (prefers-contrast: forced)`. `prefers-contrast: more` responds to macOS/iOS "Increase Contrast" in System Settings; `prefers-contrast: forced` responds to Windows High Contrast Mode — a distinct OS feature that overrides colors entirely.
+
+```css
+/* Default theme */
+:root {
+  --color-text: #555770;
+  --color-border: #d1d1e0;
+  --color-bg: #ffffff;
+}
+
+/* High contrast mode: stronger text and border colors */
+@media (prefers-contrast: more) {
+  :root {
+    --color-text: #1a1a2e;       /* Darker text for higher ratio */
+    --color-border: #1a1a2e;     /* Stronger borders */
+    --color-bg: #ffffff;
+  }
+
+  /* Ensure interactive elements are clearly delineated */
+  button, input, select, textarea {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Forced colors (Windows High Contrast mode) */
+@media (prefers-contrast: forced) {
+  /* Use system color keywords to respect OS color palette */
+  :root {
+    --color-text: ButtonText;
+    --color-bg: ButtonFace;
+    --color-border: ButtonBorder;
   }
 }
 ```
@@ -1215,6 +1279,92 @@ Test layouts in RTL mode. Flexbox and Grid handle RTL automatically with logical
 
 ---
 
+## 11. Progressive Web Apps [MEDIUM]
+
+PWAs allow web apps to be installed and run offline. When building an installable web app, the following rules ensure the experience is consistent and reliable.
+
+### 11.1 Provide a Complete Web App Manifest
+
+Include a `manifest.json` linked from `<head>` with all required fields for installability. Missing fields silently prevent install prompts.
+
+```html
+<link rel="manifest" href="/manifest.json">
+```
+
+```json
+{
+  "name": "My App",
+  "short_name": "App",
+  "start_url": "/",
+  "display": "standalone",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
+```
+
+**Incorrect:**
+```json
+{
+  "name": "My App"
+  // Missing start_url, display, and icons — app is not installable
+}
+```
+
+### 11.2 Set theme_color and background_color
+
+`theme_color` tints the browser chrome and the OS task switcher. `background_color` fills the splash screen before the app loads. Both must match your brand colors.
+
+```json
+{
+  "theme_color": "#1a73e8",
+  "background_color": "#ffffff"
+}
+```
+
+### 11.3 Register a Service Worker for Offline Support
+
+A service worker is required for installability and offline capability. Cache critical assets on install; respond from cache when offline.
+
+```js
+// In your main entry point
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+```
+
+```js
+// sw.js — cache on install, serve from cache when offline
+const CACHE = 'v1';
+const PRECACHE = ['/', '/index.html', '/app.js', '/app.css'];
+
+self.addEventListener('install', e =>
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(PRECACHE)))
+);
+
+self.addEventListener('fetch', e =>
+  e.respondWith(
+    caches.match(e.request).then(hit => hit ?? fetch(e.request))
+  )
+);
+```
+
+### 11.4 Meet Installability Criteria
+
+For the browser install prompt to appear: the app must be served over HTTPS, have a registered service worker with a `fetch` handler, and include a manifest with `name`, `icons`, `start_url`, and `display: standalone` (or `fullscreen`/`minimal-ui`).
+
+### 11.5 Use display Mode Appropriately
+
+| Value | Use When |
+|-------|----------|
+| `standalone` | App replaces browser UI; most common choice |
+| `fullscreen` | Games or media apps needing the entire screen |
+| `minimal-ui` | Retain minimal browser controls (back, reload) |
+| `browser` | No installation behavior; opens in browser tab |
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist when building or reviewing web interfaces.
@@ -1260,6 +1410,8 @@ Use this checklist when building or reviewing web interfaces.
 - [ ] Dark mode maintains contrast ratios
 - [ ] `color-scheme` meta tag is present
 - [ ] Theme uses CSS custom properties
+- [ ] `prefers-contrast: more` increases text and border contrast
+- [ ] `prefers-contrast: forced` uses system color keywords
 
 ### Internationalization
 - [ ] `lang` attribute on `<html>`
@@ -1267,6 +1419,12 @@ Use this checklist when building or reviewing web interfaces.
 - [ ] Dates/numbers formatted with Intl APIs
 - [ ] No text embedded in images
 - [ ] Layout tested in RTL mode
+
+### Progressive Web App
+- [ ] Web App Manifest linked from `<head>` with `name`, `icons`, `start_url`, and `display`
+- [ ] `theme_color` and `background_color` match brand palette
+- [ ] Service worker registered with a `fetch` handler for offline support
+- [ ] App served over HTTPS
 
 ---
 

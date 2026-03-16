@@ -1,6 +1,6 @@
 # Platform Design Skills
 
-Platform design skill pack: 300+ rules for Apple HIG, Material Design 3, and WCAG 2.2 across iOS, iPadOS, macOS, watchOS, visionOS, tvOS, Android, and Web.
+Platform design skill pack: 450+ rules for Apple HIG, Material Design 3, and WCAG 2.2 across iOS, iPadOS, macOS, watchOS, visionOS, tvOS, Android, and Web.
 
 Built by scraping the [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines) (a compiled [PDF version](Apple_HIG.pdf) is included in this repo) and distilling it — along with Material Design 3 and WCAG 2.2 — into succinct but exhaustive skill files. Use them to evaluate, improve, or create your designs.
 
@@ -8,7 +8,7 @@ Built by scraping the [Apple Human Interface Guidelines](https://developer.apple
 
 ### ios
 
-Apple Human Interface Guidelines for iPhone. 50+ rules covering navigation, layout, accessibility, gestures, and iOS-specific components like tab bars, sheets, and Dynamic Island.
+Apple Human Interface Guidelines for iPhone. 67+ rules covering navigation, layout, accessibility, gestures, and iOS-specific components like tab bars, sheets, and Dynamic Island.
 
 **Use when:**
 - Building SwiftUI or UIKit interfaces for iPhone

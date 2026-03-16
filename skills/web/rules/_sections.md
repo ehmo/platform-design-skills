@@ -31,6 +31,8 @@ Load individual sections as needed. Each section is self-contained.
 
 11. **Prefer native HTML over ARIA roles.** Use `<button>` not `<div role="button">`. Use `<nav>` not `<div role="navigation">`. ARIA is a supplement, not a replacement.
 
+12. **Accessible name must contain visible text (SC 2.5.3).** When an element has visible text, its accessible name must include that text as a substring. Do not use `aria-label` that replaces visible text with different text — voice control users speak the visible label to activate controls.
+
 <!-- /SECTION: accessibility -->
 
 ---
@@ -159,6 +161,8 @@ Load individual sections as needed. Each section is self-contained.
 
 5. **Adapt images to theme.** Use `<picture>` with `media="(prefers-color-scheme: dark)"` for alternate assets. Use `filter: brightness()` for simple adjustments.
 
+6. **Respect `prefers-contrast`.** Use `@media (prefers-contrast: more)` to increase text and border contrast for users with OS-level "Increase Contrast" enabled. Use `@media (prefers-contrast: forced)` with system color keywords (`ButtonText`, `ButtonFace`, `ButtonBorder`) for Windows High Contrast mode.
+
 <!-- /SECTION: dark-mode -->
 
 ---
@@ -206,19 +210,36 @@ Load individual sections as needed. Each section is self-contained.
 
 ### Rules
 
-1. **Set `lang` attribute on `<html>`.** Use BCP 47 language tags (`en`, `fr`, `ar`, `zh-Hans`). Override with `lang` on elements containing different-language content.
+1. **Set `lang` and `dir` attributes.** Set `lang` on `<html>` using BCP 47 language tags (`en`, `fr`, `ar`, `zh-Hans`). Override with `lang` on elements containing different-language content. Use `dir="auto"` for user-generated content; use `dir="rtl"` or `dir="ltr"` when direction is known.
 
-2. **Use `dir="auto"` for user-generated content.** Let the browser detect text direction. Use `dir="rtl"` or `dir="ltr"` when direction is known.
+2. **Format with Intl APIs.** `Intl.DateTimeFormat` for dates. `Intl.NumberFormat` for numbers and currency. `Intl.RelativeTimeFormat` for relative time. `Intl.ListFormat` for lists.
 
-3. **Format with Intl APIs.** `Intl.DateTimeFormat` for dates. `Intl.NumberFormat` for numbers and currency. `Intl.RelativeTimeFormat` for relative time. `Intl.ListFormat` for lists.
+3. **Avoid text in images.** Text in images cannot be translated, resized, or read by screen readers.
 
-4. **Avoid text in images.** Text in images cannot be translated, resized, or read by screen readers.
+4. **Use CSS logical properties.** `margin-inline-start` not `margin-left`. `padding-block-end` not `padding-bottom`. `inset-inline-start` not `left`. `text-align: start` not `text-align: left`.
 
-5. **Use CSS logical properties.** `margin-inline-start` not `margin-left`. `padding-block-end` not `padding-bottom`. `inset-inline-start` not `left`. `text-align: start` not `text-align: left`.
-
-6. **Support RTL layouts.** Test in RTL mode. Flip directional icons with `transform: scaleX(-1)` in `[dir="rtl"]`. Flexbox and Grid handle flow reversal automatically with logical properties.
+5. **Support RTL layouts.** Test in RTL mode. Flip directional icons with `transform: scaleX(-1)` in `[dir="rtl"]`. Flexbox and Grid handle flow reversal automatically with logical properties.
 
 <!-- /SECTION: i18n -->
+
+---
+
+<!-- SECTION: pwa -->
+## Progressive Web Apps [MEDIUM]
+
+### Rules
+
+1. **Provide a complete Web App Manifest.** Link `manifest.json` from `<head>`. Required fields: `name`, `short_name`, `start_url`, `display`, and `icons` (192px and 512px PNG). Missing fields prevent the install prompt.
+
+2. **Set `theme_color` and `background_color`.** `theme_color` tints OS chrome and the task switcher. `background_color` fills the splash screen. Match both to your brand palette.
+
+3. **Register a service worker with a fetch handler.** Required for installability. Cache critical assets on `install`; serve from cache when offline. Use a `fetch` event listener to intercept requests.
+
+4. **Meet all installability criteria.** HTTPS is required. The service worker must have a `fetch` handler. The manifest must include `name`, `icons`, `start_url`, and `display: standalone` (or `fullscreen`/`minimal-ui`).
+
+5. **Choose `display` mode intentionally.** Use `standalone` for most apps (replaces browser UI). Use `fullscreen` for games/media. Use `minimal-ui` to retain minimal browser controls. Avoid `browser` for installed app experiences.
+
+<!-- /SECTION: pwa -->
 
 ---
 

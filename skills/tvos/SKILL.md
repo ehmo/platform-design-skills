@@ -31,6 +31,44 @@ When visual gaps exist between focusable elements, add invisible focus guides so
 **FOCUS-04: Apply the parallax effect to focused items.**
 Focused cards, posters, and icons should exhibit a subtle parallax tilt responding to touch surface movement. Use layered images (LSR format) with foreground, midground, and background layers. This communicates depth and confirms focus.
 
+**Correct:**
+```swift
+// SwiftUI — custom focus engine with explicit focus state
+struct ContentView: View {
+    @FocusState private var focusedItem: String?
+
+    var body: some View {
+        HStack(spacing: 40) {
+            ForEach(items) { item in
+                CardView(item: item)
+                    .focusable()
+                    .focused($focusedItem, equals: item.id)
+                    .scaleEffect(focusedItem == item.id ? 1.1 : 1.0)
+                    .shadow(radius: focusedItem == item.id ? 20 : 0)
+                    .animation(.easeInOut(duration: 0.15), value: focusedItem)
+            }
+        }
+    }
+}
+```
+
+**Incorrect:**
+```swift
+// SwiftUI — no focus state: unfocused and focused items look identical
+struct ContentView: View {
+    var body: some View {
+        HStack(spacing: 40) {
+            ForEach(items) { item in
+                CardView(item: item)
+                    .focusable()
+                // No scale, shadow, or visual change on focus
+                // User cannot tell which item is selected
+            }
+        }
+    }
+}
+```
+
 **FOCUS-05: Make focus targets large enough for comfortable navigation.**
 Minimum recommended touch target is 250x150pt for cards. Smaller elements are difficult to land on with swipe-based navigation. Group small actions under a focused parent when possible.
 
@@ -51,7 +89,7 @@ Users must always be able to move focus away from any element. If focus cannot l
 | Midground | Primary artwork or content image | Moderate (3-5pt) |
 | Foreground | Title text, logos, badges | Maximum (5-8pt) |
 
-Use Xcode's LSR (Layered Static Image) format or dynamically compose layers at runtime via `TVMonogramView` or custom focus effects.
+Use Xcode's LSR (Layered Static Image) format for static layered images in the asset catalog — the system animates them automatically on focus. For custom programmatic parallax, stack `UIImageView` instances and use the focus engine callbacks (`didUpdateFocus(in:with:)` and `UIFocusAnimationCoordinator`) to drive layer movement during focus transitions. (`UIMotionEffect` responds only to subtle Siri Remote gyroscope micromotion and is not the mechanism for focus-driven parallax.)
 
 ---
 
@@ -130,7 +168,7 @@ The Top Shelf is a prominent content area displayed when the user focuses on you
 ### Rules
 
 **SHELF-01: Provide a Top Shelf extension.**
-Apps should include a TVTopShelfProvider that returns dynamic content. A static Top Shelf is a missed opportunity for engagement.
+Apps should include a `TVTopShelfContentProvider` (tvOS 14+) that returns dynamic content. `TVTopShelfProvider` is deprecated since tvOS 14 — do not use it. A static Top Shelf is a missed opportunity for engagement.
 
 **SHELF-02: Use the correct layout style for your content.**
 - **Inset banner**: 1 large focused item with smaller items on either side. Best for featured or editorial content.
@@ -204,6 +242,61 @@ If the user was on the "Search" tab when they left the app, return to "Search" w
 
 ---
 
+## 7. Accessibility (CRITICAL)
+
+Apple TV supports VoiceOver. Sighted users use focus navigation; VoiceOver users additionally hear spoken descriptions. Both must work.
+
+### Rules
+
+**ACCESS-01: Every interactive element must have a meaningful accessibility label.**
+Icon-only buttons and image cards must have labels. The focused item's name is announced by VoiceOver when focus arrives.
+
+**ACCESS-02: Provide accessibility hints for non-obvious interactions.**
+If tapping a card does something other than opening the content (e.g., launching a trailer rather than full playback), describe this with an accessibility hint.
+
+**ACCESS-03: Ensure VoiceOver focus order matches visual focus order.**
+VoiceOver must traverse elements in the same order that focus engine navigation produces. Custom focus ordering via `UIFocusGuide` must not create discontinuities in the VoiceOver reading order.
+
+**ACCESS-04: Respect Reduce Motion.**
+Parallax effects and other animations must be reduced or disabled when the user enables Reduce Motion in Accessibility settings.
+
+**ACCESS-05: Respond to Bold Text.**
+When the user enables Bold Text, custom-rendered text must adapt. SwiftUI dynamic type styles handle this automatically; custom text rendering must check `UIAccessibility.isBoldTextEnabled` or use `@Environment(\.legibilityWeight)`.
+
+**ACCESS-06: Respond to Increase Contrast.**
+When the user enables Increase Contrast (Darker System Colors), custom colors must provide higher-contrast variants. Use `@Environment(\.colorSchemeContrast)` in SwiftUI or `UIAccessibility.isDarkerSystemColorsEnabled` in UIKit to detect and apply appropriate values.
+
+**ACCESS-07: Respect Dynamic Type / Larger Text.**
+tvOS supports the "Larger Text" accessibility setting via `UIContentSizeCategory`. Use SwiftUI semantic text styles (`Font.TextStyle`) so text scales automatically. For UIKit, scale custom fonts with `UIFontMetrics` relative to a base `UIFont.TextStyle`.
+
+**Correct:**
+```swift
+// SwiftUI — semantic text styles scale with Larger Text automatically
+Text("Now Playing")
+    .font(.title2)        // Scales with UIContentSizeCategory
+Text("Episode description")
+    .font(.body)          // Scales with UIContentSizeCategory
+
+// UIKit — scale custom font with UIFontMetrics
+let baseFont = UIFont(name: "CustomFont-Regular", size: 29)!
+let scaledFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: baseFont)
+label.font = scaledFont
+label.adjustsFontForContentSizeCategory = true
+```
+
+**Incorrect:**
+```swift
+// SwiftUI — hardcoded size ignores Larger Text preference
+Text("Now Playing")
+    .font(.system(size: 29)) // Does not scale
+
+// UIKit — hardcoded font ignores UIContentSizeCategory
+label.font = UIFont(name: "CustomFont-Regular", size: 29)
+// Missing adjustsFontForContentSizeCategory = true
+```
+
+---
+
 ## Evaluation Checklist
 
 Use this checklist when reviewing a tvOS app design or implementation.
@@ -250,6 +343,15 @@ Use this checklist when reviewing a tvOS app design or implementation.
 - [ ] Tabs have text labels
 - [ ] 3-7 tabs are used
 - [ ] Selected tab persists across launches
+
+### Accessibility
+- [ ] Every interactive element and content card has a meaningful accessibility label
+- [ ] Non-obvious interactions have accessibility hints
+- [ ] VoiceOver focus order matches the visual focus engine order
+- [ ] Parallax effects and decorative animations are disabled when Reduce Motion is enabled
+- [ ] Bold Text preference is respected (SwiftUI handles automatically; custom text checks `isBoldTextEnabled`)
+- [ ] Increase Contrast preference is respected (custom colors provide higher-contrast variants)
+- [ ] Larger Text (Dynamic Type) preference is respected (use `Font.TextStyle` in SwiftUI or `UIFontMetrics` in UIKit)
 
 ---
 

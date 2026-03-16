@@ -90,8 +90,8 @@ Every menu item that performs an action must have a keyboard shortcut. Use stand
 Menu items must reflect current state. Disable items that are not applicable. Update titles to match context (e.g., "Undo Typing" not just "Undo"). Toggle checkmarks for on/off states.
 
 ```swift
-// SwiftUI — Dynamic menu state
-CommandGroup(replacing: .toolbar) {
+// SwiftUI — Add sidebar toggle alongside existing toolbar menu commands
+CommandGroup(after: .toolbar) {
     Button(showingSidebar ? "Hide Sidebar" : "Show Sidebar") {
         showingSidebar.toggle()
     }
@@ -338,7 +338,7 @@ Sidebars are the primary navigation surface for Mac apps. They appear on the lea
 
 ### Rule 4.1 — Leading Edge, Collapsible
 
-Place the sidebar on the left (leading) edge. Make it collapsible via the toolbar button or Cmd+Ctrl+S. Persist collapsed state.
+Place the sidebar on the left (leading) edge. Make it collapsible via the toolbar button or a keyboard shortcut. Apple does not define a universal sidebar shortcut — choose one appropriate for your app (e.g., Cmd+Ctrl+S is common but not guaranteed to be free in all apps). Persist collapsed state.
 
 ```swift
 // SwiftUI
@@ -829,6 +829,142 @@ Use 20pt standard margins, 8pt spacing between related controls, 20pt spacing be
 
 ---
 
+## 10. Popovers (MEDIUM)
+
+Popovers present contextual content anchored to a control. They are common in Mac apps for options panels, color pickers, and contextual settings.
+
+### Rule 10.1 — Use Popovers for Transient Context-Sensitive Content
+
+Popovers attach to a source view and are dismissed by clicking outside or pressing Esc. Use them for settings or options that apply to a specific element. Do not use popovers for primary workflows or multi-step operations.
+
+```swift
+// SwiftUI
+Button("Format...") { showingFormatPopover = true }
+    .popover(isPresented: $showingFormatPopover, arrowEdge: .bottom) {
+        FormatOptionsView()
+            .frame(width: 280)
+            .padding()
+    }
+```
+
+### Rule 10.2 — Dismiss Popovers with Esc
+
+Popovers must close when the user presses Esc. SwiftUI handles this automatically for `.popover`. AppKit's `NSPopover` also dismisses on Esc when `behavior` is set to `.transient` or `.semitransient`.
+
+### Rule 10.3 — Size Popovers to Their Content
+
+Set a reasonable width for the popover's content. Do not let the popover be wider than necessary. Content should not require scrolling unless the list is inherently long (e.g., a font picker).
+
+---
+
+## 11. Accessibility (CRITICAL)
+
+Mac apps must support VoiceOver, Full Keyboard Access, Switch Control, and related assistive technologies.
+
+### Rule 11.1 — VoiceOver Labels on All Interactive Elements
+
+Every button, control, and interactive element must have a meaningful accessibility label. Icon-only toolbar items and image buttons must provide labels.
+
+**Correct:**
+```swift
+Button(action: deleteSelected) {
+    Image(systemName: "trash")
+}
+.accessibilityLabel("Delete selected items")
+```
+
+**Incorrect:**
+```swift
+Button(action: deleteSelected) {
+    Image(systemName: "trash")
+}
+// VoiceOver reads "trash" — ambiguous without context
+```
+
+### Rule 11.2 — Full Keyboard Access
+
+Every action reachable by mouse must also be reachable by keyboard. Tab must move focus between all controls. Arrow keys must navigate within lists, tables, and grids. No keyboard traps.
+
+```swift
+// SwiftUI — Ensure all custom views are focusable
+MyCustomControl()
+    .focusable()
+    .onKeyPress(.return) { handleActivation(); return .handled }
+```
+
+### Rule 11.3 — Respect Reduce Motion
+
+Disable or substitute decorative animations when the user enables Reduce Motion.
+
+```swift
+@Environment(\.accessibilityReduceMotion) var reduceMotion
+
+var body: some View {
+    ContentView()
+        .animation(reduceMotion ? nil : .spring(), value: isExpanded)
+}
+```
+
+### Rule 11.4 — Respect Reduce Transparency
+
+Replace translucent materials with solid backgrounds when Reduce Transparency is enabled (see Rule 9.5).
+
+### Rule 11.5 — Logical Focus Order
+
+VoiceOver must traverse elements in a logical reading order (top-left to bottom-right for LTR). Use `.accessibilitySortPriority()` or `accessibilityElement(children:)` to correct order when the visual layout diverges.
+
+### Rule 11.6 — Respond to Bold Text
+
+When the user enables Bold Text in System Settings, custom-rendered text must adapt. SwiftUI text styles handle this automatically. For AppKit, check `NSWorkspace.shared.accessibilityDisplayShouldUseBoldText`, or use `@Environment(\.legibilityWeight)` in SwiftUI to apply heavier weights to custom text.
+
+**Correct:**
+```swift
+// SwiftUI — environment handles bold text automatically for standard styles
+Text("Section Header")
+    .font(.headline)
+
+// SwiftUI — custom rendering responds to legibilityWeight
+@Environment(\.legibilityWeight) var legibilityWeight
+
+var body: some View {
+    Text("Custom Label")
+        .fontWeight(legibilityWeight == .bold ? .bold : .regular)
+}
+```
+
+**Incorrect:**
+```swift
+// Hardcoded weight ignores Bold Text preference
+Text("Custom Label")
+    .fontWeight(.regular) // Never adapts to Bold Text setting
+```
+
+### Rule 11.7 — Respond to Increase Contrast
+
+When the user enables Increase Contrast in System Settings, custom colors must provide higher-contrast variants. Use `NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast` in AppKit, or `@Environment(\.colorSchemeContrast)` in SwiftUI to detect and apply appropriate values.
+
+**Correct:**
+```swift
+// SwiftUI
+@Environment(\.colorSchemeContrast) var contrast
+
+var borderColor: Color {
+    contrast == .increased ? Color.primary : Color.secondary
+}
+
+// AppKit
+let shouldIncrease = NSWorkspace.shared.accessibilityDisplayShouldIncreaseContrast
+let borderColor: NSColor = shouldIncrease ? .labelColor : .separatorColor
+```
+
+**Incorrect:**
+```swift
+// Static color ignores Increase Contrast setting
+let borderColor = NSColor.separatorColor // Always low-contrast; ignores user preference
+```
+
+---
+
 ## Keyboard Shortcut Quick Reference
 
 ### Navigation
@@ -860,8 +996,7 @@ Use 20pt standard margins, 8pt spacing between related controls, 20pt spacing be
 | Shortcut | Action |
 |----------|--------|
 | Cmd+Ctrl+F | Toggle fullscreen |
-| Cmd+Ctrl+S | Toggle sidebar |
-| Cmd+0 | Show/hide toolbar |
+| Cmd+Ctrl+S | Toggle sidebar (app-defined; not a universal HIG standard) |
 | Cmd++ / Cmd+- | Zoom in/out |
 | Cmd+0 | Actual size |
 
@@ -927,6 +1062,20 @@ Before shipping a Mac app, verify:
 - [ ] System accent color respected
 - [ ] Translucency respects accessibility setting
 - [ ] Consistent spacing on 8pt grid
+
+### Popovers
+- [ ] Popover is anchored to its source element with an arrow pointing at it
+- [ ] Pressing Esc dismisses the popover
+- [ ] Popover is sized to its content without unnecessary scrolling
+
+### Accessibility
+- [ ] All icon-only toolbar items and image buttons have accessibility labels
+- [ ] Every action reachable by mouse is also reachable by keyboard (Full Keyboard Access)
+- [ ] Decorative animations disabled when Reduce Motion is enabled
+- [ ] Translucent surfaces replaced with solid backgrounds when Reduce Transparency is enabled
+- [ ] VoiceOver traversal order is logical (top-left to bottom-right)
+- [ ] Bold Text preference respected (SwiftUI handles automatically; AppKit checks `accessibilityDisplayShouldUseBoldText`)
+- [ ] Increase Contrast preference respected (custom colors provide higher-contrast variants via `colorSchemeContrast` or `accessibilityDisplayShouldIncreaseContrast`)
 
 ---
 

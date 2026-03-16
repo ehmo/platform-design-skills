@@ -259,10 +259,10 @@ var body: some View {
 }
 ```
 
-### Rule 3.3: Custom Fonts Must Use UIFontMetrics
-If you use a custom typeface, scale it with `UIFontMetrics` so it responds to Dynamic Type.
+### Rule 3.3: Custom Fonts Must Scale with Dynamic Type
+If you use a custom typeface, scale it so it responds to Dynamic Type. The API differs by framework.
 
-**Correct:**
+**Correct (SwiftUI):**
 ```swift
 extension Font {
     static func scaledCustom(size: CGFloat, relativeTo textStyle: Font.TextStyle) -> Font {
@@ -273,6 +273,14 @@ extension Font {
 // Usage
 Text("Hello")
     .font(.scaledCustom(size: 17, relativeTo: .body))
+```
+
+**Correct (UIKit):**
+```swift
+let metrics = UIFontMetrics(forTextStyle: .body)
+let customFont = UIFont(name: "CustomFont-Regular", size: 17)!
+label.font = metrics.scaledFont(for: customFont)
+label.adjustsFontForContentSizeCategory = true
 ```
 
 ### Rule 3.4: SF Pro as System Font
@@ -402,14 +410,36 @@ Ensure VoiceOver reads elements in a logical order. Use `.accessibilitySortPrior
 ```swift
 VStack {
     Text("Price: $29.99")
-        .accessibilitySortPriority(1) // Read first
+        .accessibilitySortPriority(1) // Read second (lower number = lower priority)
     Text("Product Name")
-        .accessibilitySortPriority(2) // Read second
+        .accessibilitySortPriority(2) // Read first (higher number = higher priority)
 }
 ```
 
 ### Rule 5.3: Support Bold Text
-When the user enables Bold Text in Settings, use the `.bold` dynamic type variants. SwiftUI text styles handle this automatically. Custom text must respond to `UIAccessibility.isBoldTextEnabled`.
+When the user enables Bold Text in Settings, custom-rendered text must adapt. SwiftUI text styles handle this automatically. For SwiftUI custom rendering, use `@Environment(\.legibilityWeight)` to apply heavier weights. UIKit code must check `UIAccessibility.isBoldTextEnabled` and re-query on `UIAccessibility.boldTextStatusDidChangeNotification`.
+
+**Correct:**
+```swift
+// SwiftUI — standard text styles adapt automatically
+Text("Section Header")
+    .font(.headline)
+
+// SwiftUI — custom rendering respects legibilityWeight
+@Environment(\.legibilityWeight) var legibilityWeight
+
+var body: some View {
+    Text("Custom Label")
+        .fontWeight(legibilityWeight == .bold ? .bold : .regular)
+}
+```
+
+**Incorrect:**
+```swift
+// Hardcoded weight ignores Bold Text preference
+label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+// Missing: re-query font when UIAccessibility.boldTextStatusDidChangeNotification fires
+```
 
 ### Rule 5.4: Support Reduce Motion
 Disable decorative animations and parallax when Reduce Motion is enabled. Use `@Environment(\.accessibilityReduceMotion)`.
@@ -618,6 +648,73 @@ PhotoView(photo: photo)
 - Indeterminate (`ProgressView()`) for unknown duration
 - Never block the entire screen with a spinner
 
+### Rule 7.9: SF Symbols — Rendering Modes
+Use the appropriate rendering mode for each symbol. Monochrome is the default; hierarchical, palette, and multicolor provide richer expression where appropriate. Always prefer the symbol rendering mode that best communicates meaning — do not default to monochrome when multicolor conveys critical state.
+
+**Correct:**
+```swift
+// Hierarchical: single color with automatic opacity layers
+Image(systemName: "person.crop.circle.fill")
+    .symbolRenderingMode(.hierarchical)
+    .foregroundStyle(.blue)
+
+// Multicolor: system-defined color per layer (e.g., battery, weather)
+Image(systemName: "battery.100percent.bolt")
+    .symbolRenderingMode(.multicolor)
+
+// Palette: explicit per-layer colors
+Image(systemName: "folder.badge.plus")
+    .symbolRenderingMode(.palette)
+    .foregroundStyle(.white, .blue)
+```
+
+**Incorrect:**
+```swift
+// Monochrome on a symbol that has meaningful multicolor layers
+Image(systemName: "battery.100percent.bolt")
+    .foregroundColor(.gray) // loses the contextual color meaning
+```
+
+### Rule 7.10: SF Symbols — Weight and Scale
+Match the symbol weight to adjacent text weight. Use scale variants (`.small`, `.medium`, `.large`) rather than resizing. The symbol weight should never appear heavier than adjacent text.
+
+**Correct:**
+```swift
+Label("Download", systemImage: "arrow.down.circle.fill")
+    .font(.body.weight(.semibold))
+    // Symbol inherits .semibold weight automatically via Label
+```
+
+**Incorrect:**
+```swift
+HStack {
+    Image(systemName: "arrow.down.circle.fill")
+        .font(.system(size: 32)) // explicit size ignores type scale
+    Text("Download")
+        .font(.body)
+}
+```
+
+### Rule 7.11: SF Symbols — Animations (iOS 17+)
+Use `symbolEffect` for symbol state transitions. Prefer discrete effects (`.bounce`, `.pulse`) for actions and indefinite effects (`.variableColor`) for ongoing state. Do not use manual cross-fade between symbol names when `contentTransition(.symbolEffect)` is available.
+
+**Correct:**
+```swift
+Image(systemName: isLoading ? "arrow.2.circlepath" : "checkmark.circle")
+    .contentTransition(.symbolEffect(.replace))
+    .symbolEffect(.pulse, isActive: isLoading)
+```
+
+**Incorrect:**
+```swift
+// Manual opacity cross-fade between symbol names
+if isLoading {
+    Image(systemName: "arrow.2.circlepath")
+} else {
+    Image(systemName: "checkmark.circle")
+}
+```
+
 ---
 
 ## 8. Patterns
@@ -771,6 +868,8 @@ If you track users across apps or websites, display the ATT prompt. Respect deni
 Use `LocationButton` for actions that need location once without requesting ongoing permission.
 
 ```swift
+import CoreLocationUI
+
 LocationButton(.currentLocation) {
     fetchNearbyStores()
 }
@@ -783,7 +882,26 @@ LocationButton(.currentLocation) {
 **Impact:** MEDIUM
 
 ### Rule 10.1: Widgets for Glanceable Data
-Provide widgets using WidgetKit for information users check frequently. Widgets are not interactive (beyond tapping to open the app), so show the most useful snapshot.
+Provide widgets using WidgetKit for information users check frequently. Show the most useful snapshot. Since iOS 17, widgets support interactive controls: use `Button` and `Toggle` backed by App Intents for actions users perform directly from the widget without opening the app.
+
+```swift
+// iOS 17+ interactive widget with a Button
+struct TimerWidgetView: View {
+    let entry: TimerEntry
+
+    var body: some View {
+        VStack {
+            Text(entry.remaining, style: .timer)
+                .font(.title2.bold())
+            Button(intent: ToggleTimerIntent()) {
+                Label(entry.isRunning ? "Pause" : "Start",
+                      systemImage: entry.isRunning ? "pause.fill" : "play.fill")
+            }
+            .buttonStyle(.borderedProminent)
+        }
+    }
+}
+```
 
 ### Rule 10.2: App Shortcuts for Key Actions
 Define App Shortcuts so users can trigger key actions from Siri, Spotlight, and the Shortcuts app.
@@ -883,7 +1001,7 @@ Use this checklist to audit an iPhone app for HIG compliance:
 - [ ] State is preserved when switching tabs
 
 ### Typography
-- [ ] All text uses built-in text styles or `UIFontMetrics`-scaled custom fonts
+- [ ] All text uses built-in text styles or custom fonts scaled with Dynamic Type (`Font.custom(_:size:relativeTo:)` in SwiftUI or `UIFontMetrics` in UIKit)
 - [ ] Dynamic Type is supported up to accessibility sizes
 - [ ] Layouts reflow at large text sizes (no truncation of essential text)
 - [ ] Minimum text size is 11pt

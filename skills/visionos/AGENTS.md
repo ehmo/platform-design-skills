@@ -24,8 +24,34 @@ This skill activates when tasks involve:
 - Mixed reality or immersive experience design
 - Window, volume, or immersive space architecture
 
+## Rule Categories
+
+| # | Category | Impact |
+|---|----------|--------|
+| 1 | Spatial Layout | CRITICAL |
+| 2 | Eye & Hand Input | CRITICAL |
+| 3 | Windows | HIGH |
+| 4 | Volumes | HIGH |
+| 5 | Immersive Spaces | HIGH |
+| 6 | Materials & Depth | MEDIUM |
+| 7 | Ornaments | MEDIUM |
+| 8 | Accessibility | CRITICAL |
+
 ## Priority Levels
 
 - **CRITICAL**: Violations break core spatial UX or cause user discomfort
 - **HIGH**: Violations degrade experience significantly
 - **MEDIUM**: Violations miss polish or platform conventions
+
+## Never Do
+
+- Never head-lock UI — all content must be world-anchored
+- Never place interactive elements below 60pt in size
+- Never skip hover/gaze feedback on interactive elements
+- Never use gaze direction for analytics or content decisions (privacy violation)
+- Never force immersion on launch — start in the Shared Space
+- Never trap users in full immersion with no exit
+- Never place content behind the user
+- Never position windows or objects closer than ~0.5m (personal space)
+- Never use opaque backgrounds in shared space (except media)
+- Never omit accessibility labels on interactive elements and 3D objects
