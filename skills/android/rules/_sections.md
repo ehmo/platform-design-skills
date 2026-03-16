@@ -160,7 +160,7 @@ Quick reference for locating rules by category and ID.
 | Touch targets | 6.2 | 7.1 (gesture zones) |
 | System bars | 3.3 | 7.1 (gesture insets) |
 | FAB placement | 5.1 | 2.2 (rail header), 5.15 (snackbar) |
-| Font scaling | 4.1 | 6.4 (accessibility) |
+| Font scaling | 4.1 | R4.4 (200% scale test), R6.9 (bold text) |
 | Permissions | 9.1 | 9.5 (photo picker) |
 | Navigation sizing | 2.5 (table) | 3.1 (window size classes) |
-| Color roles | 1.2 | 2.4 (nav indicator), 5.3 (FAB color) |
+| Color roles | 1.2 | R2.4 (nav indicator active color), R5.3 (FAB color) |
