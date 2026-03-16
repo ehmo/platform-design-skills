@@ -39,7 +39,7 @@ iPad layouts must be purpose-built. Stretching an iPhone layout across a 13" dis
 
 ### 1.3 Support All iPad Screen Sizes
 
-Design for the full range: iPad Mini (8.3"), iPad (10.9"), iPad Air (11"/13"), and iPad Pro (11"/13"). Use flexible layouts that redistribute content rather than simply scaling.
+Design for the full range: iPad Mini (8.3"), iPad (11"), iPad Air (11"/13"), and iPad Pro (11"/13"). Use flexible layouts that redistribute content rather than simply scaling.
 
 ### 1.4 Column-Based Layouts for Regular Width
 
