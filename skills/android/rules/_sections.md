@@ -11,7 +11,7 @@ Quick reference for locating rules by category and ID.
 | 3 | Layout & Responsive | HIGH | R3.1–R3.10 | Window size classes, Material grid, edge-to-edge, insets, foldable support |
 | 4 | Typography | HIGH | R4.1–R4.5 | Type scale, sp units, font scaling, line height, custom fonts |
 | 5 | Components | HIGH | R5.1–R5.18 | FAB, top app bar, bottom sheets, dialogs, snackbars, chips, cards |
-| 6 | Accessibility | CRITICAL | R6.1–R6.12 | TalkBack, contentDescription, touch targets, contrast, focus order |
+| 6 | Accessibility | CRITICAL | R6.1–R6.13 | TalkBack, contentDescription, touch targets, contrast, focus order, custom canvas views |
 | 7 | Gestures & Input | MEDIUM | R7.1–R7.7 | System gestures, pull to refresh, swipe to dismiss, long press, ripple |
 | 8 | Notifications | MEDIUM | R8.1–R8.9 | Channels, importance, messaging style, expandable, foreground service |
 | 9 | Permissions & Privacy | HIGH | R9.1–R9.8 | Runtime permissions, rationale, photo picker, approximate location |
@@ -105,6 +105,7 @@ Quick reference for locating rules by category and ID.
 - **R6.10** — Logical focus order (top-to-bottom, start-to-end)
 - **R6.11** — Move focus to logical target after navigation/dialog dismissal
 - **R6.12** — Full operability via TalkBack, Switch Access, keyboard
+- **R6.13** — Custom canvas views must use ExploreByTouchHelper for a virtual accessibility tree
 
 ### 7. Gestures & Input [MEDIUM]
 

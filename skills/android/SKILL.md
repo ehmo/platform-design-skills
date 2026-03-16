@@ -704,6 +704,57 @@ Column {
 - R6.11: After navigation or dialog dismissal, move focus to the most logical target element.
 - R6.12: All screens must be fully operable using TalkBack, Switch Access, and external keyboard.
 
+### 6.5 Custom Canvas Views
+
+Custom `View` subclasses that draw content on a Canvas (charts, custom pickers, drawing surfaces) are invisible to TalkBack by default because they have no child views. Use `ExploreByTouchHelper` from `androidx.customview.widget` to define a virtual accessibility tree.
+
+- R6.13: Custom canvas-drawn views must use `ExploreByTouchHelper` to expose a virtual accessibility tree to TalkBack. Override `getVirtualViewAt()` to map touch coordinates to virtual view IDs, and `onPopulateNodeForVirtualView()` to supply text, bounds, and actions for each virtual node.
+
+```kotlin
+import androidx.customview.widget.ExploreByTouchHelper
+
+class PieChartView(context: Context) : View(context) {
+
+    private val helper = object : ExploreByTouchHelper(this) {
+        override fun getVirtualViewAt(x: Float, y: Float): Int {
+            // Return virtual view ID for the slice at (x, y), or INVALID_ID
+            return sliceIndexAt(x, y)
+        }
+
+        override fun getVisibleVirtualViews(virtualViewIds: MutableList<Int>) {
+            slices.indices.forEach { virtualViewIds.add(it) }
+        }
+
+        override fun onPopulateNodeForVirtualView(
+            virtualViewId: Int,
+            node: AccessibilityNodeInfoCompat
+        ) {
+            val slice = slices[virtualViewId]
+            node.text = "${slice.label}: ${slice.percentage}%"
+            node.setBoundsInParent(slice.bounds)
+            node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK)
+        }
+
+        override fun onPerformActionForVirtualView(
+            virtualViewId: Int, action: Int, arguments: Bundle?
+        ): Boolean {
+            if (action == AccessibilityNodeInfoCompat.ACTION_CLICK) {
+                onSliceSelected(virtualViewId)
+                return true
+            }
+            return false
+        }
+    }
+
+    init {
+        ViewCompat.setAccessibilityDelegate(this, helper)
+    }
+
+    override fun dispatchHoverEvent(event: MotionEvent) =
+        helper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event)
+}
+```
+
 ---
 
 ## 7. Gestures & Input [MEDIUM]
