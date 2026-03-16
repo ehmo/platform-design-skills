@@ -111,7 +111,7 @@ All rules organized by category with stable IDs for cross-referencing.
 | W-AC-02 | VoiceOver can navigate all app content | CRITICAL |
 | W-AC-03 | Custom controls have accessibilityValue and accessibilityHint | HIGH |
 | W-AC-04 | Respect Reduce Motion; disable decorative animations | HIGH |
-| W-AC-05 | Respond to Bold Text; adapt custom text via legibilityWeight / isBoldTextEnabled | HIGH |
+| W-AC-05 | Respond to Bold Text; adapt custom text via `@Environment(\.legibilityWeight)` | HIGH |
 | W-AC-06 | Respond to Increase Contrast; provide higher-contrast variants via colorSchemeContrast | HIGH |
 
 **Rationale**: VoiceOver is used on Apple Watch. Complications and health data must be accessible to all users.
