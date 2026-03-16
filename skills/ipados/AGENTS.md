@@ -10,7 +10,7 @@ iPad-specific HIG rules extending iOS patterns for the larger, multitasking-capa
 |---|----------|--------|-----------|
 | 1 | Responsive Layout | CRITICAL | Adaptive layouts, size classes, column-based design |
 | 2 | Multitasking | CRITICAL | Split View, Slide Over, Stage Manager, resizable windows |
-| 3 | Navigation | HIGH | Sidebar, three-column layout, toolbar placement |
+| 3 | Navigation | CRITICAL | Sidebar, three-column layout, toolbar placement |
 | 4 | Pointer & Trackpad | HIGH | Hover effects, magnetism, right-click, drag and drop |
 | 5 | Keyboard | HIGH | Cmd shortcuts, discoverability overlay, tab navigation |
 | 6 | Apple Pencil | MEDIUM | Scribble, hover detection, PencilKit |
