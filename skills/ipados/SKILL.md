@@ -461,65 +461,6 @@ Use the full resolution and aspect ratio of the external display. Do not letterb
 
 ---
 
-## Evaluation Checklist
-
-Use this checklist to verify iPad-readiness:
-
-### Layout & Multitasking
-- [ ] App uses adaptive layout with `horizontalSizeClass`
-- [ ] Tested at all Split View ratios (1/3, 1/2, 2/3)
-- [ ] Tested in Slide Over (compact width)
-- [ ] Stage Manager: resizes fluidly to arbitrary dimensions
-- [ ] Multiple scenes/windows supported
-- [ ] Both orientations (portrait and landscape) work correctly
-- [ ] No content clipped at any size
-- [ ] Safe areas respected on all iPad models
-
-### Navigation
-- [ ] Sidebar visible in regular width
-- [ ] Tab bar used in compact width
-- [ ] Detail view shows placeholder when no selection
-- [ ] Toolbar items placed at top, not bottom
-- [ ] Three-column layout used where appropriate
-
-### Pointer & Trackpad
-- [ ] Hover effects on all interactive elements
-- [ ] Right-click context menus available
-- [ ] Pointer cursor adapts to content (I-beam for text, etc.)
-- [ ] Click-and-drag works for reordering
-
-### Keyboard
-- [ ] Cmd+key shortcuts for all major actions
-- [ ] Shortcuts appear in Cmd-hold overlay
-- [ ] Tab key navigates between form fields
-- [ ] No system shortcut conflicts
-- [ ] Arrow keys navigate lists and grids
-- [ ] Return/Enter activates default action
-
-### Apple Pencil
-- [ ] Scribble works in all text fields
-- [ ] Drawing apps support pressure and tilt
-- [ ] Double-tap interaction handled (if applicable)
-
-### Drag and Drop
-- [ ] Content can be dragged out to other apps
-- [ ] Content can be dropped in from other apps
-- [ ] Multi-item drag supported
-- [ ] Visual feedback for all drag states
-
-### External Display
-- [ ] Extended content shown (not just mirror)
-- [ ] Graceful handling of connect/disconnect
-
-### Accessibility
-- [ ] VoiceOver labels on all icon-only buttons and custom interactive elements
-- [ ] Text uses semantic type styles and scales with Dynamic Type (including accessibility sizes)
-- [ ] All functionality reachable with Full Keyboard Access (Tab navigation, logical focus order)
-- [ ] Interactive elements are distinguishable without relying solely on hover state
-- [ ] VoiceOver navigates correctly at all Split View widths
-
----
-
 ## 9. Accessibility (CRITICAL)
 
 **Impact:** CRITICAL
@@ -579,6 +520,65 @@ struct FormView: View {
 ### Rule 9.5: VoiceOver in Split View — Separate Focus Contexts
 
 In Split View, each app has its own VoiceOver focus context. Your app must not assume it occupies the full screen. Ensure VoiceOver can navigate your entire visible interface even at 1/3 or 1/2 split width. Do not hide actionable content outside the visible region without also removing it from the accessibility tree.
+
+---
+
+## Evaluation Checklist
+
+Use this checklist to verify iPad-readiness:
+
+### Layout & Multitasking
+- [ ] App uses adaptive layout with `horizontalSizeClass`
+- [ ] Tested at all Split View ratios (1/3, 1/2, 2/3)
+- [ ] Tested in Slide Over (compact width)
+- [ ] Stage Manager: resizes fluidly to arbitrary dimensions
+- [ ] Multiple scenes/windows supported
+- [ ] Both orientations (portrait and landscape) work correctly
+- [ ] No content clipped at any size
+- [ ] Safe areas respected on all iPad models
+
+### Navigation
+- [ ] Sidebar visible in regular width
+- [ ] Tab bar used in compact width
+- [ ] Detail view shows placeholder when no selection
+- [ ] Toolbar items placed at top, not bottom
+- [ ] Three-column layout used where appropriate
+
+### Pointer & Trackpad
+- [ ] Hover effects on all interactive elements
+- [ ] Right-click context menus available
+- [ ] Pointer cursor adapts to content (I-beam for text, etc.)
+- [ ] Click-and-drag works for reordering
+
+### Keyboard
+- [ ] Cmd+key shortcuts for all major actions
+- [ ] Shortcuts appear in Cmd-hold overlay
+- [ ] Tab key navigates between form fields
+- [ ] No system shortcut conflicts
+- [ ] Arrow keys navigate lists and grids
+- [ ] Return/Enter activates default action
+
+### Apple Pencil
+- [ ] Scribble works in all text fields
+- [ ] Drawing apps support pressure and tilt
+- [ ] Double-tap interaction handled (if applicable)
+
+### Drag and Drop
+- [ ] Content can be dragged out to other apps
+- [ ] Content can be dropped in from other apps
+- [ ] Multi-item drag supported
+- [ ] Visual feedback for all drag states
+
+### External Display
+- [ ] Extended content shown (not just mirror)
+- [ ] Graceful handling of connect/disconnect
+
+### Accessibility
+- [ ] VoiceOver labels on all icon-only buttons and custom interactive elements
+- [ ] Text uses semantic type styles and scales with Dynamic Type (including accessibility sizes)
+- [ ] All functionality reachable with Full Keyboard Access (Tab navigation, logical focus order)
+- [ ] Interactive elements are distinguishable without relying solely on hover state
+- [ ] VoiceOver navigates correctly at all Split View widths
 
 ---
 
