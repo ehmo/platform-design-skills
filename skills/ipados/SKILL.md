@@ -457,7 +457,7 @@ func sceneDidDisconnect(_ scene: UIScene) {
 
 ### 8.3 Support Full External Display Resolution
 
-Use the full resolution and aspect ratio of the external display. Do not letterbox or pillarbox your content. Query `UIScreen.bounds` and `UIScreen.scale` for the connected display.
+Use the full resolution and aspect ratio of the external display. Do not letterbox or pillarbox your content. In iOS 16+ multi-scene contexts, `UIScreen.main` is deprecated — query the connected display via `UIWindowScene.coordinateSpace.bounds` and `UIWindowScene.screen.scale`, or use `@Environment(\.displayScale)` in SwiftUI.
 
 ---
 
