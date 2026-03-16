@@ -56,6 +56,44 @@ The Digital Crown is the primary physical input for scrolling and precise value 
 - **W-DC-03**: Do not override or conflict with system Crown behaviors. The system uses the Crown for volume control during media playback, scrolling in system UI, and Time Travel in complications.
 - **W-DC-04**: Provide visual feedback synchronized with Crown rotation. The UI must respond frame-by-frame to Crown input with no perceptible lag.
 
+**Correct — Crown binding with haptic detents:**
+```swift
+struct VolumePickerView: View {
+    @State private var volume: Double = 0.5
+
+    var body: some View {
+        VStack {
+            Text("\(Int(volume * 100))%")
+                .font(.title.bold())
+            Image(systemName: "speaker.wave.3")
+        }
+        .focusable()
+        .digitalCrownRotation(
+            $volume,
+            from: 0.0,
+            through: 1.0,
+            by: 0.05,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+    }
+}
+```
+
+**Incorrect — ignoring the Crown and forcing touch-only interaction:**
+```swift
+struct VolumePickerView: View {
+    @State private var volume: Double = 0.5
+
+    var body: some View {
+        Slider(value: $volume)
+        // No .digitalCrownRotation — Crown input is ignored
+        // Users must use touch-only, which is imprecise and frustrating on Watch
+    }
+}
+```
+
 ### Anti-Patterns
 
 - Ignoring the Crown and forcing all interaction through touch
@@ -104,6 +142,39 @@ Complications are the most visible surface of a Watch app. They live on the watc
 - **W-CP-01**: Support multiple complication families to maximize watch face compatibility. At minimum support `accessoryCircular`, `accessoryCorner`, and `accessoryRectangular` (WidgetKit, watchOS 9+).
 - **W-CP-02**: Provide both tinted (single-color) and full-color variants. Tinted complications must remain legible when the system applies a single tint color.
 - **W-CP-03**: Update complications via `TimelineProvider`. Provide future timeline entries when data is predictable (e.g., next calendar event, weather forecast). Keep data fresh -- stale complications erode trust.
+
+**Correct — WidgetKit TimelineProvider for an accessoryCircular complication:**
+```swift
+struct StepCountProvider: TimelineProvider {
+    func placeholder(in context: Context) -> StepEntry {
+        StepEntry(date: Date(), steps: 5000)
+    }
+
+    func getSnapshot(in context: Context, completion: @escaping (StepEntry) -> Void) {
+        completion(StepEntry(date: Date(), steps: HealthStore.shared.todaySteps))
+    }
+
+    func getTimeline(in context: Context, completion: @escaping (Timeline<StepEntry>) -> Void) {
+        let entry = StepEntry(date: Date(), steps: HealthStore.shared.todaySteps)
+        // Refresh in 15 minutes
+        let nextUpdate = Calendar.current.date(byAdding: .minute, value: 15, to: Date())!
+        completion(Timeline(entries: [entry], policy: .after(nextUpdate)))
+    }
+}
+
+struct StepCountComplicationView: View {
+    let entry: StepEntry
+
+    var body: some View {
+        Gauge(value: Double(entry.steps), in: 0...10000) {
+            Image(systemName: "figure.walk")
+        } currentValueLabel: {
+            Text("\(entry.steps / 1000)k")
+        }
+        .gaugeStyle(.accessoryCircular)
+    }
+}
+```
 - **W-CP-04**: Complication content must be meaningful without context. A user glancing at their watch face should immediately understand the data (e.g., "72F" not "72").
 - **W-CP-05**: Tapping a complication must launch the app to a relevant context, not just the app's root view.
 
