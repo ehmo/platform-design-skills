@@ -6,7 +6,7 @@
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines",
     "https://developer.apple.com/design/human-interface-guidelines/designing-for-tvos",
-    "https://developer.apple.com/documentation/tvuikit",
+    "https://developer.apple.com/documentation/tvos-release-notes",
     "https://developer.apple.com/documentation/tvservices"
   ]
 }
