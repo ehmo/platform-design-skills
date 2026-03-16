@@ -225,10 +225,22 @@ PermanentNavigationDrawer(
 Android 13+ supports predictive back with an animation preview.
 
 ```kotlin
-// Compose: Predictive back handling
-val predictiveBackHandler = remember { PredictiveBackHandler(enabled = true) { progress ->
-    // Animate based on progress (0.0 to 1.0)
-}}
+// Compose: Predictive back with BackHandler (androidx.activity.compose)
+BackHandler(enabled = true) {
+    // Called when back is confirmed; navigate back in your nav controller
+    navController.popBackStack()
+}
+```
+
+```kotlin
+// Compose: Predictive back progress animation using predictiveBackHandler modifier
+// (androidx.activity:activity-compose 1.8+)
+Modifier.predictiveBackHandler(enabled = true) { progress ->
+    // progress is a Flow<BackEventCompat> with x, y, swipeEdge, progress (0.0–1.0)
+    progress.collect { backEvent ->
+        animationState = backEvent.progress
+    }
+}
 ```
 
 ```xml
