@@ -359,7 +359,7 @@ Set breakpoints where your content breaks, not at device widths. Common starting
 
 ### 2.5 Touch Targets
 
-Minimum 44x44 CSS pixels for touch targets (WCAG SC 2.5.8). Provide at least 24px spacing between adjacent targets.
+Minimum 44x44 CSS pixels for touch targets (WCAG SC 2.5.5 AAA; SC 2.5.8 requires only 24x24px at AA). Provide at least 24px spacing between adjacent targets.
 
 ```css
 button, a, input, select, textarea {
