@@ -338,7 +338,7 @@ Sidebars are the primary navigation surface for Mac apps. They appear on the lea
 
 ### Rule 4.1 — Leading Edge, Collapsible
 
-Place the sidebar on the left (leading) edge. Make it collapsible via the toolbar button or Cmd+Ctrl+S. Persist collapsed state.
+Place the sidebar on the left (leading) edge. Make it collapsible via the toolbar button or a keyboard shortcut. Apple does not define a universal sidebar shortcut — choose one appropriate for your app (e.g., Cmd+Ctrl+S is common but not guaranteed to be free in all apps). Persist collapsed state.
 
 ```swift
 // SwiftUI
@@ -946,7 +946,7 @@ VoiceOver must traverse elements in a logical reading order (top-left to bottom-
 | Shortcut | Action |
 |----------|--------|
 | Cmd+Ctrl+F | Toggle fullscreen |
-| Cmd+Ctrl+S | Toggle sidebar |
+| Cmd+Ctrl+S | Toggle sidebar (app-defined; not a universal HIG standard) |
 | Cmd++ / Cmd+- | Zoom in/out |
 | Cmd+0 | Actual size |
 
