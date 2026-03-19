@@ -79,6 +79,8 @@ Load individual sections as needed. Each section is self-contained.
 
 7. **Keep submit buttons enabled.** Validate on submit and show errors. Disabled buttons fail to explain why the user cannot proceed.
 
+8. **Keep instructions near the field.** Put examples, constraints, and recovery text next to the relevant input so users do not have to remember guidance from earlier copy.
+
 <!-- /SECTION: forms -->
 
 ---
@@ -122,6 +124,8 @@ Load individual sections as needed. Each section is self-contained.
 6. **Avoid layout thrashing.** Batch all DOM reads, then batch all DOM writes. Never interleave reads and writes in a loop.
 
 7. **Use `will-change` sparingly.** Apply only to elements that will animate. Remove after animation completes. Never apply globally.
+
+8. **Expose waiting states promptly.** After user input, acknowledge the new state immediately. If work will take longer than a brief moment, show progress, skeletons, optimistic UI, or `aria-busy`.
 
 <!-- /SECTION: performance -->
 

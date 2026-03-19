@@ -55,6 +55,7 @@ The Digital Crown is the primary physical input for scrolling and precise value 
 - **W-DC-02**: For value pickers (time, quantity, sliders), bind the Crown to precise adjustments with haptic detents at each discrete value.
 - **W-DC-03**: Do not override or conflict with system Crown behaviors. The system uses the Crown for volume control during media playback, scrolling in system UI, and Time Travel in complications.
 - **W-DC-04**: Provide visual feedback synchronized with Crown rotation. The UI must respond frame-by-frame to Crown input with no perceptible lag.
+- **W-DC-05**: Update on each Crown increment. Values, selection, and highlight states should move with each detent. Do not debounce Crown input until the gesture ends.
 
 **Correct — Crown binding with haptic detents:**
 ```swift

@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "organization": "Platform Design Skills",
   "date": "February 2026",
-  "abstract": "Material Design 3 and Android platform guidelines. 104 rules across 10 categories covering Material You, dynamic color, navigation patterns, Jetpack Compose components, accessibility, adaptive layouts, and Android-specific interactions. Each rule includes Compose and XML examples.",
+  "abstract": "Material Design 3 and Android platform guidelines. 106 rules across 10 categories covering Material You, dynamic color, navigation patterns, Jetpack Compose components, accessibility, adaptive layouts, and Android-specific interactions. Each rule includes Compose and XML examples.",
   "references": [
     "https://m3.material.io",
     "https://developer.android.com/design",

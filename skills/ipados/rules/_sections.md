@@ -12,7 +12,7 @@
 
 ## Section 3: Navigation
 - **Impact**: CRITICAL
-- **Scope**: Sidebar navigation, tab-to-sidebar conversion, three-column layout, toolbar placement, detail views
+- **Scope**: Sidebar navigation, tab-to-sidebar conversion, three-column layout, toolbar placement, detail views, preserved visible hierarchy and state
 - **Applies when**: Designing primary navigation, building information hierarchies, placing toolbars and actions
 
 ## Section 4: Pointer & Trackpad
@@ -22,7 +22,7 @@
 
 ## Section 5: Keyboard
 - **Impact**: HIGH
-- **Scope**: Cmd+key shortcuts, discoverability overlay, tab navigation, hardware keyboard detection, system shortcut conflicts
+- **Scope**: Cmd+key shortcuts, discoverability overlay, tab navigation, hardware keyboard detection, system shortcut conflicts, shortcut learnability
 - **Applies when**: Adding keyboard shortcuts, building forms, supporting hardware keyboard users
 
 ## Section 6: Apple Pencil

@@ -6,7 +6,7 @@
 
 ## 2. Navigation (nav)
 **Impact:** CRITICAL
-**Description:** Navigation defines how users move through an app and directly affects whether they can find features and complete tasks. iOS users expect a tab bar at the bottom for top-level sections, large titles in primary views, and swipe-from-left-edge for back. Violating these conventions forces users to relearn interaction patterns they already know, increasing cognitive load and abandonment.
+**Description:** Navigation defines how users move through an app and directly affects whether they can find features and complete tasks. iOS users expect a tab bar at the bottom for top-level sections, large titles in primary views, and swipe-from-left-edge for back. Violating these conventions forces users to relearn interaction patterns they already know, increasing cognitive load and abandonment. Preserve visible state so users resume by recognition rather than memory.
 
 ## 3. Typography & Dynamic Type (type)
 **Impact:** HIGH
@@ -30,7 +30,7 @@
 
 ## 8. Patterns (pattern)
 **Impact:** MEDIUM
-**Description:** Common UX patterns like onboarding, loading, and modality shape the overall feel of an app. Skeleton views instead of blocking spinners make apps feel faster. Launch screens that match the first screen eliminate visual jarring. Limiting onboarding to three skippable pages respects user time. These patterns collectively determine whether an app feels native or foreign.
+**Description:** Common UX patterns like onboarding, loading, and modality shape the overall feel of an app. Skeleton views instead of blocking spinners make apps feel faster. Launch screens that match the first screen eliminate visual jarring. Limiting onboarding to three skippable pages respects user time. Acknowledge waiting states immediately so the app never appears inert after input. These patterns collectively determine whether an app feels native or foreign.
 
 ## 9. Privacy & Permissions (privacy)
 **Impact:** HIGH

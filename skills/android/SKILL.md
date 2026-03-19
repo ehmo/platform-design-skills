@@ -253,6 +253,7 @@ Modifier.predictiveBackHandler(enabled = true) { progress ->
 - R2.11: The system back gesture navigates back in the navigation stack. The Up button (toolbar arrow) navigates up in the app hierarchy. These may differ.
 - R2.12: Never intercept system back to show "are you sure?" dialogs unless there is unsaved user input.
 - R2.13: Do not suppress the system-provided back preview animation. If you implement custom enter/exit transitions, interpolate them using `BackEventCompat.progress` (0.0–1.0) and respect `BackEventCompat.swipeEdge` (`EDGE_LEFT`/`EDGE_RIGHT`) so the exiting screen scales down and shifts toward the initiating edge, matching the system animation.
+- R2.14: Prefer recognition over recall. Keep destinations labeled, selected state visible, and back-stack context preserved so users do not reconstruct where they are after every navigation step.
 
 ```kotlin
 // Compose: drive a custom animation from predictive back progress
@@ -570,6 +571,7 @@ AssistChip(
 **Rules:**
 - R5.17: Use `FilterChip` for toggling filters, `AssistChip` for smart suggestions, `InputChip` for user-entered content (tags), `SuggestionChip` for dynamically generated suggestions.
 - R5.18: Chips should be arranged in a horizontally scrollable row or a flow layout, not stacked vertically.
+- R5.19: Expose waiting states immediately. If an action cannot finish right away, acknowledge it with inline state change, progress, or another visible response rather than leaving the UI static.
 
 ### 5.7 Component Selection Guide
 

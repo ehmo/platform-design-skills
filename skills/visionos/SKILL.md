@@ -89,6 +89,9 @@ If you define custom hand gestures beyond the system pinch, ensure they are easy
 **EH-07: Do not require precise hand positioning.**
 Users interact with hands resting naturally in their lap or at their sides. Do not require users to hold their hands in specific positions, reach to specific locations, or maintain sustained gestures. The indirect interaction model exists specifically to reduce physical effort.
 
+**EH-08: Confirm intent at the start of the interaction.**
+As soon as the system recognizes gaze target, pinch, drag pickup, or direct touch contact, show a visible state change. Delayed confirmation breaks the eye-hand loop and makes selection feel uncertain.
+
 ### Spatial Interaction Quick Reference
 
 | Interaction | Method | Use Case |
@@ -241,6 +244,9 @@ Not all ornaments need to be visible at all times. Toolbars can appear on hover 
 
 **OR-06: Use standard ornament styling.**
 Ornaments use the same glass material system as windows but at a slightly different depth. Use system-provided ornament containers rather than custom floating UI. This ensures visual consistency with other visionOS apps.
+
+**OR-07: Keep essential controls discoverable.**
+Use ornaments for commands users must revisit repeatedly, such as navigation, playback, or primary actions. Do not hide essential controls behind memorized gestures or hover-only affordances.
 
 ---
 

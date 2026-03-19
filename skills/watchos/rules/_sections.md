@@ -27,8 +27,9 @@ All rules organized by category with stable IDs for cross-referencing.
 | W-DC-02 | Bind Crown to value pickers with haptic detents | HIGH |
 | W-DC-03 | Never override system Crown behaviors | HIGH |
 | W-DC-04 | Visual feedback must be frame-synced to Crown rotation | HIGH |
+| W-DC-05 | Update values and highlights on each Crown increment | HIGH |
 
-**Rationale**: The Digital Crown is a precision input unique to Apple Watch. It enables interaction without obscuring the small display with fingers.
+**Rationale**: The Digital Crown is a precision input unique to Apple Watch. It enables interaction without obscuring the small display with fingers, but only if response stays causally linked to each detent.
 
 ---
 
@@ -123,11 +124,11 @@ All rules organized by category with stable IDs for cross-referencing.
 | Section | Count | Priority |
 |---------|-------|----------|
 | Glanceable Design | 6 | CRITICAL |
-| Digital Crown | 4 | HIGH |
+| Digital Crown | 5 | HIGH |
 | Navigation | 5 | HIGH |
 | Complications | 5 | HIGH |
 | Always On Display | 5 | MEDIUM |
 | Workouts & Health | 5 | MEDIUM |
 | Notifications | 4 | MEDIUM |
 | Accessibility | 6 | CRITICAL |
-| **Total** | **40** | |
+| **Total** | **41** | |

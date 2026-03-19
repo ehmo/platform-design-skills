@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased
+
+### Summary
+
+Added a focused Human Processor Model pass across the skill pack as a supporting HCI lens, not a new top-level doctrine.
+
+### Added
+
+- Added HPM-informed guidance to the existing sections where it materially improves the rules:
+  - iOS: recognition over recall in navigation; immediate waiting-state feedback in patterns
+  - iPadOS: preserved visible navigation state; shortcut discoverability over memorization
+  - macOS: stable menu command naming/location; lower-interruption feedback for routine actions
+  - watchOS: tighter Digital Crown response guidance
+  - tvOS: reduced re-orientation cost in focus navigation; lower-effort text-entry guidance
+  - visionOS: immediate intent confirmation for eye/hand input; essential controls stay discoverable
+  - Android: recognition over recall in navigation; explicit visible waiting states in components
+  - Web: field-local instructions; prompt exposure of waiting states
+
+### Documentation
+
+- Updated `README.md` Sources to add the Human Processor Model references used for this pass
+- Explicitly documented that HPM is a secondary reference and does not override Apple HIG, Material Design, or WCAG
+
+### Notes
+
+- No standalone HPM section was added to the repo
+- Avoided turning HPM into hard numeric rules where the platform source is the real authority
+
 ## v1.1.0 — March 2026
 
 ### Summary

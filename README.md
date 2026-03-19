@@ -136,10 +136,21 @@ Each skill contains:
 
 ## Sources
 
+### Platform-normative sources
+
 - Apple Human Interface Guidelines (2025) — developer.apple.com/design/human-interface-guidelines
 - Material Design 3 — m3.material.io
 - Web Content Accessibility Guidelines (WCAG) 2.2 — w3.org/WAI/WCAG22/quickref
 - MDN Web Docs — developer.mozilla.org
+
+### Supporting HCI references
+
+These are secondary references used to sharpen guidance around recognition over recall, visible waiting states, and input effort. They do not override Apple HIG, Material, or WCAG.
+
+- Stuart K. Card, Thomas P. Moran, and Allen Newell, *The Psychology of Human-Computer Interaction* (1983) — https://archive.org/details/psychologyofhuma0000card
+- Allen Newell and Stuart K. Card, *Prospects for Psychological Science in Human-Computer Interaction* (includes Model Human Processor summary and operating principles) — https://iiif.library.cmu.edu/file/Newell_box00042_fld03533_doc0001/Newell_box00042_fld03533_doc0001.pdf
+- Tiffany Jastrzembski and Neil Charness, *The Model Human Processor and the Older Adult: Parameter Estimation and Validation Within a Mobile Phone Task* (2007 / PMC) — https://pmc.ncbi.nlm.nih.gov/articles/PMC4591021/
+- Human Processor Model overview (discovery/reference pointer) — https://en.wikipedia.org/wiki/Human_processor_model
 
 ## License
 

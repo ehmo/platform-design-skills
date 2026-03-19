@@ -1,6 +1,6 @@
 # macOS Design Guidelines — Section Index
 
-Quick-reference for all 11 categories and 60 rules. See `../SKILL.md` for full details, code examples, and rationale.
+Quick-reference for all 11 categories and 62 rules. See `../SKILL.md` for full details, code examples, and rationale.
 
 ---
 
@@ -13,8 +13,9 @@ Quick-reference for all 11 categories and 60 rules. See `../SKILL.md` for full d
 | 1.3 | Dynamic menu updates: disable unavailable items, update titles contextually |
 | 1.4 | Right-click context menus on all interactive elements |
 | 1.5 | App menu must contain About, Settings, Services, Hide, Quit |
+| 1.6 | Keep common commands in stable menus with stable names and shortcuts |
 
-**Key principle:** The menu bar is the primary command discovery surface on Mac. Every action in the app must be reachable through the menu bar.
+**Key principle:** The menu bar is the primary command discovery surface and memory offload on Mac. Every action in the app must be reachable through the menu bar.
 
 ---
 
@@ -100,8 +101,9 @@ Quick-reference for all 11 categories and 60 rules. See `../SKILL.md` for full d
 | 7.2 | Recurring alerts offer "Do not show again" suppression |
 | 7.3 | Never show alerts for successful routine operations |
 | 7.4 | Dock badge for notification counts; clear promptly |
+| 7.5 | Match interruption style to the user's decision cost |
 
-**Key principle:** Respect user attention. Only interrupt when genuinely necessary.
+**Key principle:** Respect user attention. Give fast feedback for routine actions and interrupt only when genuinely necessary.
 
 ---
 
@@ -167,10 +169,10 @@ Quick-reference for all 11 categories and 60 rules. See `../SKILL.md` for full d
 
 | Priority | Sections | Rule Count |
 |----------|----------|------------|
-| CRITICAL | Menu Bar, Windows, Keyboard, Accessibility | 25 rules |
+| CRITICAL | Menu Bar, Windows, Keyboard, Accessibility | 26 rules |
 | HIGH | Toolbars, Sidebars, Pointer/Mouse, Visual Design | 22 rules |
-| MEDIUM | Notifications, System Integration, Popovers | 13 rules |
-| **Total** | **11 sections** | **60 rules** |
+| MEDIUM | Notifications, System Integration, Popovers | 14 rules |
+| **Total** | **11 sections** | **62 rules** |
 
 ---
 

@@ -27,6 +27,7 @@ Rules where violations break core spatial UX or cause user discomfort.
 | EH-03 | Hover feedback on gaze | Visible highlight when eye rests on element |
 | EH-05 | No gaze tracking for content | Eye data is system-only, never for analytics |
 | EH-07 | No precise hand positioning | Users interact with hands at rest |
+| EH-08 | Immediate confirmation of gaze, pinch, drag, and touch intent | Visible state change as soon as interaction is recognized |
 
 ### Accessibility
 
@@ -119,6 +120,7 @@ Rules where violations miss platform polish or conventions.
 | OR-04 | No content occlusion | Ornaments extend outward |
 | OR-05 | Contextual visibility | Show/hide on hover when appropriate |
 | OR-06 | Standard ornament styling | System glass containers |
+| OR-07 | Keep essential controls discoverable | Do not hide core actions behind memorized gestures or hover-only affordances |
 
 ---
 
@@ -127,11 +129,11 @@ Rules where violations miss platform polish or conventions.
 | Category | Count | Severity |
 |---|---|---|
 | Spatial Layout | 7 | 5 CRITICAL, 2 HIGH |
-| Eye & Hand Input | 7 | 5 CRITICAL, 2 HIGH |
+| Eye & Hand Input | 8 | 6 CRITICAL, 2 HIGH |
 | Windows | 6 | 6 HIGH |
 | Volumes | 5 | 5 HIGH |
 | Immersive Spaces | 7 | 7 HIGH |
 | Materials & Depth | 6 | 6 MEDIUM |
-| Ornaments | 6 | 6 MEDIUM |
+| Ornaments | 7 | 7 MEDIUM |
 | Accessibility | 6 | 6 CRITICAL |
-| **Total** | **50** | |
+| **Total** | **52** | |

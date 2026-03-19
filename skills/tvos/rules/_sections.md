@@ -16,6 +16,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | FOCUS-06 | Provide a default focused element on every screen | CRITICAL |
 | FOCUS-07 | Preserve focus memory when returning to a screen | HIGH |
 | FOCUS-08 | Never trap focus; users must always be able to move away | CRITICAL |
+| FOCUS-09 | Keep row order stable and focus moves local to reduce re-orientation | HIGH |
 
 ### Key APIs
 - `UIFocusEnvironment`, `UIFocusGuide`, `UIFocusSystem`
@@ -36,6 +37,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | REMOTE-05 | Swipe directions must be intuitive and axis-consistent | HIGH |
 | REMOTE-06 | Support Siri voice input for search and text entry | HIGH |
 | REMOTE-07 | Provide immediate click feedback (visual response) | HIGH |
+| REMOTE-08 | Avoid long remote-typed text; prefer dictation, autofill, or code-based flows | HIGH |
 
 ### Input Model
 - **Touch surface**: Swipe (directional), click (select), long press (context)
@@ -154,7 +156,7 @@ Quick-access reference organized by category. Each rule has a severity and uniqu
 | Severity | Count |
 |----------|-------|
 | CRITICAL | 12 |
-| HIGH | 20 |
+| HIGH | 22 |
 | MEDIUM | 12 |
 | LOW | 3 |
-| **Total** | **47** |
+| **Total** | **49** |

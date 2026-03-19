@@ -7,10 +7,10 @@ Quick reference for locating rules by category and ID.
 | # | Section | Priority | Rules | Topics |
 |---|---------|----------|-------|--------|
 | 1 | Material You & Theming | CRITICAL | R1.1–R1.11 | Dynamic color, color roles, light/dark themes, custom seeds, tonal palettes |
-| 2 | Navigation | CRITICAL | R2.1–R2.13 | Navigation bar, navigation rail, navigation drawer, predictive back, up vs back |
+| 2 | Navigation | CRITICAL | R2.1–R2.14 | Navigation bar, navigation rail, navigation drawer, predictive back, up vs back |
 | 3 | Layout & Responsive | HIGH | R3.1–R3.10 | Window size classes, Material grid, edge-to-edge, insets, foldable support |
 | 4 | Typography | HIGH | R4.1–R4.5 | Type scale, sp units, font scaling, line height, custom fonts |
-| 5 | Components | HIGH | R5.1–R5.18 | FAB, top app bar, bottom sheets, dialogs, snackbars, chips, cards |
+| 5 | Components | HIGH | R5.1–R5.19 | FAB, top app bar, bottom sheets, dialogs, snackbars, chips, cards, waiting states |
 | 6 | Accessibility | CRITICAL | R6.1–R6.13 | TalkBack, contentDescription, touch targets, contrast, focus order, custom canvas views |
 | 7 | Gestures & Input | MEDIUM | R7.1–R7.7 | System gestures, pull to refresh, swipe to dismiss, long press, ripple |
 | 8 | Notifications | MEDIUM | R8.1–R8.9 | Channels, importance, messaging style, expandable, foreground service |
@@ -48,6 +48,7 @@ Quick reference for locating rules by category and ID.
 - **R2.11** — System back != Up button; they may navigate differently
 - **R2.12** — No "are you sure?" on back unless unsaved user input
 - **R2.13** — Do not suppress the system predictive back preview animation; interpolate custom transitions using `BackEventCompat.progress` and respect `BackEventCompat.swipeEdge`
+- **R2.14** — Prefer recognition over recall; keep destinations labeled and visible state preserved
 
 ### 3. Layout & Responsive [HIGH]
 
@@ -90,6 +91,7 @@ Quick reference for locating rules by category and ID.
 - **R5.16** — Include undo action when operation is reversible
 - **R5.17** — Correct chip type for use case (Filter/Assist/Input/Suggestion)
 - **R5.18** — Chips in horizontal scroll or flow layout, not stacked vertically
+- **R5.19** — Expose waiting states immediately; acknowledge long-running work with visible progress
 
 ### 6. Accessibility [CRITICAL]
 

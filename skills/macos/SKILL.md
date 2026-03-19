@@ -140,6 +140,10 @@ struct MyApp: App {
 }
 ```
 
+### Rule 1.6 — Stable Command Names and Locations
+
+Treat the menu bar as the app's command memory. Keep common actions in consistent menus with stable names and shortcuts so users recognize them quickly instead of searching for context-specific variants.
+
 ---
 
 ## 2. Windows (CRITICAL)
@@ -655,6 +659,10 @@ Show a badge on the Dock icon for notification counts. Clear it promptly when th
 // AppKit
 NSApp.dockTile.badgeLabel = unreadCount > 0 ? "\(unreadCount)" : nil
 ```
+
+### Rule 7.5 — Match Feedback to Cognitive Cost
+
+Routine actions should acknowledge completion with inline status, toolbar state, or a subtle animation. Use modal alerts only when the user must stop, evaluate consequences, and choose.
 
 ---
 
